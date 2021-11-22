@@ -2,7 +2,7 @@ export const TitleContainer = () =>
 {
     return (
         <div className="title-container container-fluid">
-            <div className="row align-items-center title-row">
+            <div className="title-row row align-items-center">
                 <div className="col-1"></div>
                 <div className="col-8">
                     <div className="row">
@@ -31,18 +31,32 @@ export const TitleContainer = () =>
                     <button type="button" className="btn btn-danger btn-lg">Connect Nami Wallet</button>         
                 </div>        
                 <div className="col-3"></div>
-            </div>    
+            </div>  
+
+            <style jsx>{`
+                .title-container {
+                    background-image: linear-gradient(180deg, #143f6d, #1e5692); /*linear-gradient(180deg, #2CBBE7, #2ea2be);*/
+                    height: 40rem;
+
+                    color: white;
+                    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+                }
+
+                .title-row {
+                    height: 100%;
+                }
+
+                .title-row h1 {
+                    font-size: 6rem;
+                    font-weight: 700;
+                }
+
+                .title-row p {
+                    color: #d3e1f0;
+                    font-size: 1.1rem;
+                }
+            `}</style>  
         </div>
     )
 }
 
-<style jsx>{`
-    .title-container {
-        //background-image: linear-gradient(180deg, #143f6d, #1e5692); /*linear-gradient(180deg, #2CBBE7, #2ea2be);*/
-        background-color: blue;
-        height: 40rem;
-
-        color: white;
-        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
-    }
-`}</style>
