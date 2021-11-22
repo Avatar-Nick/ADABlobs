@@ -1,11 +1,12 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Home() {
   return (
-    <div className="container">
+    <div className="container test">
       <Head>
-        <title>Create Next App</title>
+        <title>ADA Blobs</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -16,7 +17,7 @@ export default function Home() {
               <a>this page!</a>
             </Link>
         </h1>
-
+        <Image src="/images/Bob.png" height={256} width={256} alt="Bob"/>
         <p className="description">
           Get started by editing <code>pages/index.js</code>
         </p>
@@ -71,6 +72,7 @@ export default function Home() {
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          background-color: green;
         }
 
         main {
@@ -194,7 +196,13 @@ export default function Home() {
         }
       `}</style>
 
-      <style jsx global>{`
+      
+    </div>
+  )
+}
+
+/*
+<style jsx global>{`
         html,
         body {
           padding: 0;
@@ -208,6 +216,4 @@ export default function Home() {
           box-sizing: border-box;
         }
       `}</style>
-    </div>
-  )
-}
+*/
