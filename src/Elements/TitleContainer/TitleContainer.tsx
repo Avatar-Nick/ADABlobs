@@ -28,7 +28,6 @@ export const TitleContainer = () =>
                         You can join this Discord Server to discuss the Blobs as well as find people who are buying / selling Blobs.
                     </p>
                     <br />
-                    <button type="button" className="btn btn-danger btn-lg">Connect Nami Wallet</button>         
                 </div>        
                 <div className="col-3"></div>
             </div>  
