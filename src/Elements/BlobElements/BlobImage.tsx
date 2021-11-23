@@ -4,7 +4,7 @@ export const BlobImage = () =>
         <div type="button" className="blob-content rounded pb-3 mb-3" >
             <div className="blob-content-inner">
                 <div className="d-flex flex-column justify-content-center align-items-center">
-                    <img src="images/Bob.png" />
+                    <img height={"100%"} width={"100%"} src="images/Bob.png" />
                     <div className="blob-name mb-2">Bob</div>
                     <button type="button" className="btn btn-primary btn-block">Buy</button>
                 </div>  
