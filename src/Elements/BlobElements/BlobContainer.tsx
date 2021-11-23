@@ -1,4 +1,4 @@
-import { BlobImage } from "./BlobImage"
+import { BlobImage } from "./BlobImage";
 
 export const BlobContainer = () => 
 {
@@ -14,12 +14,14 @@ export const BlobContainer = () =>
                     </div> 
                     )}
                 </div>
-
-                
             </div>
+
             <style jsx>{`
                 .blob-container {
-                    background-color: #E7E8E9 ;
+                    background-color: #E7E8E9;
+
+                    //font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                    //font-weight: 700;
                 }
 
                 .blob-content {

@@ -5,7 +5,7 @@ export const BlobImage = () =>
             <div className="blob-content-inner">
                 <div className="d-flex flex-column justify-content-center align-items-center">
                     <img height={"100%"} width={"100%"} src="images/Bob.png" />
-                    <div className="blob-name mb-2">Bob</div>
+                    <div className="blob-name mb-2">Bob #001</div>
                     <button type="button" className="btn btn-primary btn-block">Buy</button>
                 </div>  
             </div> 
@@ -14,7 +14,10 @@ export const BlobImage = () =>
                 .blob-content {
                     display: flex;
                     justify-content: center;
+                    
                     background-color: #f4f4f4;
+                    color: #777777;
+
                 }
 
                 .blob-content:hover {
@@ -31,8 +34,9 @@ export const BlobImage = () =>
 
                 .blob-name {
                     font-size: 1.2rem;
-                    font-weight: 900 !important;
-                    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+                    font-weight: 700;
+                    //font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
                 }
 
                 .blob-owner {

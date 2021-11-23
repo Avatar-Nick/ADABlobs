@@ -11,7 +11,7 @@ export const TitleContainer = () =>
                             <h1>ADA Blobs!</h1>
                         </div>
                         <div className="col-2">
-                            <img height={256} width={256} src="images/Bob.png" />
+                            <img width={256} height={256} src="images/Bob.png" />
                         </div>
                     </div>
                     <p>
@@ -35,11 +35,11 @@ export const TitleContainer = () =>
 
             <style jsx>{`
                 .title-container {
-                    background-image: linear-gradient(180deg, #143f6d, #1e5692); /*linear-gradient(180deg, #2CBBE7, #2ea2be);*/
+                    background-image: linear-gradient(180deg, #143f6d, #1e5692);/*linear-gradient(180deg, #143f6d, #1e5692); linear-gradient(180deg, #2CBBE7, #2ea2be);*/
                     height: 40rem;
 
                     color: white;
-                    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
+                    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
                 }
 
                 .title-row {
