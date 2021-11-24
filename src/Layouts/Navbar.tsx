@@ -4,7 +4,7 @@ export const Navbar = () =>
 {
     return (
         <div className="blob-container">
-            <div className="top-row ps-3 navbar navbar-dark">
+            <div className="navbar navbar-dark navbar-expand-lg px-3">
                 <div className="container-fluid d-flex">
                     <div className="navbar-header me-auto p-2">
                         <Link href="/">                    
@@ -29,9 +29,22 @@ export const Navbar = () =>
                         </Link>
                     </div>
 
-                    <div className="p-2 ps-3">
+                    <div className="d-none d-lg-block p-2 ps-3">
                         <button type="button" className="btn btn-danger btn-lg">Connect Wallet</button>  
-                    </div>   
+                    </div>
+
+                    {/*
+                    <div className="collapse navbar-collapse">
+                        
+                        
+                    </div>
+                    <div className="p-2">
+                        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span className="navbar-toggler-icon"></span>
+                        </button>
+                    </div>
+                    */}
+                    
                     
                     {/*
                     <button title="Navigation menu" className="navbar-toggler" >

@@ -6,7 +6,7 @@ export const BlobContainer = () =>
     //const colCount = "row-cols-5";
     return (
         <div className="blob-container">
-            <div className="blob-content container-fluid pt-3">
+            <div className="blob-content container pt-3">
                 <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
                 {test.map((j, i) =>  
                     <div className="col" key={i}>
