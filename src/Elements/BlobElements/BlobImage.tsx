@@ -1,11 +1,13 @@
-export const BlobImage = () => 
+export const BlobImage = ({ blob } : { blob: Blob }) => 
 {
+    if (!blob) return <></>;
+
     return (
         <div type="button" className="blob-content rounded pb-3 mb-3" >
             <div className="blob-content-inner">
                 <div className="d-flex flex-column justify-content-center align-items-center">
-                    <img height={"100%"} width={"100%"} src="images/blobs/Bob.png" />
-                    <div className="blob-name mb-2">Bob #001</div>
+                    <img height={"100%"} width={"100%"} src={blob.image} />
+                    <div className="blob-name mb-2">{blob.name} {idToString(blob.id)}</div>
                     <button type="button" className="btn btn-primary btn-block">Buy</button>
                 </div>  
             </div> 
@@ -47,5 +49,17 @@ export const BlobImage = () =>
             `}</style> 
         </div>
     )
+}
+
+const idToString = (id: Number) => 
+{
+    let idString = id.toString();
+    
+    let count = idString.length;
+    for (let i = count; i < 3; i++) 
+    {
+        idString = `${0}${idString}`;
+    }
+    return `${"#"}${idString}`;
 }
 
