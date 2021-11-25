@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 export const BlobImage = ({ blob } : { blob: Blob }) => 
 {
     if (!blob) return <></>;
@@ -6,7 +8,7 @@ export const BlobImage = ({ blob } : { blob: Blob }) =>
         <div type="button" className="blob-content rounded pb-3 mb-3" >
             <div className="blob-content-inner">
                 <div className="d-flex flex-column justify-content-center align-items-center">
-                    <img height={"100%"} width={"100%"} src={blob.image} />
+                    <Image src={blob.image} width={"400%"} height={"400%"} quality={100} />
                     <div className="blob-name mb-2">{blob.name} {idToString(blob.id)}</div>
                     <button type="button" className="btn btn-primary btn-block">Buy</button>
                 </div>  

@@ -4,8 +4,7 @@ import { blobs } from "../../consts/blobs";
 
 export const BlobContainer = () => 
 {
-    const test = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,20];
-    //const colCount = "row-cols-5";
+    const test = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
     return (
         <div className="blob-container">
             <div className="blob-content container pt-3">
@@ -21,9 +20,6 @@ export const BlobContainer = () =>
             <style jsx>{`
                 .blob-container {
                     background-color: #E7E8E9;
-
-                    //font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-                    //font-weight: 700;
                 }
 
                 .blob-content {
