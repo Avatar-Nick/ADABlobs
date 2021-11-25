@@ -72,7 +72,7 @@ export const TitleContainer = () =>
 
                 @media screen and (min-width: 576px) {
                     .title-container {
-                        height: 31vw;
+                        height: 31.5vw;
                     }
                     
                     h1 {
