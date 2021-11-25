@@ -1,7 +1,7 @@
 import { blobs } from "../../consts/blobs"
 import { BlobBigImage } from "./BlobBigImage";
 
-export const BlobTitle = ({id}: {id : number}) => 
+export const BlobTitle = ({ id } : {id : number}) => 
 {
     return (
         <div className="title-container d-flex align-items-center">            

@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { idToLongString } from '../../utils/idToLongString';
 
@@ -11,7 +10,7 @@ export const BlobImage = ({ blob } : { blob: Blob }) =>
             <div type="button" className="blob-content d-flex justify-content-center rounded pb-3 mb-3" >
                 <div className="blob-content-inner">
                     <div className="d-flex flex-column justify-content-center align-items-center">
-                        <Image src={blob.image} width={"400%"} height={"400%"} quality={100} />
+                        <img src={blob.image} width={"100%"} height={"100%"} />
                         <div className="blob-name mb-2">{blob.name} {idToLongString(blob.id)}</div>
                         <button type="button" className="btn btn-primary btn-block">Buy</button>
                     </div>  

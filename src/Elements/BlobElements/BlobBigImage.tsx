@@ -10,7 +10,7 @@ export const BlobBigImage = ({ blob } : { blob: Blob }) =>
         <div className="blob-content d-flex justify-content-center align-items-center rounded-3">
             <div className="blob-content-inner">
                 <div className="d-flex flex-column justify-content-center align-items-center">
-                    <Image src={blob.image} width={"400%"} height={"400%"} quality={100} />
+                    <img src={blob.image} width={"43%"} height={"43%"} />
                     <div className="blob-name mb-2">{blob.name} {idToLongString(blob.id)}</div>
                 </div>  
             </div>
@@ -28,7 +28,7 @@ export const BlobBigImage = ({ blob } : { blob: Blob }) =>
                     background-color: #0a2e53;
                     color: #777777;
 
-                    width: 27vw;
+                    width: 54vw;
                     height: 27vw;
                 }
 

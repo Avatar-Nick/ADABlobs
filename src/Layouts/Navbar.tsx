@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image';
 
 export const Navbar = () => 
 {
@@ -9,8 +10,8 @@ export const Navbar = () =>
                     <div className="navbar-header">
                         <Link href="/">                    
                             <a className="navbar-brand">
-                                <img width={56} height={56} src="images/Logo.png" />
-                                <img width={260} height={56} src="images/LogoText.png" />
+                                <img width={56} height={56} src="/images/Logo.png" />
+                                <img width={260} height={56} src="/images/LogoText.png" />
                             </a>
                         </Link>
                     </div>
