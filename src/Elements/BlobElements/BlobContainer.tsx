@@ -19,7 +19,7 @@ export const BlobContainer = () =>
 
             <style jsx>{`
                 .blob-container {
-                    background-color: #E7E8E9;
+                    background-color: #ececec;
                 }
 
                 .blob-content {

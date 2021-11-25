@@ -17,12 +17,12 @@ export const BlobImage = ({ blob } : { blob: Blob }) =>
                 </div>
                 <style jsx>{`
                     .blob-content {                        
-                        background-color: #f4f4f4;
                         color: #777777;
+                        background-color: white;                        
                     }
 
                     .blob-content:hover {
-                        background-color: #ececec;
+                        transform: scale(1.08);
                     }
 
                     .blob-content-inner {
