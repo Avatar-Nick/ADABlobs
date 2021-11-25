@@ -12,12 +12,38 @@ export const BlobManagement = ({ id } : { id : number}) =>
                     </div>
                 </div>
                 <div className="row pb-4">
-                    <div className="col-6">
-                        <div className="blob-management rounded">
-                            Last Sale
+                    <div className="col-12">
+                        <div className="blob-properties container-fluid rounded">
+                            <div className="row justify-content-center">
+                                <div className=" col-12 blob-properties-title rounded mt-4">
+                                    <h2 className="">Bid On Bob</h2>
+                                </div>
+                            </div>
+                            <div className="row justify-content-center pt-3">
+                                <div className="col-2"></div>
+                                <div className="col-8 blob-trade-text">
+                                    <span>Current Bid:&nbsp;</span>
+                                    <span className="blob-purchase-text">100 ADA</span>
+                                </div>                                
+                                <div className="col-2"></div>
+                                <div className="col-1"></div>
+                                <div className="col-10 blob-trade-text">
+                                    <form className="blob-form">
+                                        <div className="mt-3 mb-3">
+                                            <input type="text" className="form-control" placeholder="₳ Bid Amount" aria-describedby="blobBidPrice" />
+                                        </div>
+                                    </form>
+                                </div>                                
+                                <div className="col-1"></div>
+                                <div className="col-1"></div>
+                                <div className="col-10">
+                                    <button type="button" className="btn btn-success btn-block">Place Bid</button>
+                                </div>
+                                <div className="col-1"></div>                                                   
+                            </div>
                         </div>
                     </div>
-                    <div className="col-6">
+                    <div className="col-12 pt-4">
                         <div className="blob-properties container-fluid rounded">
                             <div className="row justify-content-center">
                                 <div className=" col-12 blob-properties-title rounded mt-4">
@@ -94,7 +120,7 @@ export const BlobManagement = ({ id } : { id : number}) =>
                     border-style: solid;
                     border-color: #bbc9ec;
 
-                    width: 33vw;
+                    width: 54vw;
                     height: 27vw;
 
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; 
@@ -108,8 +134,8 @@ export const BlobManagement = ({ id } : { id : number}) =>
                     border-style: solid;
                     border-color: #bbc9ec; 
                     
-                    width: 33vw;
-                    height: 27vw;
+                    width: 54vw;
+                    height: 20vw;
 
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; 
                 }
@@ -134,6 +160,19 @@ export const BlobManagement = ({ id } : { id : number}) =>
                     font-weight: 500;
                     font-size: 1.6rem;
                 } 
+
+                .blob-trade-text {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    font-weight: 500;
+                    font-size: 1.6rem;
+                }
+
+                .blob-purchase-text {
+                    font-weight: 700;
+                }
             `}</style>
         </div>
     )
