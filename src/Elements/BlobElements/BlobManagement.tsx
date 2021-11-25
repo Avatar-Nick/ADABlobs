@@ -133,9 +133,7 @@ export const BlobManagement = ({ id } : { id : number}) =>
                 .blob-properties-text {
                     font-weight: 500;
                     font-size: 1.6rem;
-                }
-
-                
+                } 
             `}</style>
         </div>
     )
