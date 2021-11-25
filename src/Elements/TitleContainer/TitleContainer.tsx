@@ -1,13 +1,31 @@
-import Image from 'next/image'
-
 export const TitleContainer = () => 
 {
     return (
         <div className="title-container d-flex align-items-center">            
             <div className="container">
-                <div className="row">
+                <div className="row d-flex d-sm-none">
+                    <div className="col-12">
+                        <img src="/images/blobs/001 - Bob.png" height={"100%"} width={"100%"} />  
+                    </div>
                 </div>
-                <div className="row">
+                <div className="row d-flex d-sm-none">
+                    <div className="col-12">
+                        <h1>Start Your Blob</h1>
+                        <h1>Collection!</h1>
+                        <br />
+                        <p>
+                            Launched on November 30th, 2021, ADA Blobs is a collection of 300 Blob NFTs and is one of the first NFT projects on the Cardano Blockchain. There will only ever be 300 ADA Blobs available,
+                            with 1 new adorable and memeable Blob being available each week until all 300 are revealed. 
+                        </p>
+                    </div>
+                </div>
+                <div className="row d-flex d-sm-none">
+                    <div className="col-12 pt-1 pb-4 d-flex justify-content-center">
+                        <button type="button" className="btn btn-danger btn-lg btn-block nav-button-text">Connect Wallet</button>  
+                    </div> 
+                </div>
+
+                <div className="row d-none d-sm-flex">
                     <div className="col-8">
                         <h1>Start Your Blob</h1>
                         <h1>Collection!</h1>
@@ -34,29 +52,38 @@ export const TitleContainer = () =>
             <style jsx>{`
                 .title-container {
                     background-image: linear-gradient(180deg, #143f6d, #1e5692); /*linear-gradient(180deg, #143f6d, #1e5692); linear-gradient(180deg, #2CBBE7, #2ea2be);*/
-                    min-height: 20rem;
-                    height: 31vw;
+                    min-height: 20rem;                    
 
                     color: white;
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
                 }
 
-                /*
-                .title-row {
-                    height: 100%;
-                }
-                */
-
                 h1 {
-                    font-size: 6.0vw;
+                    font-size: 12.0vw;
                     font-weight: 700;
+                    text-align: center;
                 }
 
                 p {
                     color: #ecf3fa;
-                    font-size: 0.8rem;
+                    font-size: 1.2rem;
                     font-weight: 500;
                 }
+
+                @media screen and (min-width: 576px) {
+                    .title-container {
+                        height: 31vw;
+                    }
+                    
+                    h1 {
+                        font-size: 6.0vw;
+                        text-align: left;
+                    }
+
+                    p {
+                        font-size: 0.8rem;
+                    }                   
+                }                
 
                 @media screen and (min-width: 996px) {
                     h1 {
@@ -75,8 +102,6 @@ export const TitleContainer = () =>
                         font-size: 1.2rem;
                     }                    
                 }
-
-                
 
                 .position-first-blob {
                     position: absolute;
@@ -119,6 +144,11 @@ export const TitleContainer = () =>
                     right: -10%;
                     margin-left: 0vw;
                     margin-right: 0vw;
+                }
+
+                .nav-button-text {
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                    font-weight: 700;
                 }
             `}</style>  
         </div>
