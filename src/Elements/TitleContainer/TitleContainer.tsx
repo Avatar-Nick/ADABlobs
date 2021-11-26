@@ -3,29 +3,29 @@ export const TitleContainer = () =>
     return (
         <div className="title-container d-flex align-items-center">            
             <div className="container">
-                <div className="row d-flex d-sm-none">
+                <div className="row d-flex d-md-none">
                     <div className="col-12">
                         <img src="/images/blobs/001 - Bob.png" height={"100%"} width={"100%"} />  
                     </div>
                 </div>
-                <div className="row d-flex d-sm-none">
+                <div className="row d-flex d-md-none">
                     <div className="col-12">
                         <h1>Start Your Blob</h1>
                         <h1>Collection!</h1>
                         <br />
-                        <p>
+                        <p className="px-3">
                             Launched on November 30th, 2021, ADA Blobs is a collection of 300 Blob NFTs and is one of the first NFT projects on the Cardano Blockchain. There will only ever be 300 ADA Blobs available,
                             with 1 new adorable and memeable Blob being available each week until all 300 are revealed. 
                         </p>
                     </div>
                 </div>
-                <div className="row d-flex d-sm-none">
+                <div className="row d-flex d-md-none">
                     <div className="col-12 pt-1 pb-4 d-flex justify-content-center">
                         <button type="button" className="btn btn-danger btn-lg btn-block nav-button-text">Connect Wallet</button>  
                     </div> 
                 </div>
 
-                <div className="row d-none d-sm-flex">
+                <div className="row d-none d-md-flex">
                     <div className="col-8">
                         <h1>Start Your Blob</h1>
                         <h1>Collection!</h1>
@@ -59,7 +59,7 @@ export const TitleContainer = () =>
                 }
 
                 h1 {
-                    font-size: 12.0vw;
+                    font-size: 9.4vw;
                     font-weight: 700;
                     text-align: center;
                 }
@@ -70,9 +70,9 @@ export const TitleContainer = () =>
                     font-weight: 500;
                 }
 
-                @media screen and (min-width: 576px) {
+                @media screen and (min-width: 768px) {
                     .title-container {
-                        height: 31.5vw;
+                        height: 32vw;
                     }
                     
                     h1 {

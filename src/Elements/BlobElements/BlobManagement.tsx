@@ -12,34 +12,40 @@ export const BlobManagement = ({ id } : { id : number}) =>
                     </div>
                 </div>
                 <div className="row pb-4">
+                    
+                    
                     <div className="col-12">
-                        <div className="blob-properties container-fluid rounded">
-                            <div className="row justify-content-center">
-                                <div className=" col-12 blob-properties-title rounded mt-4">
-                                    <h2 className="">Bid On Bob</h2>
+                        <div className="blob-properties container rounded">
+                            <div className="row pt-3">
+                                <div className="col-2">
+                                    <img width={"40px"} height={"40px"} src="/images/CardanoLogo.png" />
                                 </div>
-                            </div>
-                            <div className="row justify-content-center pt-3">
-                                <div className="col-2"></div>
                                 <div className="col-8 blob-trade-text">
-                                    <span>Current Bid:&nbsp;</span>
-                                    <span className="blob-purchase-text">100 ADA</span>
-                                </div>                                
-                                <div className="col-2"></div>
-                                <div className="col-1"></div>
-                                <div className="col-10 blob-trade-text">
+                                    <span className="auction-title-text">Auction ends November 26, 2021 at 4:59pm EST</span>
+    
+                                    <div className="auction-timer rounded pt-2 pb-2 mt-2">
+                                        <div>
+                                            00 Hours    
+                                        </div>
+                                        <div>
+                                            00 Minutes   
+                                        </div>
+                                        <div>
+                                            00 Seconds   
+                                        </div>
+                                    </div>
+                   
+                                    <hr className="divider" />
+                                    <span className="blob-purchase-title">Top Bid:&nbsp;</span>
+                                    <span className="blob-purchase-title blob-purchase-text">100 ADA</span>
                                     <form className="blob-form">
                                         <div className="mt-3 mb-3">
-                                            <input type="text" className="form-control" placeholder="₳ Bid Amount" aria-describedby="blobBidPrice" />
+                                            <input type="number" className="form-control" placeholder="₳ Bid Amount" aria-describedby="blobBidPrice" />
                                         </div>
                                     </form>
-                                </div>                                
-                                <div className="col-1"></div>
-                                <div className="col-1"></div>
-                                <div className="col-10">
-                                    <button type="button" className="btn btn-success btn-block">Place Bid</button>
-                                </div>
-                                <div className="col-1"></div>                                                   
+                                    <button type="button" className="btn btn-success btn-trade">Place Bid</button>
+                                </div>       
+                                <div className="col-2"></div>                                          
                             </div>
                         </div>
                     </div>
@@ -47,10 +53,17 @@ export const BlobManagement = ({ id } : { id : number}) =>
                         <div className="blob-properties container-fluid rounded">
                             <div className="row justify-content-center">
                                 <div className=" col-12 blob-properties-title rounded mt-4">
-                                    <h2 className="">Blob Properties</h2>
+                                    <h2 className="">Blob Rarity / Info</h2>
                                 </div>
                             </div>
                             <div className="row justify-content-center pt-3">
+                            <div className="col-3"></div>
+                                <div className="col-4 blob-properties-text">
+                                    Category
+                                </div>
+                                <div className="col-5 blob-properties-text">
+                                    Blue
+                                </div>
                                 <div className="col-3"></div>
                                 <div className="col-4 blob-properties-text">
                                     Id
@@ -63,15 +76,8 @@ export const BlobManagement = ({ id } : { id : number}) =>
                                     Name
                                 </div>
                                 <div className="col-5 blob-properties-text">
-                                  Bob
-                                </div>
-                                <div className="col-3"></div>
-                                <div className="col-4 blob-properties-text">
-                                    Category
-                                </div>
-                                <div className="col-5 blob-properties-text">
-                                  Blue
-                                </div>
+                                    Bob
+                                </div>                                
                                 <div className="col-3"></div>
                                 <div className="col-4 blob-properties-text">
                                     Hex Color
@@ -162,16 +168,48 @@ export const BlobManagement = ({ id } : { id : number}) =>
                 } 
 
                 .blob-trade-text {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-
                     font-weight: 500;
                     font-size: 1.6rem;
                 }
 
+                .blob-purchase-title {
+                    font-size: 1.4rem;
+                }
+
                 .blob-purchase-text {
                     font-weight: 700;
+                }
+
+                .btn-trade {
+                    width: 100%;
+
+                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                    font-weight: 500;
+                }
+
+                .divider {
+                    background-color: #bbc9ec;
+                    height: 1px;
+                    opacity: 1.0;
+                }
+
+                .auction-title-text {
+                    font-size: 1.0rem;
+                }
+
+                .auction-text {
+                    font-size: 0.7rem;
+                }
+
+                .auction-timer {
+                    display: flex;
+                    justify-content: space-around;
+
+                    background-color: #cde1f8;
+
+                    border-width: 1px;
+                    border-style: solid;
+                    border-color: #bbc9ec; 
                 }
             `}</style>
         </div>

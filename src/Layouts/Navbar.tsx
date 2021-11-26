@@ -1,19 +1,28 @@
 import Link from 'next/link'
-import Image from 'next/image';
 
 export const Navbar = () => 
 {
     return (
         <div className="blob-container">
             <div className="navbar navbar-dark navbar-expand-md px-3">
-                <div className="container-fluid d-flex p-2">
+                <div className="container-fluid px-2">
                     <div className="navbar-header">
-                        <Link href="/">                    
-                            <a className="navbar-brand">
-                                <img width={56} height={56} src="/images/Logo.png" />
-                                <img width={260} height={56} src="/images/LogoText.png" />
-                            </a>
-                        </Link>
+                        <div className="d-none d-sm-flex">
+                            <Link href="/">                    
+                                <a className="navbar-brand">
+                                    <img width={56} height={56} src="/images/Logo.png" />
+                                    <img width={260} height={56} src="/images/LogoText.png" />
+                                </a>
+                            </Link>
+                        </div>
+                        <div className="d-flex d-sm-none">
+                            <Link href="/">                    
+                                <a className="navbar-brand">
+                                    <img width={42} height={42} src="/images/Logo.png" />
+                                    <img width={195} height={42} src="/images/LogoText.png" />
+                                </a>
+                            </Link>
+                        </div>
                     </div>
                     
                     <div className="collapse navbar-collapse justify-content-end" id="navbarHelp">
@@ -37,7 +46,7 @@ export const Navbar = () =>
                     </div>
                     
                     {/* TODO THIS REQUIRES JAVASCRIPT TO FUNCTION PERFECTLY */}
-                    <div>
+                    <div className="pb-3">
                         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="navbarHelp" aria-controls="navbarHelp" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>
                         </button>

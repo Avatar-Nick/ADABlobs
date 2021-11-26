@@ -16,7 +16,7 @@ export const BlobTitle = ({ id } : {id : number}) =>
                 .title-container {
                     background-image: linear-gradient(180deg, #143f6d, #1e5692); /*linear-gradient(180deg, #143f6d, #1e5692); linear-gradient(180deg, #2CBBE7, #2ea2be);*/
                     min-height: 20rem; 
-                    height: 31vw;                   
+                    height: 32vw;                   
 
                     color: white;
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
