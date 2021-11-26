@@ -24,7 +24,6 @@ export const BlobContainer = () =>
 
                 .blob-content {
                     max-width: 100rem;
-                    //width: 80%;
                     padding-right: 8%;
                     padding-left: 8%;
                 }
