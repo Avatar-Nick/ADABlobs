@@ -4,7 +4,7 @@ import { idToLongString } from '../../utils/idToLongString';
 export const BlobBigImage = ({ blob } : { blob: Blob }) => 
 {
     //<div className="blob-name mb-2">{blob.name} {idToLongString(blob.id)}</div>
-    // TODO Allow Changing Color Pallete on the big blob section.
+    /// TODO Allow Changing Color Pallete on the big blob section.
     if (!blob) return <></>;
 
     return (
