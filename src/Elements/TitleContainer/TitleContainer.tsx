@@ -1,5 +1,10 @@
+import { useQuery } from "react-query";
+import { connect, isConnected } from "../../wallet/connect";
+
 export const TitleContainer = () => 
 {
+    const { isLoading, error, data} = useQuery("isConnected", isConnected);
+    let connected = data;
     return (
         <div className="title-container d-flex align-items-center">            
             <div className="container">
@@ -21,7 +26,10 @@ export const TitleContainer = () =>
                 </div>
                 <div className="row d-flex d-md-none">
                     <div className="col-12 pt-1 pb-4 d-flex justify-content-center">
-                        <button type="button" className="btn btn-danger btn-lg btn-block nav-button-text">Connect Wallet</button>  
+                        {!connected ?
+                            <button type="button" className="btn btn-danger btn-lg nav-button-text" onClick={connect}>Connect Wallet</button> :
+                            <div className="bg-success btn-lg nav-button-text">Connected</div> 
+                        }  
                     </div> 
                 </div>
 

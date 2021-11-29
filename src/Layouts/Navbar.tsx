@@ -1,7 +1,31 @@
+import { useState, useEffect } from 'react';
 import Link from 'next/link'
+
+import { useQuery } from "react-query";
+
+import { connect, isConnected } from '../wallet/connect';
 
 export const Navbar = () => 
 {
+    //const [connected, setConnected] = useState(false);
+    
+    /*
+    useEffect(() =>
+    {
+        const checkWallet = async () =>{
+            const walletConnected = await isConnected();
+            if (walletConnected)
+            {
+                setConnected(true);
+            }
+        }
+        
+        checkWallet();
+    }, [isConnected]);
+    */
+    const { isLoading, error, data} = useQuery("isConnected", isConnected);
+    let connected = data;
+    
     return (
         <div className="blob-container">
             <div className="navbar navbar-dark navbar-expand-md px-3">
@@ -41,7 +65,10 @@ export const Navbar = () =>
                             </Link>
                         </div>  
                         <div className="d-none d-md-block ps-3">
-                            <button type="button" className="btn btn-danger btn-lg nav-button-text">Connect Wallet</button>  
+                            {!connected ?
+                                <button type="button" className="btn btn-danger btn-lg nav-button-text" onClick={connect}>Connect Wallet</button> :
+                                <div className="bg-success btn-lg nav-button-text">Connected</div> 
+                            }  
                         </div>  
                     </div>
                     
