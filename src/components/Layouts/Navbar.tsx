@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 import { useQuery } from "react-query";
 
-import { connect, isConnected } from '../cardano/wallet/connect';
+import { connect, isConnected } from '../../cardano/wallet/connect';
 
 export const Navbar = () => 
 {    

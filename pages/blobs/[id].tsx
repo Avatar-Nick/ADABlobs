@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
-import { BlobTitle } from '../../src/Elements/BlobElements/BlobTitle'
-import { BlobManagement } from '../../src/Elements/BlobElements/BlobManagement'
+import { BlobTitle } from '../../src/components/Elements/BlobElements/BlobTitle'
+import { BlobManagement } from '../../src/components/Elements/BlobElements/BlobManagement'
 
 const BlobDetails = () => 
 {

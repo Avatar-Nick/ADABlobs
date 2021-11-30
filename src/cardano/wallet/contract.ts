@@ -1,0 +1,1 @@
+// Plutus Contract off chain code as typescript
