@@ -1,4 +1,4 @@
-import { transact } from "../../wallet/transact"
+import { transact } from "../../../cardano/wallet/transact"
 
 export const AuctionSection = ({ id } : { id : number}) => 
 {

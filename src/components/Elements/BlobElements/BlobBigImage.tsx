@@ -1,5 +1,4 @@
-import Image from 'next/image'
-import { idToLongString } from '../../utils/idToLongString';
+import { idToLongString } from '../../../utils/idToLongString';
 
 export const BlobBigImage = ({ blob } : { blob: Blob }) => 
 {

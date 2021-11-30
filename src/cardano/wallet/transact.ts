@@ -1,4 +1,5 @@
-import cbor from 'cbor';
+
+
 import { isConnected } from "./connect";
 
 export const transact = async () => 
@@ -11,8 +12,18 @@ export const transact = async () =>
         if (!isConnected()) return;
 
         const balance = await cardano.getBalance();
-        const decoded = await cbor.decodeFirst(balance);
-        console.log(decoded);
+        const decodedBalance = await //cbor.decodeFirst(balance);
+        console.log(decodedBalance);
+
+        const utxos = await cardano.getUtxos();
+        console.log(utxos);
+        console.log(utxos[0]);
+
+        const addresses = await cardano.getUsedAddresses();
+        console.log(addresses);
+        console.log(addresses[0]);
+
+
         return balance;
     }
     catch (error) {

@@ -1,6 +1,6 @@
 import { BlobImage } from "./BlobImage";
 
-import { blobs } from "../../consts/blobs";
+import { blobs } from "../../../consts/blobs";
 
 export const BlobContainer = () => 
 {

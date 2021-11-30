@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { idToLongString } from '../../utils/idToLongString';
+import { idToLongString } from '../../../utils/idToLongString';
 
 export const BlobImage = ({ blob } : { blob: Blob }) => 
 {

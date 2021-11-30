@@ -1,28 +1,11 @@
-import { useState, useEffect } from 'react';
 import Link from 'next/link'
 
 import { useQuery } from "react-query";
 
-import { connect, isConnected } from '../wallet/connect';
+import { connect, isConnected } from '../cardano/wallet/connect';
 
 export const Navbar = () => 
-{
-    //const [connected, setConnected] = useState(false);
-    
-    /*
-    useEffect(() =>
-    {
-        const checkWallet = async () =>{
-            const walletConnected = await isConnected();
-            if (walletConnected)
-            {
-                setConnected(true);
-            }
-        }
-        
-        checkWallet();
-    }, [isConnected]);
-    */
+{    
     const { isLoading, error, data} = useQuery("isConnected", isConnected);
     let connected = data;
     

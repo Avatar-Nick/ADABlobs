@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { connect, isConnected } from "../../wallet/connect";
+import { connect, isConnected } from "../../../cardano/wallet/connect";
 
 export const TitleContainer = () => 
 {
