@@ -1,3 +1,5 @@
+import { transact } from "../../wallet/transact"
+
 export const AuctionSection = ({ id } : { id : number}) => 
 {
     return (
@@ -28,7 +30,7 @@ export const AuctionSection = ({ id } : { id : number}) =>
                             <input type="number" className="form-control input-bid" placeholder="Bid Amount" aria-describedby="blobBidPrice" />
                         </div>
                     </form>
-                    <button type="button" className="btn btn-success btn-trade mb-4">Place Bid</button>
+                    <button type="button" className="btn btn-success btn-trade mb-4" onClick={transact}> Place Bid</button>
                 </div>       
                 <div className="col-2"></div>                                          
             </div>
