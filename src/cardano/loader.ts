@@ -1,5 +1,3 @@
-import { Console } from "console";
-
 class Loader {
     async load() {
       if (this._wasm) return;
