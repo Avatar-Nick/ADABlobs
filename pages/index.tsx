@@ -1,7 +1,7 @@
 import Head from 'next/head'
 
-import { TitleContainer } from "../src/Elements/TitleContainer/TitleContainer"
-import { BlobContainer } from "../src/Elements/BlobElements/BlobContainer"
+import { TitleContainer } from "../src/components/Elements/TitleContainer/TitleContainer"
+import { BlobContainer } from "../src/components/Elements/BlobElements/BlobContainer"
 
 const ADABlobs = () =>
 {

@@ -23,7 +23,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/cardano/loader.js"  ],
+, "src/cardano/loader.js", "next.config.js"  ],
   "exclude": [
     "node_modules"
   ]

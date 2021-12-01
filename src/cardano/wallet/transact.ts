@@ -11,15 +11,21 @@ export const transact = async () =>
         if (!cardano) return;
         if (!isConnected()) return;
 
-        const balance = await cardano.getBalance();
+        //const balance = await cardano.getBalance();
         //const decodedBalance = fromHex(balance); //cbor.decodeFirst(balance);
-        
+        await Loader.load();
+
+        console.log('test');
+        const walletAddress = Loader.Cardano
+        console.log(walletAddress);
+        /*
         const walletAddress = Loader.Cardano.BaseAddress.from_address(
             Loader.Cardano.Address.from_bytes(
               fromHex((await window.cardano.getUsedAddresses())[0])
             )
         );
         console.log(walletAddress);
+        */
 
           
         
@@ -33,7 +39,7 @@ export const transact = async () =>
         //console.log(addresses[0]);
 
 
-        return balance;
+        //return balance;
     }
     catch (error) {
         console.error(error);
