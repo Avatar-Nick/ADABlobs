@@ -1,7 +1,7 @@
-import Loader from './loader';
+import Loader from '../loader';
 
-import { fromHex } from './serialization';
-import { contract } from "./plutus/plutus";
+import { fromHex } from '../serialization';
+import { contract } from "./plutus";
 
 export const CONTRACT = () => 
 {

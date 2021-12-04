@@ -18,7 +18,7 @@ const handler = async (req : NextApiRequest, res : NextApiResponse) =>
     //const endpoint = '/accounts/stake1u8a8kcx9s6vzara6g7zxxfz8mfkhf0g0c2yy8t2k7h9n4eg8pvpyp/addresses/assets'
 
     // Account Data
-    // I need to find out how much ADA you have
+    // I need to find out how much ADA you have (done)
     // I need to find out if you have an ADA Blob
     
     // Blob Data

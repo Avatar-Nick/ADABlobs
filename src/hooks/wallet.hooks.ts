@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { isConnected } from "../cardano/wallet/connect";
+import { isConnected } from "../cardano/wallet/wallet";
 
 const BASE_WALLET_KEY = "wallet"
 

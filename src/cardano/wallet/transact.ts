@@ -1,11 +1,11 @@
 import Loader from '../loader';
-import { getAddress, getBalance, isConnected } from "./connect";
+import { isConnected, getAddress, getBalance, getUtxos, getBaseAddress, getNetworkId } from "./wallet";
 import { fromHex, toHex, toBytesNum, fromAscii  } from "../serialization";
 
 import { blockfrostAPI } from '../../api/api';
 import { blockfrostRequest } from "../../api/requests";
 
-import { CONTRACT, GIVE } from "../contract";
+import { CONTRACT, GIVE } from "../plutus/contract";
 
 export const transact = async () => 
 {    
@@ -21,9 +21,16 @@ export const transact = async () =>
 
     const balance = await getBalance();
     const address = await getAddress();
+    const baseAddress = await getBaseAddress();
+    const utxos = await getUtxos();
+    const networkId = await getNetworkId();
 
     console.log('balance', balance);
     console.log('address', address);
+    console.log('baseAddress', baseAddress.to_address());
+    console.log('utxos', utxos);
+    console.log('networkId', networkId);
+    
 
 
     /*

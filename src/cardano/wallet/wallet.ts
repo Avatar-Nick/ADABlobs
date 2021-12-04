@@ -43,10 +43,10 @@ export const isConnected = async () =>
 
 export const getBalance = async () => 
 {
-    if (typeof window === "undefined") return
+    if (typeof window === "undefined") return null;
 
     const cardano = window.cardano;
-    if (!cardano) return;
+    if (!cardano) return null;
 
     const hexBalance = await cardano.getBalance();
     const balance = Loader.Cardano.Value.from_bytes(fromHex(hexBalance));
@@ -55,17 +55,54 @@ export const getBalance = async () =>
     return lovelaces;
 }
 
-
+// Human readable address output
 export const getAddress = async () => 
 {
-    if (typeof window === "undefined") return
+    if (typeof window === "undefined") return null;
 
     const cardano = window.cardano;
-    if (!cardano) return;
+    if (!cardano) return null;
+
+    const hexAddresses = await window.cardano.getUsedAddresses();
+    const addressObject = Loader.Cardano.Address.from_bytes(fromHex(hexAddresses[0]));
+    const address = addressObject.to_bech32();
+    return address;
+}
+
+// Transaction readable address
+export const getBaseAddress = async () => 
+{
+    if (typeof window === "undefined") return null;
+
+    const cardano = window.cardano;
+    if (!cardano) return null;
 
     // cardano.changeAddress can also be used here
     const hexAddresses = await cardano.getUsedAddresses();
     const addressObject = Loader.Cardano.Address.from_bytes(fromHex(hexAddresses[0]));
-    const address = addressObject.to_bech32();
-    return address;
+    const baseAddress = Loader.Cardano.BaseAddress.from_address(addressObject);
+    return baseAddress;
+}
+
+export const getUtxos = async () => 
+{
+    if (typeof window === "undefined") return;
+
+    const cardano = window.cardano;
+    if (!cardano) return;
+
+    const hexUtxos = await cardano.getUtxos();
+    const utxos = hexUtxos.map((utxo: any) => Loader.Cardano.TransactionUnspentOutput.from_bytes(fromHex(utxo)));
+    return utxos;
+}
+
+export const getNetworkId = async () => 
+{
+    if (typeof window === "undefined") return null;
+
+    const cardano = window.cardano;
+    if (!cardano) return null;
+
+    const networkId = await cardano.getNetworkId();
+    return networkId;
 }

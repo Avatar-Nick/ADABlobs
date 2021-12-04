@@ -1,4 +1,4 @@
-import { connect } from "../../../cardano/wallet/connect";
+import { connect } from "../../../cardano/wallet/wallet";
 import { useIsConnected } from "../../../hooks/wallet.hooks";
 
 export const TitleContainer = () => 
