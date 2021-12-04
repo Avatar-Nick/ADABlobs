@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools  } from 'react-query/devtools';
 
 import { Layout } from '../src/components/Layouts/Layout';
+import Loader from '../src/cardano/loader';
 
 import '../public/styles/bootstrap/bootstrap.min.css'
 
@@ -11,6 +12,7 @@ const queryClient = new QueryClient()
 
 const App = ({ Component, pageProps }: AppProps) =>
 {
+    load();
     return (
         <QueryClientProvider client={queryClient}>
             <Layout>
@@ -22,3 +24,9 @@ const App = ({ Component, pageProps }: AppProps) =>
 }
 
 export default App;
+
+const load = async () => {
+    if (!Loader.Cardano) {
+        await Loader.load();
+    }    
+}

@@ -1,5 +1,5 @@
 import Loader from '../loader';
-import { isConnected } from "./connect";
+import { getAddress, getBalance, isConnected } from "./connect";
 import { fromHex, toHex, toBytesNum, fromAscii  } from "../serialization";
 
 import { blockfrostAPI } from '../../api/api';
@@ -8,7 +8,25 @@ import { blockfrostRequest } from "../../api/requests";
 import { CONTRACT, GIVE } from "../contract";
 
 export const transact = async () => 
-{
+{    
+    const cardano = window.cardano;
+    console.log('cardano', cardano);
+
+    //const balance = await getBalance();
+    //console.log(balance);
+    
+    
+    //const address = Loader.Cardano.Address.from_bytes(fromHex(changeAddress));
+    //const baseAddress = Loader.Cardano.BaseAddress.from_address(address);
+
+    const balance = await getBalance();
+    const address = await getAddress();
+
+    console.log('balance', balance);
+    console.log('address', address);
+
+
+    /*
     try {
         if (typeof window === "undefined") return;
 
@@ -28,4 +46,5 @@ export const transact = async () =>
         console.error(error);
         return;
     }    
+    */
 }

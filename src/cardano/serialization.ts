@@ -10,3 +10,4 @@ export const toBytesNum = (num: any) =>
     .map((d: any) => "3" + d)
     .join("");
 export const fromAscii = (hex: any) => Buffer.from(hex).toString("hex");
+
