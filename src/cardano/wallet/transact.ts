@@ -1,8 +1,11 @@
-import { isConnected } from "./connect";
-import { fromHex, toHex, toBytesNum, fromAscii  } from "../utils/serialization";
 import Loader from '../loader';
+import { isConnected } from "./connect";
+import { fromHex, toHex, toBytesNum, fromAscii  } from "../serialization";
 
-import { CONTRACT, GIVE } from "./contract";
+import { blockfrostAPI } from '../../api/api';
+import { blockfrostRequest } from "../../api/requests";
+
+import { CONTRACT, GIVE } from "../contract";
 
 export const transact = async () => 
 {
@@ -13,56 +16,13 @@ export const transact = async () =>
         if (!cardano) return;
         if (!isConnected()) return;
 
-        //const balance = await cardano.getBalance();
-        //const decodedBalance = fromHex(balance); //cbor.decodeFirst(balance);
         await Loader.load();
 
-        //console.log('test');
-        const cardanoLoader = Loader.Cardano
-        //console.log(cardanoLoader);
+        console.log(process.env);
+        const addressEndpoint = blockfrostAPI.endpoints.specificAddress('addr1q825x5678w6elkkrn8paxv4m4h92lv4x37yd6p0klku5s62z2ht8hx6s62gpxnjhwpjhxh9srzv7mzdtlf3kttzvmf3qnd0v7f')
+        const test = await blockfrostRequest(addressEndpoint);
+        console.log('response', test);
 
-        //const baseAddress = Loader.Cardano.BaseAddress;
-        //console.log(baseAddress);
-
-        //const address = Loader.Cardano.Address;
-        //console.log(address);
-
-        const usedAddresses = await cardano.getUsedAddresses()
-        const usedAddress = usedAddresses[0];
-        //console.log(usedAddresses);
-        //console.log(usedAddress);
-
-        const regularAddress = fromHex(usedAddress);
-        //console.log(regularAddress);
-        
-        const walletAddress = Loader.Cardano.BaseAddress.from_address(
-            Loader.Cardano.Address.from_bytes(
-              fromHex((await cardano.getUsedAddresses())[0])
-            )
-        );
-        /*
-        console.log('wallet');
-        console.log(walletAddress);
-
-        //console.log(CONTRACT());
-        console.log(Loader.Cardano.PlutusData);
-        console.log(Loader.Cardano.ConstrPlutusData);
-        console.log(Loader.Cardano.Int);
-        console.log(Loader.Cardano.PlutusList);
-        */
-
-        GIVE();
-
-        //const utxos = await cardano.getUtxos();
-        //console.log(utxos);
-        //console.log(utxos[0]);
-
-        //const addresses = await cardano.getUsedAddresses();
-        //console.log(addresses);
-        //console.log(addresses[0]);
-
-
-        //return balance;
     }
     catch (error) {
         console.error(error);

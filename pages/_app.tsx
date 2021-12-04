@@ -9,7 +9,7 @@ import '../public/styles/bootstrap/bootstrap.min.css'
 
 const queryClient = new QueryClient()
 
-export default function App({ Component, pageProps }: AppProps) 
+const App = ({ Component, pageProps }: AppProps) =>
 {
     return (
         <QueryClientProvider client={queryClient}>
@@ -20,3 +20,5 @@ export default function App({ Component, pageProps }: AppProps)
         </QueryClientProvider>
     )
 }
+
+export default App;

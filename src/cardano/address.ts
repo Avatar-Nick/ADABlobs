@@ -1,4 +1,4 @@
-import Loader from "../../cardano/loader";
+import Loader from "./loader";
 
 export const addressToBech32 = async () => 
 {
