@@ -1,12 +1,11 @@
 import Link from 'next/link'
 
-import { useQuery } from "react-query";
-
-import { connect, isConnected } from '../../cardano/wallet/connect';
+import { connect} from '../../cardano/wallet/connect';
+import { useIsConnected } from '../../hooks/wallet.hooks';
 
 export const Navbar = () => 
 {    
-    const { isLoading, error, data} = useQuery("isConnected", isConnected);
+    const { isLoading, error, data} = useIsConnected();
     let connected = data;
     
     return (

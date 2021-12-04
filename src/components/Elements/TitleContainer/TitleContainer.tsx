@@ -1,9 +1,9 @@
-import { useQuery } from "react-query";
-import { connect, isConnected } from "../../../cardano/wallet/connect";
+import { connect } from "../../../cardano/wallet/connect";
+import { useIsConnected } from "../../../hooks/wallet.hooks";
 
 export const TitleContainer = () => 
 {
-    const { isLoading, error, data} = useQuery("isConnected", isConnected);
+    const { isLoading, error, data} = useIsConnected();
     let connected = data;
     return (
         <div className="title-container d-flex align-items-center">            

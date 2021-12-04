@@ -12,7 +12,7 @@ export const blockfrostAPI = new API(
     {
         baseURL: process.env.BLOCKFROST_API_URL,
         endpoints: {
-            specificAddress: (address: string) => `/addresses/${address}`,
+            address: (address: string) => `/addresses/${address}`,
         }
     }
 )

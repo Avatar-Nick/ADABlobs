@@ -10,13 +10,15 @@ export const connect = async () =>
             return;
         }
     
-        if (!isConnected()) return;    
+        const walletConnected = await isConnected();
+        if (!walletConnected) return false;
+            
         const isEnabled = await cardano.enable();
         return isEnabled;
     }
     catch (error) {
         console.error(error);
-        return;
+        return false;
     }    
 }
 
