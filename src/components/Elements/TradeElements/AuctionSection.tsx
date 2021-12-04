@@ -73,7 +73,7 @@ export const AuctionSection = ({ id } : { id : number}) =>
                 
                 @media screen and (min-width: 576px) {
                     .auction-title-text {
-                        font-size: 1.6vw;
+                        font-size: 1.5vw;
                     }
 
                     .auction-timer {
@@ -91,7 +91,7 @@ export const AuctionSection = ({ id } : { id : number}) =>
                     }
 
                     .auction-title-text {
-                        font-size: 1.0vw;
+                        font-size: 0.9vw;
                     }
 
                     .auction-timer {
