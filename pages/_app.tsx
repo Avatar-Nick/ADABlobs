@@ -16,7 +16,7 @@ const App = ({ Component, pageProps }: AppProps) =>
     useEffect(() => {
         const loadCardanoSerializationLib = async () => await load();
         loadCardanoSerializationLib();
-    }, [load]);
+    });
     return (
         <QueryClientProvider client={queryClient}>
             <Layout>
