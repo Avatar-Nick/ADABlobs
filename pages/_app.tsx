@@ -1,3 +1,5 @@
+
+import { useEffect } from 'react';
 import { AppProps } from 'next/app';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools  } from 'react-query/devtools';
@@ -6,8 +8,6 @@ import { Layout } from '../src/components/Layouts/Layout';
 import Loader from '../src/cardano/loader';
 
 import '../public/styles/bootstrap/bootstrap.min.css'
-import { useEffect } from 'react';
-
 
 const queryClient = new QueryClient()
 
