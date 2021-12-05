@@ -3,9 +3,9 @@ import Head from 'next/head'
 import { TitleContainer } from "../src/components/Elements/TitleContainer/TitleContainer"
 import { BlobContainer } from "../src/components/Elements/BlobElements/BlobContainer"
 
-const ADABlobs = ({ blobData } : any) =>
+const ADABlobs = ( props: any) =>
 {
-    console.log(blobData);
+    console.log(props);
     return (
         <div>            
             <Head>
@@ -13,14 +13,13 @@ const ADABlobs = ({ blobData } : any) =>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <TitleContainer />
-            <BlobContainer blobData={blobData} />    
+            <BlobContainer blobData={props.blobData} />    
         </div>
     )
 }
 
 export const getServerSideProps = async({ query } : { query: any }) =>
 {
-    console.log("hello world");
     const page = query.page || 1;
     let blobData = null;
 
@@ -36,7 +35,7 @@ export const getServerSideProps = async({ query } : { query: any }) =>
         blobData = { error: { message: "Error Fetching Blobs" }};
     }
 
-    return { props: blobData }
+    return { props: { blobData } }
 }
 
 export default ADABlobs;
