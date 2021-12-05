@@ -26,10 +26,12 @@ const handler = async (req : NextApiRequest, res : NextApiResponse) =>
     // I need to calculate which blobs to reveal (probably by date)
     // I need to find which blobs are in a script (show bid button and ADA)
 
+    /*
     const data = await blockfrostRequest(endpoint);
     console.log(data);
     console.log(data.length);
-    res.status(200).json(data);
+    */
+    res.status(200).json({});
 }
 
 export default handler;

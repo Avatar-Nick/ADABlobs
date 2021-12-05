@@ -1,4 +1,6 @@
 class Loader {
+    _wasm: any;
+
     async load() {
       if (this._wasm) return;
       
