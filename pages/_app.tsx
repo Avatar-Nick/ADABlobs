@@ -6,13 +6,17 @@ import { Layout } from '../src/components/Layouts/Layout';
 import Loader from '../src/cardano/loader';
 
 import '../public/styles/bootstrap/bootstrap.min.css'
+import { useEffect } from 'react';
 
 
 const queryClient = new QueryClient()
 
 const App = ({ Component, pageProps }: AppProps) =>
 {
-    load();
+    useEffect(() => {
+        const loadCardanoSerializationLib = async () => await load();
+        loadCardanoSerializationLib();
+    }, [load]);
     return (
         <QueryClientProvider client={queryClient}>
             <Layout>
