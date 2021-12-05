@@ -5,7 +5,7 @@ import { convertIPFSToHTTP } from '../../../utils/ipfsToHttp';
 export const BlobImage = ({ blob } : { blob: BlobChainAsset }) => 
 {
     if (!blob) return <></>;
-
+    
     return (
         <Link href={`/blobs/${blob.onchain_metadata.id.toString()}`}>
             <div className="blob-content d-flex justify-content-center rounded pb-3 mb-3" >

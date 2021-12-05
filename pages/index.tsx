@@ -3,9 +3,8 @@ import Head from 'next/head'
 import { TitleContainer } from "../src/components/Elements/TitleContainer/TitleContainer"
 import { BlobContainer } from "../src/components/Elements/BlobElements/BlobContainer"
 
-const ADABlobs = ( props: any) =>
+const ADABlobs = () =>
 {
-    console.log(props);
     return (
         <div>            
             <Head>
@@ -13,11 +12,12 @@ const ADABlobs = ( props: any) =>
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <TitleContainer />
-            <BlobContainer blobData={props.blobData} />    
+            <BlobContainer />    
         </div>
     )
 }
 
+/*
 export const getServerSideProps = async({ query } : { query: any }) =>
 {
     const page = query.page || 1;
@@ -37,5 +37,6 @@ export const getServerSideProps = async({ query } : { query: any }) =>
 
     return { props: { blobData } }
 }
+*/
 
 export default ADABlobs;
