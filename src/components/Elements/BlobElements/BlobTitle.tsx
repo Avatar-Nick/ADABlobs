@@ -1,4 +1,3 @@
-import { blobs } from "../../../consts/blobs"
 import { BlobBigImage } from "./BlobBigImage";
 
 export const BlobTitle = ({ blob } : { blob : BlobChainAsset }) => 

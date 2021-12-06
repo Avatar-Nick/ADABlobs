@@ -1,4 +1,5 @@
-import Link from 'next/link'
+import Link from 'next/link';
+import Image from 'next/image';
 import { idToLongString } from '../../../utils/idToLongString';
 import { convertIPFSToHTTP } from '../../../utils/ipfsToHttp';
 
@@ -11,7 +12,7 @@ export const BlobImage = ({ blob } : { blob: BlobChainAsset }) =>
             <div className="blob-content d-flex justify-content-center rounded pb-3 mb-3" >
                 <div className="blob-content-inner">
                     <div className="d-flex flex-column justify-content-center align-items-center">
-                        <img src={convertIPFSToHTTP(blob.onchain_metadata.image)} width={"100%"} height={"100%"} />
+                        <Image src={convertIPFSToHTTP(blob.onchain_metadata.image)} quality={100} width={"400%"} height={"400%"} alt={blob.onchain_metadata.name}  />
                         <div className="blob-name mb-2">{blob.onchain_metadata.name} {idToLongString(blob.onchain_metadata.id)}</div>
                         <button type="button" className="btn btn-primary btn-block">Buy</button>
                     </div>  

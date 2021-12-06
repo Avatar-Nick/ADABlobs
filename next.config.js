@@ -7,7 +7,10 @@
         config.experiments.asyncWebAssembly = true;
         config.module.exprContextCritical = false;
         return config;
-      }, 
+      },
+    images: {
+        domains: ['ipfs.io'],
+    }, 
   }
   
   module.exports = nextConfig

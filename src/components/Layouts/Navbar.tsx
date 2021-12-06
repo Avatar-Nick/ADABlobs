@@ -35,14 +35,14 @@ export const Navbar = () =>
                         <div className="pe-4">
                             <Link href="/">
                                 <div>
-                                    <a className="nav-link" href="/">Guide</a>
+                                    <div className="nav-link">Guide</div>
                                 </div>
                             </Link>
                         </div>
                         <div className="pe-4">
                             <Link href="/">
                                 <div>
-                                    <a className="nav-link" href="/">FAQ</a>
+                                    <div className="nav-link">FAQ</div>
                                 </div>
                             </Link>
                         </div>  
@@ -88,6 +88,7 @@ export const Navbar = () =>
 
                 .nav-link {
                     color: white;
+                    cursor: pointer;
                 }
                 
                 .nav-button-text {

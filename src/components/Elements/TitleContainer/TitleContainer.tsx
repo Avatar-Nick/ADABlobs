@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import { connect } from "../../../cardano/wallet/wallet";
 import { useIsConnected } from "../../../hooks/wallet.hooks";
 
@@ -10,7 +11,7 @@ export const TitleContainer = () =>
             <div className="container">
                 <div className="row d-flex d-md-none">
                     <div className="col-12">
-                        <img src="/images/blobs/001 - Bob.png" height={"100%"} width={"100%"} />  
+                        <img src="/images/blobs/001 - Bob.png" height={"100%"} width={"100%"} alt={"Bob"} />  
                     </div>
                 </div>
                 <div className="row d-flex d-md-none">
@@ -44,15 +45,15 @@ export const TitleContainer = () =>
                     </div>
                     <div className="col-2">
                         <div className="d-none d-lg-block">
-                            <img className="first-image-width" src="/images/blobs/001 - Bob.png" height={"125%"} width={"125%"} />                        
+                            <img className="first-image-width" src="/images/blobs/001 - Bob.png" height={"125%"} width={"125%"} alt={"Bob"}/>                        
                         </div>
                         <div className="d-block d-lg-none">
-                            <img className="first-image-width-small" src="/images/blobs/001 - Bob.png" height={"125%"} width={"125%"} />                        
+                            <img className="first-image-width-small" src="/images/blobs/001 - Bob.png" height={"125%"} width={"125%"} alt={"Bob"} />                        
                         </div>                    
                     </div>
                     <div className="col-2 d-none d-lg-block">
                         <div>
-                            <img className="second-image-width" src="/images/YolgReverse.png" height={"125%"} width={"125%"} />                        
+                            <img className="second-image-width" src="/images/YolgReverse.png" height={"125%"} width={"125%"} alt={"Yolg"} />                        
                         </div>
                     </div>
                 </div>
