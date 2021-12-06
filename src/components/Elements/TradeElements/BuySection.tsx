@@ -1,0 +1,1 @@
+export const BuySection = ({ blob } : { blob : BlobChainAsset}) => <></>
