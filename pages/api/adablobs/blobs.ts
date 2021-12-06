@@ -4,9 +4,8 @@ import data from '../../../public/data/blobs.json';
 const handler = async (req: NextApiRequest, res: NextApiResponse) => 
 {
     const page: number = parseInt(req.query.page as string) || 1;
-    const count: number = parseInt(req.query.count as string) || 30;
-    const start = 0;
-    //const start = (page - 1) * count;
+    const count: number = parseInt(req.query.count as string) || 30;    
+    const start = (page - 1) * count;
     const end = page * count;
     try 
     {

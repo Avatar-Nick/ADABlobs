@@ -1,21 +1,11 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { BlobImage } from "./BlobImage";
 import { useFetchAssets } from "../../../hooks/assets.hooks";
 
 export const BlobContainer = () => 
 {
-    const [page, setPage] = useState(0)
-    
-    const {
-        data,
-        error,
-        fetchNextPage,
-        hasNextPage,
-        isFetching,
-        isFetchingNextPage,
-        status,
-      } = useFetchAssets();
+    const { data,  fetchNextPage, hasNextPage, isFetchingNextPage } = useFetchAssets();
 
     // Listen to scroll positions for loading more data on scroll
     useEffect(() => {
@@ -31,17 +21,12 @@ export const BlobContainer = () =>
             ".blob-list > .blob:last-child"
         ) as HTMLElement
 
-        console.log(lastBlobLoaded);
         if (lastBlobLoaded) {
             const lastBlobLoadedOffset = lastBlobLoaded.offsetTop + lastBlobLoaded.clientHeight;
             const pageOffset = window.pageYOffset + window.innerHeight;
 
-            console.log('lastBlobLoadedOffset', lastBlobLoadedOffset);
-            console.log('pageOffset', pageOffset);
-
-            // Detects when the user scrolls down till the last blob
-            if (pageOffset >= lastBlobLoadedOffset && (!hasNextPage || isFetchingNextPage)) {
-                console.log('fetch');
+            // Detects when the user scrolls down till 80% of the height to last blob
+            if (pageOffset >= (lastBlobLoadedOffset * 0.8) && hasNextPage && !isFetchingNextPage) {
                 fetchNextPage();
             }
         }

@@ -10,7 +10,7 @@ class API {
 
 //export const adablobsAPI = new API()
 // TODO add this to the adablobs api
-export const fetchAssets = async ({ pageParam = 0 } : any) => {
+export const fetchAssets = async ({ pageParam = 1 } : any) => {
     const response = await fetch(`http://localhost:3000/api/adablobs/blobs?page=${pageParam}`)
     return response.json();
 }

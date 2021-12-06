@@ -3,7 +3,7 @@ import { isConnected, getAddress, getBalance, getUtxos, getBaseAddress, getNetwo
 import { fromHex, toHex, toBytesNum, fromAscii  } from "../serialization";
 
 import { blockfrostAPI } from '../../api/api';
-import { blockfrostRequest } from "../../api/requests";
+//import { blockfrostRequest } from "../../api/requests";
 
 import { CONTRACT, GIVE } from "../plutus/contract";
 

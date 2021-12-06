@@ -17,26 +17,4 @@ const ADABlobs = () =>
     )
 }
 
-/*
-export const getServerSideProps = async({ query } : { query: any }) =>
-{
-    const page = query.page || 1;
-    let blobData = null;
-
-    try {
-        const response = await fetch(`http://localhost:3000/api/adablobs/blobs?page=${page}`)
-        if (response.status != 200) {
-            throw new Error("Failed to fetch blobs");
-        }
-        blobData = await response.json();
-    }
-    catch (error) {
-        console.log(error);
-        blobData = { error: { message: "Error Fetching Blobs" }};
-    }
-
-    return { props: { blobData } }
-}
-*/
-
 export default ADABlobs;
