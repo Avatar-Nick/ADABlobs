@@ -14,6 +14,7 @@ export const adablobsAPI = new API (
         endpoints: {
             blobs: (page: number) => `/blobs?page=${page}`,
             blob: (asset: string) => `/blobs/${asset}`,
+            address: (address: string) => `/addresses/${address}`,
         }
     }
 )

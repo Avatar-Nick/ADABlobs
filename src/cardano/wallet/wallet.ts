@@ -4,8 +4,6 @@ import { fromHex } from '../serialization';
 export const connect = async () => 
 {
     try {
-        if (typeof window === "undefined") return;
-
         const cardano = window.cardano;
         if (!cardano) 
         {
@@ -28,8 +26,6 @@ export const connect = async () =>
 export const isConnected = async () => 
 {
     try {
-        if (typeof window === "undefined") return false;
-
         const cardano = window.cardano;
         if (!cardano) return false;
     
@@ -43,8 +39,6 @@ export const isConnected = async () =>
 
 export const getBalance = async () => 
 {
-    if (typeof window === "undefined") return null;
-
     const cardano = window.cardano;
     if (!cardano) return null;
 
@@ -55,11 +49,13 @@ export const getBalance = async () =>
     return lovelaces;
 }
 
+export const getAssets = async () => {
+
+}
+
 // Human readable address output
 export const getAddress = async () => 
 {
-    if (typeof window === "undefined") return null;
-
     const cardano = window.cardano;
     if (!cardano) return null;
 
@@ -72,8 +68,6 @@ export const getAddress = async () =>
 // Transaction readable address
 export const getBaseAddress = async () => 
 {
-    if (typeof window === "undefined") return null;
-
     const cardano = window.cardano;
     if (!cardano) return null;
 
@@ -86,8 +80,6 @@ export const getBaseAddress = async () =>
 
 export const getUtxos = async () => 
 {
-    if (typeof window === "undefined") return;
-
     const cardano = window.cardano;
     if (!cardano) return;
 
@@ -98,8 +90,6 @@ export const getUtxos = async () =>
 
 export const getNetworkId = async () => 
 {
-    if (typeof window === "undefined") return null;
-
     const cardano = window.cardano;
     if (!cardano) return null;
 

@@ -15,11 +15,17 @@ export const fetchAsset = async ({ queryKey } : any) => {
     return response.json();
 }
 
+export const fetchOwnedAssets = async (address: string) => {
+    if (!address) return {};
+
+    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.address(address)}`)
+    return response.json();
+}
+
 // Blockfrost Functions
 export const blockfrostAPIRequest = async (endpoint: string, headers? : any, body? : any) =>
 {
     const url = `${blockfrostAPI.baseURL}${endpoint}`;
-    console.log(url);
     const response = await fetch(url, {
         headers: {
         project_id: blockfrostAPIKey,
@@ -29,5 +35,7 @@ export const blockfrostAPIRequest = async (endpoint: string, headers? : any, bod
         method: body ? "POST" : "GET",
         body,
     })
-    return response.json();
+    
+    const data = await response.json();
+    return data;
 }

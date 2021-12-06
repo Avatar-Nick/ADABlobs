@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery } from "react-query";
-import { fetchAssets, fetchAsset } from "../api/requests";
+import { fetchAssets, fetchAsset, fetchOwnedAssets } from "../api/requests";
 
 const BASE_ASSET_KEY = "assets"
 
@@ -13,3 +13,5 @@ export const useFetchAssets = () => useInfiniteQuery(BASE_ASSET_KEY, fetchAssets
 });
 
 export const useFetchAsset = (asset: string) => useQuery([BASE_ASSET_KEY, asset], fetchAsset);
+
+export const useOwnedAssets = (address: string) => useQuery(`${BASE_ASSET_KEY}.owned`, () => fetchOwnedAssets(address))

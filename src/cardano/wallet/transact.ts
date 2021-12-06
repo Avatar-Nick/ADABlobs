@@ -6,6 +6,7 @@ import { blockfrostAPI } from '../../api/api';
 //import { blockfrostRequest } from "../../api/requests";
 
 import { CONTRACT, GIVE } from "../plutus/contract";
+import { blockfrostAPIRequest } from '../../api/requests';
 
 export const transact = async () => 
 {    
@@ -32,26 +33,9 @@ export const transact = async () =>
     console.log('networkId', networkId);
     
 
-
     /*
-    try {
-        if (typeof window === "undefined") return;
-
-        const cardano = window.cardano;
-        if (!cardano) return;
-        if (!isConnected()) return;
-
-        await Loader.load();
-
-        console.log(process.env);
-        const addressEndpoint = blockfrostAPI.endpoints.specificAddress('addr1q825x5678w6elkkrn8paxv4m4h92lv4x37yd6p0klku5s62z2ht8hx6s62gpxnjhwpjhxh9srzv7mzdtlf3kttzvmf3qnd0v7f')
-        const test = await blockfrostRequest(addressEndpoint);
-        console.log('response', test);
-
-    }
-    catch (error) {
-        console.error(error);
-        return;
-    }    
+    const addressEndpoint = blockfrostAPI.endpoints.address('addr1q825x5678w6elkkrn8paxv4m4h92lv4x37yd6p0klku5s62z2ht8hx6s62gpxnjhwpjhxh9srzv7mzdtlf3kttzvmf3qnd0v7f')
+    const test = await blockfrostAPIRequest(addressEndpoint);
+    console.log('response', test);
     */
 }

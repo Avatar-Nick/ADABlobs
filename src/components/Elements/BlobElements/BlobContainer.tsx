@@ -1,12 +1,18 @@
 
 import React, { useEffect } from "react";
 import { BlobImage } from "./BlobImage";
-import { useFetchAssets } from "../../../hooks/assets.hooks";
+import { useFetchAssets, useOwnedAssets } from "../../../hooks/assets.hooks";
+import { useGetAddress } from "../../../hooks/wallet.hooks";
+import { BlobStatus } from "../../../types/enum";
 
 export const BlobContainer = () => 
 {
-    const { data,  fetchNextPage, hasNextPage, isFetchingNextPage } = useFetchAssets();
-
+    const  assetsQuery = useFetchAssets();
+    const addressQuery = useGetAddress();
+    const ownedAssetsQuery = useOwnedAssets(addressQuery.data);
+    console.log(ownedAssetsQuery);
+    
+    const { data,  fetchNextPage, hasNextPage, isFetchingNextPage } = assetsQuery;
     // Listen to scroll positions for loading more data on scroll
     useEffect(() => {
         window.addEventListener("scroll", handleScroll)
@@ -38,11 +44,14 @@ export const BlobContainer = () =>
                 <div className="blob-list row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
                     {data?.pages.map((group, i) => (
                         <React.Fragment key={i}>
-                            {group.blobs.map((blob : any) => (
-                                <div className="blob col" key={blob.asset}>
-                                    <BlobImage blob={blob}/>             
-                                </div> 
-                            ))}                      
+                            {group.blobs.map((blob : any) => {
+                                let blobStatus : BlobStatus = BlobStatus.Sold;
+                                return (
+                                    <div className="blob col" key={blob.asset}>
+                                        <BlobImage blob={blob} blobStatus={blobStatus}/>             
+                                    </div> 
+                                )
+                            })}                      
                         </React.Fragment>                        
                     ))}
                 </div>
