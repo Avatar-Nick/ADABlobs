@@ -1,6 +1,6 @@
 import { transact } from "../../../cardano/wallet/transact"
 
-export const AuctionSection = ({ id } : { id : number}) => 
+export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) => 
 {
     return (
         <div className="blob-auction container rounded">

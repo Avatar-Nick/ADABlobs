@@ -1,18 +1,19 @@
 import { useRouter } from 'next/router'
 import { BlobTitle } from '../../src/components/Elements/BlobElements/BlobTitle'
 import { BlobManagement } from '../../src/components/Elements/BlobElements/BlobManagement'
+import { useFetchAsset } from '../../src/hooks/assets.hooks'
 
 const BlobDetails = () => 
 {
     const router = useRouter()
-    const { id } = router.query
-  
-    const base = 10;
-    const parsedId = parseInt(`${id}`, base);
+    const { asset } = router.query    
+
+    const { data }  = useFetchAsset(asset as string);    
+    if (!asset || !data) return <></>
     return (
         <>
-            <BlobTitle id={parsedId}/>
-            <BlobManagement id={parsedId}/>
+            <BlobTitle blob={data}/>
+            <BlobManagement blob={data}/>
         </>
     )
 }

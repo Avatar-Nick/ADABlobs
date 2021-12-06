@@ -1,14 +1,14 @@
 import { blobs } from "../../../consts/blobs"
 import { BlobBigImage } from "./BlobBigImage";
 
-export const BlobTitle = ({ id } : {id : number}) => 
+export const BlobTitle = ({ blob } : { blob : BlobChainAsset }) => 
 {
     return (
         <div className="title-container d-flex align-items-center">            
             <div className="container">
                 <div className="row">
                     <div className="col-12 d-flex justify-content-center pb-4">
-                        <BlobBigImage blob={blobs[id-1]} />                        
+                        <BlobBigImage blob={blob} />                        
                     </div>
                 </div>
             </div>  

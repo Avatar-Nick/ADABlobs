@@ -1,6 +1,7 @@
 import { idToLongString } from '../../../utils/idToLongString';
+import { convertIPFSToHTTP } from '../../../utils/ipfsToHttp';
 
-export const BlobBigImage = ({ blob } : { blob: Blob }) => 
+export const BlobBigImage = ({ blob } : { blob: BlobChainAsset }) => 
 {
     //<div className="blob-name mb-2">{blob.name} {idToLongString(blob.id)}</div>
     /// TODO Allow Changing Color Pallete on the big blob section.
@@ -11,8 +12,8 @@ export const BlobBigImage = ({ blob } : { blob: Blob }) =>
             <div className="blob-content-inner">
                 <div className="d-flex flex-column justify-content-center align-items-center">
                     <div></div>
-                    <img src={blob.image} width={"100%"} height={"100%"} />
-                    <div className="blob-name mb-2">{blob.name} {idToLongString(blob.id)}</div>
+                    <img src={convertIPFSToHTTP(blob.onchain_metadata.image)} width={"100%"} height={"100%"} />
+                    <div className="blob-name mb-2">{blob.onchain_metadata.name} {idToLongString(blob.onchain_metadata.id)}</div>
                 </div>  
             </div>
             <style jsx>{`

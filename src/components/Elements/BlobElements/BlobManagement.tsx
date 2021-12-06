@@ -1,6 +1,6 @@
 import { AuctionSection } from "../TradeElements/AuctionSection";
 
-export const BlobManagement = ({ id } : { id : number}) => 
+export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) => 
 {
     return (
         <div className="blob-container">
@@ -14,7 +14,7 @@ export const BlobManagement = ({ id } : { id : number}) =>
                 </div>
                 <div className="row pb-4">
                     <div className="col-12">
-                        <AuctionSection id={id} />
+                        <AuctionSection blob={blob} />
                     </div>
                 </div>
             </div>

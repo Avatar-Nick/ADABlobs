@@ -7,7 +7,7 @@ export const BlobImage = ({ blob } : { blob: BlobChainAsset }) =>
     if (!blob) return <></>;
     
     return (
-        <Link href={`/blobs/${blob.onchain_metadata.id.toString()}`}>
+        <Link href={`/blobs/${blob.asset}`}>
             <div className="blob-content d-flex justify-content-center rounded pb-3 mb-3" >
                 <div className="blob-content-inner">
                     <div className="d-flex flex-column justify-content-center align-items-center">
