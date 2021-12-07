@@ -13,12 +13,12 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
                     <span className="auction-title-text">Start An Auction For {blob.onchain_metadata.name}!</span>               
                     <hr className="divider" />
                     <form className="blob-form">
-                        <label className="form-label">Starting Bid</label>
+                        <label className="form-label label-text ">Starting Bid</label>
                         <div className="input-group mb-3">
                             <span className="input-group-text input-bid">₳</span>
                             <input type="number" className="form-control input-bid" placeholder="Starting Bid" aria-describedby="blobBidPrice" />
                         </div>
-                        <label className="form-label">Start Date Time</label>
+                        <label className="form-label label-text ">Start Date Time</label>
                         <div className="input-group mb-3">
                             <input type="datetime-local" className="form-control input-bid" placeholder="Start Date Time" aria-describedby="startDatetime" />
                         </div>
@@ -68,6 +68,11 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
                     .auction-title-text {
                         font-size: 1.8vw;
                     }
+                }
+
+                .label-text {
+                    font-weight: 500;
+                    color: #0a2e53;               
                 }
 
                 .blob-properties h2 {

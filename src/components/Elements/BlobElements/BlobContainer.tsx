@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { BlobImage } from "./BlobImage";
 import { useFetchAssets, useOwnedAssets, useScriptAssets } from "../../../hooks/assets.hooks";
 import { useGetAddress } from "../../../hooks/wallet.hooks";
-import { BlobStatus } from "../../../types/enum";
+import { getBlobStatus } from "../../../utils/blobs/blobStatus";
 
 export const BlobContainer = () => 
 {
@@ -70,18 +70,4 @@ export const BlobContainer = () =>
             `}</style>
         </div>
     )
-}
-
-const getBlobStatus = (blob : BlobChainAsset, blobOwnerData: any, blobScriptData: any) => {
-    let blobStatus : BlobStatus = BlobStatus.Waiting;
-    if (blobOwnerData && blobScriptData) {
-        blobStatus = BlobStatus.Sold;
-        if (blob.asset in blobOwnerData) {
-            blobStatus = BlobStatus.Auction;
-        }
-        else if (blob.asset in blobScriptData) {
-            blobStatus = BlobStatus.Bid;
-        }
-    }
-    return blobStatus
 }

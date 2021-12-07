@@ -9,6 +9,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
         // Determine which blobs are in blob script
     
         const scriptBlobs : { [asset: string]: number } = { }
+
+        // TODO Adding assets as an initial test
         scriptBlobs['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f6232'] = 1;
         scriptBlobs['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f6233'] = 1;
         scriptBlobs['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f6234'] = 1;

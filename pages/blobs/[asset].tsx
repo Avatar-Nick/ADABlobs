@@ -8,7 +8,7 @@ const BlobDetails = () =>
     const router = useRouter()
     const { asset } = router.query    
 
-    const { data }  = useFetchAsset(asset as string);    
+    const { data }  = useFetchAsset(asset as string);
     if (!asset || !data) return <></>
     return (
         <>

@@ -1,8 +1,16 @@
 import { AuctionSection } from "../TradeElements/AuctionSection";
 import { BidSection } from "../TradeElements/BidSection";
+import { useOwnedAssets, useScriptAssets } from "../../../hooks/assets.hooks";
+import { useGetAddress } from "../../../hooks/wallet.hooks";
+import { getBlobStatus } from "../../../utils/blobs/blobStatus";
+import { BlobStatus } from "../../../types/enum";
 
 export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) => 
 {
+    const addressQuery = useGetAddress();
+    const ownedAssetsQuery = useOwnedAssets(addressQuery.data);
+    const scriptAssetsQuery = useScriptAssets(!!addressQuery.data)
+    const blobStatus: BlobStatus = getBlobStatus(blob, ownedAssetsQuery.data, scriptAssetsQuery.data) as BlobStatus;
     return (
         <div className="blob-container">
             <div className="container d-flex flex-column align-items-center">
@@ -15,8 +23,14 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
                 </div>
                 <div className="row pb-4">
                     <div className="col-12">
-                        <AuctionSection blob={blob} />
-                        {/*<BidSection blob={blob} />*/}
+                        <>
+                            {blobStatus === BlobStatus.Waiting && <></>}
+                            {blobStatus === BlobStatus.Sold && <></>}
+                            {blobStatus === BlobStatus.Bid && <BidSection blob={blob} />}
+                            {blobStatus === BlobStatus.Buy && <BidSection blob={blob} />}
+                            {blobStatus === BlobStatus.Sell && <AuctionSection blob={blob} />}
+                            {blobStatus === BlobStatus.Auction && <AuctionSection blob={blob} />}
+                        </>
                     </div>
                 </div>
             </div>
