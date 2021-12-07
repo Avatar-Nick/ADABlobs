@@ -14,6 +14,6 @@ export const useFetchAssets = () => useInfiniteQuery(BASE_ASSET_KEY, fetchAssets
 
 export const useFetchAsset = (asset: string) => useQuery([BASE_ASSET_KEY, asset], fetchAsset);
 
-export const useOwnedAssets = (address: string) => useQuery(`${BASE_ASSET_KEY}.owned`, () => fetchOwnedAssets(address), { enabled: !!address })
+export const useOwnedAssets = () => useQuery(`${BASE_ASSET_KEY}.owned`, fetchOwnedAssets)
 
-export const useScriptAssets = (enabled: boolean) => useQuery(`${BASE_ASSET_KEY}.script`, fetchScriptAssets, { enabled: enabled })
+export const useScriptAssets = () => useQuery(`${BASE_ASSET_KEY}.script`, fetchScriptAssets)

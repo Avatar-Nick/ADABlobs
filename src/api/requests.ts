@@ -1,4 +1,5 @@
 import { adablobsAPI, blockfrostAPI } from '../api/api';
+import { getAddress } from '../cardano/wallet/wallet';
 import { blockfrostAPIKey } from '../consts/consts';
 
 // ADABlobs Functions
@@ -15,7 +16,10 @@ export const fetchAsset = async ({ queryKey } : any) => {
     return response.json();
 }
 
-export const fetchOwnedAssets = async (address: string) => {
+export const fetchOwnedAssets = async () => {
+    const address = await getAddress();
+    if (!address) return { }
+
     const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.address(address)}`)
     return response.json();
 }

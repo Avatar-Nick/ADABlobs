@@ -1,13 +1,16 @@
 import { BlobStatus } from "../../types/enum";
 
-export const getBlobStatus = (blob : BlobChainAsset, blobOwnerData: any, blobScriptData: any) => {
+export const getBlobStatus = (isConnected: boolean, blob : BlobChainAsset, blobOwnerData: any, blobScriptData: any) => {
     let blobStatus : BlobStatus = BlobStatus.Waiting;
-    if (blobOwnerData && blobScriptData) {
+    
+    // If we have all the data we need for a connected wallet
+    // or all the data we need for a disconnected wallet
+    if ((blobOwnerData && blobScriptData) || (!isConnected && blobScriptData)) {
         blobStatus = BlobStatus.Sold;
-        if (blob.asset in blobOwnerData) {
+        if (blobOwnerData && blob.asset in blobOwnerData) {
             blobStatus = BlobStatus.Auction;
         }
-        else if (blob.asset in blobScriptData) {
+        else if (blobScriptData && blob.asset in blobScriptData) {
             blobStatus = BlobStatus.Bid;
         }
     }

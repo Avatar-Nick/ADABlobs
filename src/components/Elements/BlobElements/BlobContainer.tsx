@@ -2,15 +2,15 @@
 import React, { useEffect } from "react";
 import { BlobImage } from "./BlobImage";
 import { useFetchAssets, useOwnedAssets, useScriptAssets } from "../../../hooks/assets.hooks";
-import { useGetAddress } from "../../../hooks/wallet.hooks";
+import { useGetAddress, useIsConnected } from "../../../hooks/wallet.hooks";
 import { getBlobStatus } from "../../../utils/blobs/blobStatus";
 
 export const BlobContainer = () => 
 {
     const assetsQuery = useFetchAssets();
-    const addressQuery = useGetAddress();
-    const ownedAssetsQuery = useOwnedAssets(addressQuery.data);
-    const scriptAssetsQuery = useScriptAssets(!!addressQuery.data)
+    const connectedQuery = useIsConnected();
+    const ownedAssetsQuery = useOwnedAssets();
+    const scriptAssetsQuery = useScriptAssets();
     
     const { data,  fetchNextPage, hasNextPage, isFetchingNextPage } = assetsQuery;
     // Listen to scroll positions for loading more data on scroll
@@ -45,7 +45,7 @@ export const BlobContainer = () =>
                     {data?.pages.map((group, i) => (
                         <React.Fragment key={i}>
                             {group.blobs.map((blob : any) => {
-                                const blobStatus = getBlobStatus(blob, ownedAssetsQuery.data, scriptAssetsQuery.data);
+                                const blobStatus = getBlobStatus(connectedQuery.data, blob, ownedAssetsQuery.data, scriptAssetsQuery.data);
                                 return (
                                     <div className="blob col" key={blob.asset}>
                                         <BlobImage blob={blob} blobStatus={blobStatus}/>             

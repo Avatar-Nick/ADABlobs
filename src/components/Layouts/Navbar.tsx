@@ -5,7 +5,7 @@ import { useIsConnected } from '../../hooks/wallet.hooks';
 
 export const Navbar = () => 
 {    
-    const { isLoading, error, data} = useIsConnected();
+    const { isLoading, error, data } = useIsConnected();
     let connected = data;
     
     return (
@@ -59,21 +59,7 @@ export const Navbar = () =>
                         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="navbarHelp" aria-controls="navbarHelp" aria-expanded="false" aria-label="Toggle navigation">
                             <span className="navbar-toggler-icon"></span>
                         </button>
-                    </div>                   
-                    
-
-                    {/*
-                    
-                    
-                    */}
-                    
-                    
-                    {/*
-                    <button title="Navigation menu" className="navbar-toggler" >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    */}
-                    
+                    </div>
                 </div>
             </div>            
 

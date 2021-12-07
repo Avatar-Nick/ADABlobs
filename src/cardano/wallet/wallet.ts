@@ -10,10 +10,10 @@ export const connect = async () =>
             console.error("Error: window.cardano is null or undefined. You must have a Cardano Wallet Extension (such as Nami) to connect.")
             return;
         }
-    
+        
         const walletConnected = await isConnected();
-        if (!walletConnected) return false;
-
+        if (walletConnected) return false;
+        
         const isEnabled = await cardano.enable();
         return isEnabled;
     }
@@ -28,8 +28,9 @@ export const isConnected = async () =>
     try {
         const cardano = window.cardano;
         if (!cardano) return false;
-    
-        return await cardano.isEnabled();
+        
+        const isEnabled = await cardano.isEnabled();
+        return isEnabled
     }
     catch (error) {
         console.error(error);
@@ -44,7 +45,6 @@ export const getBalance = async () =>
 
     const hexBalance = await cardano.getBalance();
     const balance = Loader.Cardano.Value.from_bytes(fromHex(hexBalance));
-    console.log('balance', balance);
     const lovelaces = balance.coin().to_str();
     return lovelaces;
 }
