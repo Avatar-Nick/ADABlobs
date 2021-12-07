@@ -1,7 +1,8 @@
-export enum BlobStatus {    
-    Sold = 0,
-    Bid = 1,
-    Buy = 2,
-    Sell = 3,
-    Auction = 4,
+export enum BlobStatus {   
+    Waiting = 0, 
+    Sold = 1,
+    Bid = 2,
+    Buy = 3,
+    Sell = 4,
+    Auction = 5,
 }

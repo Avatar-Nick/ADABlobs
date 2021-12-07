@@ -9,7 +9,7 @@ interface BlobImageProps  {
     blobStatus: BlobStatus,
 
 }
-export const BlobImage = ({ blob, blobStatus = BlobStatus.Sold } : BlobImageProps) => 
+export const BlobImage = ({ blob, blobStatus = BlobStatus.Waiting } : BlobImageProps) => 
 {
     if (!blob) return <></>;
     
@@ -22,6 +22,7 @@ export const BlobImage = ({ blob, blobStatus = BlobStatus.Sold } : BlobImageProp
                         <Image src={convertIPFSToHTTP(blob.onchain_metadata.image)} quality={100} width={"400%"} height={"400%"} alt={blob.onchain_metadata.name}  />
                         <div className="blob-name mb-2">{blob.onchain_metadata.name} {idToLongString(blob.onchain_metadata.id)}</div>
                         <>
+                            { blobStatus === BlobStatus.Waiting && <></>}
                             { blobStatus === BlobStatus.Sold && <button type="button" className="btn btn-shade btn-block btn-text">Sold</button>}
                             { blobStatus === BlobStatus.Bid && <button type="button" className="btn btn-success btn-block btn-text">Bid</button>}
                             { blobStatus === BlobStatus.Buy && <button type="button" className="btn btn-success btn-block btn-text">Buy</button>}

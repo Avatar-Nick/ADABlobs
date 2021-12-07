@@ -14,4 +14,4 @@ export const useFetchAssets = () => useInfiniteQuery(BASE_ASSET_KEY, fetchAssets
 
 export const useFetchAsset = (asset: string) => useQuery([BASE_ASSET_KEY, asset], fetchAsset);
 
-export const useOwnedAssets = (address: string) => useQuery(`${BASE_ASSET_KEY}.owned`, () => fetchOwnedAssets(address))
+export const useOwnedAssets = (address: string) => useQuery(`${BASE_ASSET_KEY}.owned`, () => fetchOwnedAssets(address), { enabled: !!address })

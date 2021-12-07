@@ -7,10 +7,9 @@ import { BlobStatus } from "../../../types/enum";
 
 export const BlobContainer = () => 
 {
-    const  assetsQuery = useFetchAssets();
+    const assetsQuery = useFetchAssets();
     const addressQuery = useGetAddress();
     const ownedAssetsQuery = useOwnedAssets(addressQuery.data);
-    console.log(ownedAssetsQuery);
     
     const { data,  fetchNextPage, hasNextPage, isFetchingNextPage } = assetsQuery;
     // Listen to scroll positions for loading more data on scroll
@@ -45,7 +44,14 @@ export const BlobContainer = () =>
                     {data?.pages.map((group, i) => (
                         <React.Fragment key={i}>
                             {group.blobs.map((blob : any) => {
-                                let blobStatus : BlobStatus = BlobStatus.Sold;
+                                let blobStatus : BlobStatus = BlobStatus.Waiting;
+                                const blobOwnerData = ownedAssetsQuery.data;
+                                if (blobOwnerData) {
+                                    blobStatus = BlobStatus.Sold;
+                                    if (blob.asset in blobOwnerData) {
+                                        blobStatus = BlobStatus.Auction;
+                                    }
+                                }
                                 return (
                                     <div className="blob col" key={blob.asset}>
                                         <BlobImage blob={blob} blobStatus={blobStatus}/>             

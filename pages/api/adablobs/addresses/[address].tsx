@@ -7,15 +7,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
 {    
     // Determine which assets an address owns
     const { address } : any = req.query;
-    
+
     try {
         const addressData = await blockfrostAPIRequest(blockfrostAPI.endpoints.address(address))
         if (!addressData) {
             res.status(400).json({ error: "Address Data Not Found" });
+            return;
         }
         const addressAssetList = addressData.amount;
         if (!addressAssetList) {
             res.status(400).json({ error: "Address Asset List Is Null" });
+            return;
         }
         
         const blobData : { [asset: string]: BlobChainAsset } = data;  
