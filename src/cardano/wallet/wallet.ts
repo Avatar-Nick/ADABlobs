@@ -43,14 +43,13 @@ export const getBalance = async () =>
     const cardano = window.cardano;
     if (!cardano) return null;
 
+    const walletConnected = await isConnected();
+    if (!walletConnected) return null;
+
     const hexBalance = await cardano.getBalance();
     const balance = Loader.Cardano.Value.from_bytes(fromHex(hexBalance));
     const lovelaces = balance.coin().to_str();
     return lovelaces;
-}
-
-export const getAssets = async () => {
-
 }
 
 // Human readable address output
@@ -58,6 +57,9 @@ export const getAddress = async () =>
 {
     const cardano = window.cardano;
     if (!cardano) return null;
+
+    const walletConnected = await isConnected();
+    if (!walletConnected) return null;
 
     const hexAddresses = await window.cardano.getUsedAddresses();
     const addressObject = Loader.Cardano.Address.from_bytes(fromHex(hexAddresses[0]));

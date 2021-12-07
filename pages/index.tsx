@@ -6,13 +6,13 @@ import { BlobContainer } from "../src/components/Elements/BlobElements/BlobConta
 const ADABlobs = () =>
 {
     return (
-        <div>            
+        <div>         
             <Head>
                 <title>ADA Blobs</title>
                 <link rel="icon" href="/favicon.ico" />
-            </Head>
-            <TitleContainer />
-            <BlobContainer />    
+            </Head>            
+            <TitleContainer />            
+            <BlobContainer />
         </div>
     )
 }

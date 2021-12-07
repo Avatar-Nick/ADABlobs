@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import { BlobImage } from "./BlobImage";
 import { useFetchAssets, useOwnedAssets, useScriptAssets } from "../../../hooks/assets.hooks";
-import { useGetAddress, useIsConnected } from "../../../hooks/wallet.hooks";
+import { useIsConnected } from "../../../hooks/wallet.hooks";
 import { getBlobStatus } from "../../../utils/blobs/blobStatus";
 
 export const BlobContainer = () => 
@@ -10,9 +10,9 @@ export const BlobContainer = () =>
     const assetsQuery = useFetchAssets();
     const connectedQuery = useIsConnected();
     const ownedAssetsQuery = useOwnedAssets();
-    const scriptAssetsQuery = useScriptAssets();
-    
+    const scriptAssetsQuery = useScriptAssets();    
     const { data,  fetchNextPage, hasNextPage, isFetchingNextPage } = assetsQuery;
+    
     // Listen to scroll positions for loading more data on scroll
     useEffect(() => {
         window.addEventListener("scroll", handleScroll)
