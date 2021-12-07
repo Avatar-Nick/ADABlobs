@@ -3,7 +3,7 @@ import { blockfrostAPIKey } from '../consts/consts';
 
 // ADABlobs Functions
 export const fetchAssets = async ({ pageParam = 1 } : any) => {
-    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.blobs(pageParam)}`)
+    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.blobs.base(pageParam)}`)
     return response.json();
 }
 
@@ -11,12 +11,17 @@ export const fetchAsset = async ({ queryKey } : any) => {
     const [_key, asset] = queryKey
     if (!asset) return {};
 
-    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.blob(asset)}`)
+    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.blobs.blob(asset)}`)
     return response.json();
 }
 
 export const fetchOwnedAssets = async (address: string) => {
     const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.address(address)}`)
+    return response.json();
+}
+
+export const fetchScriptAssets = async () => {
+    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.blobs.script()}`)
     return response.json();
 }
 
@@ -32,7 +37,7 @@ export const blockfrostAPIRequest = async (endpoint: string, headers? : any, bod
         },
         method: body ? "POST" : "GET",
         body,
-    })
+    });
     
     const data = await response.json();
     return data;

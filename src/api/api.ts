@@ -12,8 +12,11 @@ export const adablobsAPI = new API (
     {
         baseURL: process.env.NEXT_PUBLIC_ADABLOBS_API_URL,
         endpoints: {
-            blobs: (page: number) => `/blobs?page=${page}`,
-            blob: (asset: string) => `/blobs/${asset}`,
+            blobs: {
+                base: (page: number) => `/blobs?page=${page}`,
+                blob: (asset: string) => `/blobs/${asset}`,
+                script: () => `/blobs/scripts`
+            },
             address: (address: string) => `/addresses/${address}`,
         }
     }
