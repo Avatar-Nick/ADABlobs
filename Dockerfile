@@ -15,7 +15,6 @@ RUN npm run build && npm i --production --ignore-scripts --prefer-offline
 
 # Production image, copy all the files and run next
 FROM node:alpine AS runner
-RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 ENV NODE_ENV production
@@ -32,9 +31,9 @@ COPY --from=builder /app/.env ./
 
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 80
 
-ENV PORT 3000
+ENV PORT 80
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
