@@ -15,7 +15,6 @@ RUN npm run build && npm i --production --ignore-scripts --prefer-offline
 
 # Production image, copy all the files and run next
 FROM node:alpine AS runner
-RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 ENV NODE_ENV production
