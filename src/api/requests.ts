@@ -18,8 +18,10 @@ export const fetchAsset = async ({ queryKey } : any) => {
 
 export const fetchOwnedAssets = async () => {
     const address = await getAddress();
+    console.log('address', address);
     if (!address) return { }
 
+    console.log('here');
     const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.address(address)}`)
     return response.json();
 }

@@ -9,7 +9,7 @@
         return config;
       },
     images: {
-        domains: ['ipfs.io'],
+        domains: ['ipfs.io', 'ipfs.blockfrost.dev'],
     }, 
   }
   
