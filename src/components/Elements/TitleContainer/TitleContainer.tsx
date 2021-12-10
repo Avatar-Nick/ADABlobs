@@ -1,17 +1,18 @@
 /* eslint-disable @next/next/no-img-element */
+import Image from 'next/image';
 import { connect } from "../../../cardano/wallet/wallet";
 import { useIsConnected } from "../../../hooks/wallet.hooks";
 
 export const TitleContainer = () => 
 {
-    const { isLoading, error, data} = useIsConnected();
+    const { isLoading, error, data } = useIsConnected();
     let connected = data;
     return (
         <div className="title-container d-flex align-items-center">            
             <div className="container">
                 <div className="row d-flex d-md-none">
                     <div className="col-12">
-                        <img src="/images/blobs/001 - Bob.png" height={"100%"} width={"100%"} alt={"Bob"} />  
+                        <Image src="/images/blobs/001 - Bob.png" width={"100%"} height={"100%"} layout='responsive' quality={100} alt={"Bob"} />  
                     </div>
                 </div>
                 <div className="row d-flex d-md-none">
@@ -60,7 +61,7 @@ export const TitleContainer = () =>
             </div>  
             <style jsx>{`
                 .title-container {
-                    background-image: linear-gradient(180deg, #143f6d, #1e5692); /*linear-gradient(180deg, #143f6d, #1e5692); linear-gradient(180deg, #2CBBE7, #2ea2be);*/
+                    background-image: linear-gradient(180deg, #143f6d, #1e5692);
                     min-height: 20rem;                    
 
                     color: white;

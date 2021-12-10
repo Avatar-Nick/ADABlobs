@@ -1,5 +1,5 @@
 import Link from 'next/link'
-
+import Image from 'next/image';
 import { connect} from '../../cardano/wallet/wallet';
 import { useIsConnected } from '../../hooks/wallet.hooks';
 
@@ -15,17 +15,17 @@ export const Navbar = () =>
                     <div className="navbar-header">
                         <div className="d-none d-sm-flex">
                             <Link href="/">                    
-                                <a className="navbar-brand">
-                                    <img width={56} height={56} src="/images/Logo.png" />
-                                    <img width={260} height={56} src="/images/LogoText.png" />
+                                <a className="navbar-brand d-flex">
+                                    <Image src="/images/Logo.png" width={56} height={56} quality={100} alt="ADABlobs Icon" />
+                                    <Image src="/images/LogoText.png" width={260} height={56} quality={100}  alt="ADABlobs Logo" />
                                 </a>
                             </Link>
                         </div>
                         <div className="d-flex d-sm-none">
                             <Link href="/">                    
-                                <a className="navbar-brand">
-                                    <img width={42} height={42} src="/images/Logo.png" />
-                                    <img width={195} height={42} src="/images/LogoText.png" />
+                                <a className="navbar-brand d-flex">
+                                    <Image src="/images/Logo.png" width={42} height={42} quality={100} alt="ADABlobs Icon" />
+                                    <Image src="/images/LogoText.png" width={195} height={42} quality={100}  alt="ADABlobs Logo" />
                                 </a>
                             </Link>
                         </div>
