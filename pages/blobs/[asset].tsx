@@ -15,8 +15,7 @@ const BlobDetails = () =>
         <>
             <Head>
                 <meta name="description"
-                      content={`This cute and adorable ADA Blob is part of a collection of 300 
-                               pet blob NFTs on the Cardano blockchain.`} />
+                      content={`This cute and adorable ADA Blob is part of a collection of 300 pet blob NFTs on the Cardano blockchain.`} />
             </Head>
             <BlobTitle blob={data}/>
             <BlobManagement blob={data}/>
