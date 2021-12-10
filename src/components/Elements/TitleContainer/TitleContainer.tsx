@@ -12,7 +12,7 @@ export const TitleContainer = () =>
             <div className="container">
                 <div className="row d-flex d-md-none">
                     <div className="col-12">
-                        <Image src="/images/blobs/001 - Bob.png" width={"100%"} height={"100%"} layout='responsive' quality={100} alt={"Bob"} />  
+                        <Image src="/images/blobs/001 - Bob.png" width={"100%"} height={"100%"} layout="responsive" quality={100} alt={"Bob"} />  
                     </div>
                 </div>
                 <div className="row d-flex d-md-none">
@@ -41,31 +41,34 @@ export const TitleContainer = () =>
                         <h1>Collection!</h1>
                         <p>
                             Launched on November 30th, 2021, ADA Blobs is a collection of 300 Blob NFTs and is one of the first NFT projects on the Cardano Blockchain. There will only ever be 300 ADA Blobs available,
-                            with 1 new adorable and memeable Blob being available each week until all 300 are revealed. 
+                            with 1 new adorable and memeable pet Blob being available each week until all 300 are revealed. 
                         </p>
                     </div>
-                    <div className="col-2">
-                        <div className="d-none d-lg-block">
-                            <img className="first-image-width" src="/images/blobs/001 - Bob.png" height={"125%"} width={"125%"} alt={"Bob"}/>                        
+                    <div className="col-4">
+                        <div className="d-none d-lg-flex h-100">
+                            <div className="title-blobs pb-2 pe-2">
+                                <Image className="first-image-width" src="/images/blobs/001 - Bob.png" height={"400%"} width={"400%"} quality={100} alt={"Bob"}/>                        
+                            </div>
+                            <div className="title-blobs align-self-end pt-2 ps-2">
+                                <Image className="second-image-width" src="/images/YolgReverse.png" height={"400%"} width={"400%"} quality={100} alt={"Yolg"} />
+                            </div>
                         </div>
                         <div className="d-block d-lg-none">
-                            <img className="first-image-width-small" src="/images/blobs/001 - Bob.png" height={"125%"} width={"125%"} alt={"Bob"} />                        
-                        </div>                    
-                    </div>
-                    <div className="col-2 d-none d-lg-block">
-                        <div>
-                            <img className="second-image-width" src="/images/YolgReverse.png" height={"125%"} width={"125%"} alt={"Yolg"} />                        
-                        </div>
+                            <Image className="first-image-width-small" src="/images/blobs/001 - Bob.png" width={"100%"} height={"100%"} layout='responsive' quality={100} alt={"Bob"} />                     
+                        </div>               
                     </div>
                 </div>
             </div>  
             <style jsx>{`
+                .title-blobs {
+                    transform: scale(1.3);
+                }
+
                 .title-container {
                     background-image: linear-gradient(180deg, #143f6d, #1e5692);
                     min-height: 20rem;                    
 
                     color: white;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
                 }
 
                 h1 {
@@ -95,9 +98,8 @@ export const TitleContainer = () =>
                     }                   
                 }                
 
-                @media screen and (min-width: 996px) {
+                @media screen and (min-width: 992px) {
                     h1 {
-                        font-size: 6.2vw;
                         font-weight: 700;
                     }
 
@@ -113,51 +115,13 @@ export const TitleContainer = () =>
                     }                    
                 }
 
-                .position-first-blob {
-                    position: absolute;
-                    top: -2rem;
-                }
-
-                .position-second-blob {
-                    position: absolute;
-                    top: 10rem;
-                }
-
-                .first-image-width {
-                    position: relative;
-                    width: 15vw;
-                    max-width: 15vw;
-                    top: -2vw;
-                    left: -5%;
-                    right: -5%;
-                    margin-left: 0vw;
-                    margin-right: 0vw;
-                }
-
-                .first-image-width-small {
-                    position: relative;
-                    width: 25vw;
-                    max-width: 25vw;
-                    top: 2vw;
-                    left: 0%;
-                    right: 0%;
-                    margin-left: 0vw;
-                    margin-right: 0vw
-                }
-
-                .second-image-width {
-                    position: relative;
-                    width: 15vw;
-                    max-width: 15vw;
-                    top: 8vw;
-                    left: -10%;
-                    right: -10%;
-                    margin-left: 0vw;
-                    margin-right: 0vw;
+                @media screen and (min-width: 1400px) {
+                    h1 {
+                        font-size: 5.4vw;
+                    }                   
                 }
 
                 .nav-button-text {
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
                     font-weight: 700;
                 }
             `}</style>  

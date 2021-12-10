@@ -7,6 +7,7 @@ import { ReactQueryDevtools  } from 'react-query/devtools';
 import { Layout } from '../src/components/Layouts/Layout';
 import Loader from '../src/cardano/loader';
 
+import '../public/styles/base.css';
 import '../public/styles/bootstrap/bootstrap.min.css'
 
 const queryClient = new QueryClient()
