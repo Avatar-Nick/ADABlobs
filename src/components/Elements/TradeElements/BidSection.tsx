@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import { transact } from "../../../cardano/wallet/transact"
 
 export const BidSection = ({ blob } : { blob : BlobChainAsset}) => 
@@ -6,7 +7,7 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
         <div className="blob-bid container rounded">
             <div className="row pt-3">
                 <div className="col-2">
-                    <img width={"40px"} height={"40px"} src="/images/CardanoLogo.png" />
+                    <Image src="/images/CardanoLogo.png" width={40} height={40} quality={100} alt="Cardano Logo" />
                 </div>
                 <div className="col-8 ">
                     <span className="bid-title-text">Auction ends November 26, 2021 at 4:59pm EST</span>    
@@ -45,7 +46,6 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                     border-color: #bbc9ec; 
                     
                     width: 80vw;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; 
                 }
                 
                 .bid-title-text {
@@ -111,7 +111,6 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                 .btn-trade {
                     width: 100%;
 
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
                     font-weight: 500;
                 }
 

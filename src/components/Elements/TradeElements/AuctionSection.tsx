@@ -7,7 +7,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         <div className="blob-auction container rounded">
             <div className="row pt-3">
                 <div className="col-2">
-                    <Image src="/images/CardanoLogo.png" width={"40px"} height={"40px"} quality={100} alt={blob.onchain_metadata.name} />
+                    <Image src="/images/CardanoLogo.png" width={40} height={40} quality={100} alt="Cardano Logo" />
                 </div>
                 <div className="col-8 ">
                     <span className="auction-title-text">Start An Auction For {blob.onchain_metadata.name}!</span>               
@@ -38,7 +38,6 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
                     border-color: #bbc9ec; 
                     
                     width: 80vw;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; 
                 }
                 
                 .auction-title-text {
@@ -86,8 +85,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 
                 .btn-trade {
                     width: 100%;
-
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                    
                     font-weight: 500;
                 }
 

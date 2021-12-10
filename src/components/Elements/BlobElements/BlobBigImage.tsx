@@ -4,7 +4,6 @@ import { convertIPFSToHTTP } from '../../../utils/ipfsToHttp';
 
 export const BlobBigImage = ({ blob } : { blob: BlobChainAsset }) => 
 {
-    //<div className="blob-name mb-2">{blob.name} {idToLongString(blob.id)}</div>
     /// TODO Allow Changing Color Pallete on the big blob section.
     if (!blob) return <></>;
 
@@ -19,12 +18,11 @@ export const BlobBigImage = ({ blob } : { blob: BlobChainAsset }) =>
             </div>
             <style jsx>{`
                 .title-container {
-                    background-image: linear-gradient(180deg, #143f6d, #1e5692); /*linear-gradient(180deg, #143f6d, #1e5692); linear-gradient(180deg, #2CBBE7, #2ea2be);*/
+                    background-image: linear-gradient(180deg, #143f6d, #1e5692);
                     min-height: 20rem; 
                     height: 32vw;                   
 
                     color: white;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
                 }   
                 
                 .blob-content {                        
@@ -43,8 +41,7 @@ export const BlobBigImage = ({ blob } : { blob: BlobChainAsset }) =>
                     color: white;
 
                     font-size: 4.2vw;
-                    font-weight: 700;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+                    font-weight: 700;                   
                 }
 
                 @media screen and (min-width: 768px) {

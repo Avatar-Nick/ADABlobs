@@ -13,10 +13,9 @@ export const BlobImage = ({ blob, blobStatus = BlobStatus.Waiting } : BlobImageP
 {
     if (!blob) return <></>;
     
-    // Does this wallet own this blob?
     return (
-        <Link href={`/blobs/${blob.asset}`}>
-            <div className="blob-content d-flex justify-content-center rounded pb-3 mb-3" >
+        <Link href={`/blobs/${blob.asset}`} passHref>
+            <div className="blob-content d-flex justify-content-center rounded pb-4 mb-4" >
                 <div className="blob-content-inner">
                     <div className="d-flex flex-column justify-content-center align-items-center">
                         <Image src={convertIPFSToHTTP(blob.onchain_metadata.image)} quality={100} width={"400%"} height={"400%"} alt={blob.onchain_metadata.name}  />
@@ -52,9 +51,7 @@ export const BlobImage = ({ blob, blobStatus = BlobStatus.Waiting } : BlobImageP
 
                     .blob-name {
                         font-size: 1.2rem;
-                        font-weight: 700;
-                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-                    }
+                        font-weight: 700;}
 
                     .btn-shade {
                         background-color: #3d4142;
@@ -63,13 +60,6 @@ export const BlobImage = ({ blob, blobStatus = BlobStatus.Waiting } : BlobImageP
 
                     .btn-text {
                         font-weight: 700;
-                        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-                    }
-
-                    .blob-owner {
-                        font-size: 1.2rem;
-                        font-weight: 900 !important;
-                        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
                     }
                 `}</style> 
             </div>

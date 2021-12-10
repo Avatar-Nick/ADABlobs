@@ -115,9 +115,9 @@ export const TitleContainer = () =>
                     }                    
                 }
 
-                @media screen and (min-width: 1400px) {
+                @media screen and (min-width: 1920px) {
                     h1 {
-                        font-size: 5.4vw;
+                        font-size:  5.4vw;
                     }                   
                 }
 

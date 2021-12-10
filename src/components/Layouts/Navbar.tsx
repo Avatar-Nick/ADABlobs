@@ -33,14 +33,14 @@ export const Navbar = () =>
                     
                     <div className="collapse navbar-collapse justify-content-end" id="navbarHelp">
                         <div className="pe-4">
-                            <Link href="/">
+                            <Link href="/" passHref>
                                 <div>
                                     <div className="nav-link">Guide</div>
                                 </div>
                             </Link>
                         </div>
                         <div className="pe-4">
-                            <Link href="/">
+                            <Link href="/" passHref>
                                 <div>
                                     <div className="nav-link">FAQ</div>
                                 </div>
@@ -67,19 +67,14 @@ export const Navbar = () =>
                 .blob-container {
                     background-color: #143f6d;
                     color: white;
+
                     font-size: 2rem;
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
                     font-weight: 700;
                 }
 
                 .nav-link {
                     color: white;
                     cursor: pointer;
-                }
-                
-                .nav-button-text {
-                    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-                    font-weight: 700;
                 }
             `}</style>
         </div>
