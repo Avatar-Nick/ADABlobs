@@ -14,9 +14,9 @@ const BlobDetails = () =>
     return (
         <>
             <Head>
-                <meta name={`${data.blob.onchain_metadata.name}`}
-                    content={`${data.blob.onchain_metadata.name} is a cute and adorable ADA Blob and is part of 
-                             a collection of 300 pet blob NFTs on the Cardano blockchain.`}></meta>
+                <meta name="description"
+                      content={`${data.blob.onchain_metadata.name} is a cute and adorable ADA Blob and is part of 
+                               a collection of 300 pet blob NFTs on the Cardano blockchain.`} />
             </Head>
             <BlobTitle blob={data}/>
             <BlobManagement blob={data}/>
