@@ -1,17 +1,30 @@
 import Image from 'next/image';
+import { START } from '../../../cardano/plutus/contract';
+import { toHex } from '../../../cardano/serialization';
 import { transact } from "../../../cardano/wallet/transact"
+import { getAddress, getBaseAddress } from '../../../cardano/wallet/wallet';
+import { getUTCDatetime } from '../../../utils/blobs/blobReveal';
 
 export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 {
 
     const submitTransaction = async (event : any) => {
         event.preventDefault();
-        console.log('test');
-        console.log(event);
-        console.log(event.target.amount.value);
-        console.log(event.target.datetime.value);
-        console.log(blob.asset);
-        console.log(blob.onchain_metadata.name);
+
+        const reservePrice = event.target.amount.value;
+        const startDateTime = new Date(event.target.startDatetime.value);
+        const endDateTime = new Date(event.target.endDatetime.value);
+
+        const walletAddress = await getBaseAddress();
+
+        const adSeller = toHex(walletAddress.payment_cred().to_keyhash().to_bytes())
+        const adCurrency = blob.policy_id; // policy_id
+        const adToken = blob.asset_name; // token_id
+        const adDeadline = startDateTime.getTime().toString(); // December 11th 4pm
+        const adStartTime = endDateTime.getTime().toString; // December 11th 12pm,
+        const adMinBid = reservePrice.toString();
+        
+        //const datum = START(adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid);
     }
 
     return (
@@ -24,14 +37,18 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
                     <span className="auction-title-text">Start An Auction For {blob.onchain_metadata.name}!</span>               
                     <hr className="divider" />
                     <form className="blob-form" onSubmit={submitTransaction}>
-                        <label className="form-label label-text ">Starting Bid</label>
+                        <label className="form-label label-text ">Reserve Price</label>
                         <div className="input-group mb-3">
                             <span className="input-group-text input-bid">₳</span>
-                            <input type="number" name="amount" className="form-control input-bid" placeholder="Starting Bid" aria-describedby="blobBidPrice" />
+                            <input type="number" name="amount" className="form-control input-bid" placeholder="Reserve Price" aria-describedby="blobBidPrice" />
                         </div>
                         <label className="form-label label-text ">Start Date Time</label>
                         <div className="input-group mb-3">
-                            <input type="datetime-local" name="datetime" className="form-control input-bid" placeholder="Start Date Time" aria-describedby="startDatetime" />
+                            <input type="datetime-local" name="startDatetime" className="form-control input-bid" placeholder="Start Date Time" aria-describedby="startDatetime" />
+                        </div>
+                        <label className="form-label label-text ">End Date Time</label>
+                        <div className="input-group mb-3">
+                            <input type="datetime-local" name="endDatetime" className="form-control input-bid" placeholder="End Date Time" aria-describedby="endDatetime" />
                         </div>
                         
                         <button type="submit" className="btn btn-danger btn-trade mb-4">Start Auction</button>

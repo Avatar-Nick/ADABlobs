@@ -39,6 +39,6 @@ const getDaysSinceStartDate = (localDatetime: Date) => {
     return daysSinceStart; 
 }
 
-const getUTCDatetime = (localDatetime: Date) => {
+export const getUTCDatetime = (localDatetime: Date) => {
     return new Date(localDatetime.getUTCFullYear(), localDatetime.getUTCMonth(), localDatetime.getUTCDate(), localDatetime.getUTCHours(), localDatetime.getUTCMinutes(), localDatetime.getUTCSeconds());
 }
