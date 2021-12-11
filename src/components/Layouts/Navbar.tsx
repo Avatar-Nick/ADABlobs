@@ -76,6 +76,10 @@ export const Navbar = () =>
                     color: white;
                     cursor: pointer;
                 }
+
+                .nav-button-text {
+                    font-weight: 700;
+                }
             `}</style>
         </div>
     )

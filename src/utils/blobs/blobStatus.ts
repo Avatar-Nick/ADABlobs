@@ -1,6 +1,6 @@
 import { BlobStatus } from "../../types/enum";
 
-export const getBlobStatus = (isConnected: boolean, blob : BlobChainAsset, blobOwnerData: any, blobScriptData: any) => {
+export const getBlobStatus = (blob : BlobChainAsset, blobOwnerData: any, blobScriptData: any) => {
     let blobStatus : BlobStatus = BlobStatus.Waiting;
     
     // If we have all the data we need for a connected wallet

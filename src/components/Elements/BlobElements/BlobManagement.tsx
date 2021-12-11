@@ -10,7 +10,7 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
     const connectedQuery = useIsConnected();
     const ownedAssetsQuery = useOwnedAssets();
     const scriptAssetsQuery = useScriptAssets()
-    const blobStatus: BlobStatus = getBlobStatus(connectedQuery.data, blob, ownedAssetsQuery.data, scriptAssetsQuery.data) as BlobStatus;
+    const blobStatus: BlobStatus = getBlobStatus(blob, ownedAssetsQuery.data, scriptAssetsQuery.data) as BlobStatus;
     return (
         <div className="blob-container">
             <div className="container d-flex flex-column align-items-center">

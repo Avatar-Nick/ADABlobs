@@ -4,9 +4,13 @@ import { BlobImage } from "./BlobImage";
 import { useFetchAssets, useOwnedAssets, useScriptAssets } from "../../../hooks/assets.hooks";
 import { useIsConnected } from "../../../hooks/wallet.hooks";
 import { getBlobStatus } from "../../../utils/blobs/blobStatus";
+import { getBlobRevealCount } from "../../../utils/blobs/blobReveal";
 
 export const BlobContainer = () => 
 {
+    // Have a Query For Blob Reveal
+    const count = getBlobRevealCount();
+
     const assetsQuery = useFetchAssets();
     const connectedQuery = useIsConnected();
     const ownedAssetsQuery = useOwnedAssets();
@@ -44,8 +48,10 @@ export const BlobContainer = () =>
                 <div className="blob-list row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
                     {data?.pages.map((group, i) => (
                         <React.Fragment key={i}>
-                            {group.blobs.map((blob : any) => {
-                                const blobStatus = getBlobStatus(connectedQuery.data, blob, ownedAssetsQuery.data, scriptAssetsQuery.data);
+                            {group.blobs.map((blob : BlobChainAsset) => {
+                                const blobStatus = getBlobStatus(blob, ownedAssetsQuery.data, scriptAssetsQuery.data);
+                                
+                                if (blob.onchain_metadata.id > 2) return <div key={blob.asset}></div>
                                 return (
                                     <div className="blob col" key={blob.asset}>
                                         <BlobImage blob={blob} blobStatus={blobStatus}/>             
