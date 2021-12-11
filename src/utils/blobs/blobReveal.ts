@@ -1,5 +1,12 @@
+// Hardcode the blob address here
+
 export const isBlobRevealed = (blob: BlobChainAsset, blobCount: number | undefined) => {
-    return blobCount && blob.onchain_metadata.id <= blobCount
+    return blobCount && blob.onchain_metadata.id <= blobCount;
+}
+
+export const isHomeAddress = (address: string | undefined) => {
+    const homeAddress = "";    
+    return homeAddress === address;
 }
 
 // Blobs are revealed 1 per week until all 300 are revealed
