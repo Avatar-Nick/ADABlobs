@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useQuery } from "react-query";
 import { fetchAssets, fetchAsset, fetchOwnedAssets, fetchScriptAssets } from "../api/requests";
+import { getBlobRevealCount } from "../utils/blobs/blobReveal";
 
 const BASE_ASSET_KEY = "assets"
 
@@ -17,3 +18,5 @@ export const useFetchAsset = (asset: string) => useQuery([BASE_ASSET_KEY, asset]
 export const useOwnedAssets = () => useQuery(`${BASE_ASSET_KEY}.owned`, fetchOwnedAssets)
 
 export const useScriptAssets = () => useQuery(`${BASE_ASSET_KEY}.script`, fetchScriptAssets)
+
+export const useRevealedAssets = () => useQuery(`${BASE_ASSET_KEY}.revealed`, getBlobRevealCount)

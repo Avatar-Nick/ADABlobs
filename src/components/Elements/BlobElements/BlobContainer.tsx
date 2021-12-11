@@ -1,20 +1,18 @@
 
 import React, { useEffect } from "react";
 import { BlobImage } from "./BlobImage";
-import { useFetchAssets, useOwnedAssets, useScriptAssets } from "../../../hooks/assets.hooks";
+import { useFetchAssets, useOwnedAssets, useRevealedAssets, useScriptAssets } from "../../../hooks/assets.hooks";
 import { useIsConnected } from "../../../hooks/wallet.hooks";
 import { getBlobStatus } from "../../../utils/blobs/blobStatus";
-import { getBlobRevealCount } from "../../../utils/blobs/blobReveal";
+import { isBlobRevealed } from "../../../utils/blobs/blobReveal";
 
 export const BlobContainer = () => 
 {
-    // Have a Query For Blob Reveal
-    const count = getBlobRevealCount();
-
     const assetsQuery = useFetchAssets();
-    const connectedQuery = useIsConnected();
     const ownedAssetsQuery = useOwnedAssets();
-    const scriptAssetsQuery = useScriptAssets();    
+    const scriptAssetsQuery = useScriptAssets(); 
+    const revealedAssetsQuery = useRevealedAssets();
+
     const { data,  fetchNextPage, hasNextPage, isFetchingNextPage } = assetsQuery;
     
     // Listen to scroll positions for loading more data on scroll
@@ -50,13 +48,15 @@ export const BlobContainer = () =>
                         <React.Fragment key={i}>
                             {group.blobs.map((blob : BlobChainAsset) => {
                                 const blobStatus = getBlobStatus(blob, ownedAssetsQuery.data, scriptAssetsQuery.data);
+                                if (isBlobRevealed(blob, revealedAssetsQuery.data))  {
+                                    return (
+                                        <div className="blob col" key={blob.asset}>
+                                            <BlobImage blob={blob} blobStatus={blobStatus}/>             
+                                        </div> 
+                                    )
+                                }
                                 
-                                if (blob.onchain_metadata.id > 2) return <div key={blob.asset}></div>
-                                return (
-                                    <div className="blob col" key={blob.asset}>
-                                        <BlobImage blob={blob} blobStatus={blobStatus}/>             
-                                    </div> 
-                                )
+                                return <div key={blob.asset}></div>
                             })}                      
                         </React.Fragment>                        
                     ))}
