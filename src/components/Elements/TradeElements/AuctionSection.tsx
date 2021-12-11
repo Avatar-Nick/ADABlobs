@@ -1,8 +1,19 @@
 import Image from 'next/image';
 import { transact } from "../../../cardano/wallet/transact"
 
-export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) => 
+export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 {
+
+    const submitTransaction = async (event : any) => {
+        event.preventDefault();
+        console.log('test');
+        console.log(event);
+        console.log(event.target.amount.value);
+        console.log(event.target.datetime.value);
+        console.log(blob.asset);
+        console.log(blob.onchain_metadata.name);
+    }
+
     return (
         <div className="blob-auction container rounded">
             <div className="row pt-3">
@@ -12,18 +23,19 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
                 <div className="col-8 ">
                     <span className="auction-title-text">Start An Auction For {blob.onchain_metadata.name}!</span>               
                     <hr className="divider" />
-                    <form className="blob-form">
+                    <form className="blob-form" onSubmit={submitTransaction}>
                         <label className="form-label label-text ">Starting Bid</label>
                         <div className="input-group mb-3">
                             <span className="input-group-text input-bid">₳</span>
-                            <input type="number" className="form-control input-bid" placeholder="Starting Bid" aria-describedby="blobBidPrice" />
+                            <input type="number" name="amount" className="form-control input-bid" placeholder="Starting Bid" aria-describedby="blobBidPrice" />
                         </div>
                         <label className="form-label label-text ">Start Date Time</label>
                         <div className="input-group mb-3">
-                            <input type="datetime-local" className="form-control input-bid" placeholder="Start Date Time" aria-describedby="startDatetime" />
+                            <input type="datetime-local" name="datetime" className="form-control input-bid" placeholder="Start Date Time" aria-describedby="startDatetime" />
                         </div>
+                        
+                        <button type="submit" className="btn btn-danger btn-trade mb-4">Start Auction</button>
                     </form>
-                    <button type="button" className="btn btn-danger btn-trade mb-4" onClick={transact}>Start Auction</button>
                 </div>       
                 <div className="col-2"></div>                                          
             </div>

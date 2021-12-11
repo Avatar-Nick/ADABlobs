@@ -3,6 +3,14 @@ import { transact } from "../../../cardano/wallet/transact"
 
 export const BidSection = ({ blob } : { blob : BlobChainAsset}) => 
 {
+    const submitTransaction = async (event : any) => {
+        event.preventDefault();
+        console.log('test');
+        console.log(event);
+        console.log(event.target.amount.value);
+        console.log(blob.asset);
+        console.log(blob.onchain_metadata.name);
+    }
     return (
         <div className="blob-bid container rounded">
             <div className="row pt-3">
@@ -25,13 +33,14 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                     <hr className="divider" />
                     <span className="blob-purchase-title">Top Bid:&nbsp;</span>
                     <span className="blob-purchase-title blob-purchase-text">100 ADA</span>
-                    <form className="blob-form">
+                    <form className="blob-form" onSubmit={submitTransaction}>
                         <div className="input-group mt-3 mb-3">
                             <span className="input-group-text input-bid">₳</span>
-                            <input type="number" className="form-control input-bid" placeholder="Bid Amount" aria-describedby="blobBidPrice" />
+                            <input type="number" name="amount" className="form-control input-bid" placeholder="Bid Amount" aria-describedby="blobBidPrice" />
                         </div>
+                        <button type="submit" className="btn btn-success btn-trade mb-4">Place Bid</button>
                     </form>
-                    <button type="button" className="btn btn-success btn-trade mb-4" onClick={transact}>Place Bid</button>
+                    
                 </div>       
                 <div className="col-2"></div>                                          
             </div>

@@ -12,7 +12,7 @@ export const isHomeAddress = (address: string | undefined) => {
 // Blobs are revealed 1 per week until all 300 are revealed
 export const getBlobRevealCount = () => {
     //const now = new Date(Date.now());
-    const now = new Date("2021-12-25T12:00:00.000Z");
+    const now = new Date("2028-12-25T12:00:00.000Z");
     const daysSinceStart = getDaysSinceStartDate(now);
 
     const daysInWeek = 7;
