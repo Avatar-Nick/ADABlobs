@@ -1,7 +1,7 @@
 import Loader from '../loader';
 
-import { fromHex } from '../serialization';
-import { initializeTransaction } from '../wallet/transact';
+import { assetsToValue, fromHex } from '../serialization';
+import { createOutput, finalizeTransaction, initializeTransaction, splitAmount } from '../wallet/transact';
 import { getBaseAddress, getUtxos } from '../wallet/wallet';
 import { contract } from "./plutus";
 
@@ -162,13 +162,47 @@ const GRAB = () =>
 //--------------------------------------------------------------------------------//
 // Endpoints
 //--------------------------------------------------------------------------------//
-export const start = async (startDatum: any) => {
+export const start = async (auctionDetails: AuctionDetails) => {
+
+    const datum = START(auctionDetails);
+
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
     const walletAddress = await getBaseAddress();
     const utxos = await getUtxos();
     
+    // Contract receives blob
     outputs.add(
-        
+        createOutput(
+            CONTRACT_ADDRESS(),
+            assetsToValue([
+                {
+                    unit: auctionDetails.adCurrency + auctionDetails.adToken, // TODO: Is this correct?
+                    quantity: "1",
+                }
+            ]),
+            {
+                datum: datum,
+                index: 0,
+                metadata: metadata, // TODO should I have the datum value here as well?
+            }
+        )
     )
+    datums.add(datum);
+
+    const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
+    requiredSigners.add(walletAddress.payment_cred().to_keyhash());
+    txBuilder.set_required_signers(requiredSigners);
+
+    const txHash = await finalizeTransaction({
+        txBuilder,
+        changeAddress: walletAddress,
+        utxos,
+        outputs,
+        datums,
+        metadata,
+        scriptUtxo: null,
+        action: null, // REDEEMERS HERE TODO (Need start redeemer?)
+      });
+      return txHash;
 }
 //--------------------------------------------------------------------------------//

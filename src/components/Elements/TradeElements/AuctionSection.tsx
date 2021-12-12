@@ -1,8 +1,7 @@
 import Image from 'next/image';
-import { START } from '../../../cardano/plutus/contract';
 import { toHex } from '../../../cardano/serialization';
-import { getAddress, getBaseAddress } from '../../../cardano/wallet/wallet';
-import { getUTCDatetime } from '../../../utils/blobs/blobReveal';
+import { getBaseAddress } from '../../../cardano/wallet/wallet';
+import { start } from '../../../cardano/plutus/contract';
 
 export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 {
@@ -24,7 +23,10 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         const adMinBid = reservePrice.toString();
         
         const auctionDetails : AuctionDetails = { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid }
-        const datum = START(auctionDetails);
+        const txHash = await start(auctionDetails);
+
+        // Check transaction and twitter bot (lol nice)
+        console.log(txHash);
     }
 
     return (

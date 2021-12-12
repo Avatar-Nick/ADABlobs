@@ -1,5 +1,5 @@
 import Loader from '../loader';
-import { fromHex } from '../serialization';
+import { fromHex, toHex } from '../serialization';
 
 export const connect = async () => 
 {
@@ -91,6 +91,15 @@ export const getUtxos = async () =>
     return utxos;
 }
 
+export const getCollateral = async () => {
+    const cardano = window.cardano;
+    if (!cardano) return;
+
+    const hexCollateral = await cardano.getCollateral();
+    const collateral = hexCollateral.map((utxo: any) => Loader.Cardano.TransactionUnspentOutput.from_bytes(fromHex(utxo)));
+    return collateral;
+}
+
 export const getNetworkId = async () => 
 {
     const cardano = window.cardano;
@@ -98,4 +107,20 @@ export const getNetworkId = async () =>
 
     const networkId = await cardano.getNetworkId();
     return networkId;
+}
+
+export const signTx = async (tx: any) => {
+    const cardano = window.cardano;
+    if (!cardano) return null;
+
+    const txVKeyWitnesses = await cardano.signTx(toHex(tx.to_bytes()), true);
+    return txVKeyWitnesses;
+}
+
+export const submitTx = async (signedTx: any) => {
+    const cardano = window.cardano;
+    if (!cardano) return null;
+
+    const txHash = await cardano.submitTx(toHex(signedTx.to_bytes()));
+    return txHash;
 }

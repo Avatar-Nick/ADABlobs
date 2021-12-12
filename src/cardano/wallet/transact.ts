@@ -1,6 +1,10 @@
 import Loader from '../loader';
 import CardanoBlockchain from '../cardanoBlockchain';
-import { toHex } from '../serialization';
+import CoinSelection from '../CoinSelection';
+import { fromHex, toHex } from '../serialization';
+import { fee, marketplaceAddress } from '../consts';
+import { CONTRACT } from '../plutus/contract';
+import { getCollateral, signTx, submitTx } from './wallet';
 
 const DATUM_LABEL = 405;
 const ADDRESS_LABEL = 406;
@@ -33,24 +37,158 @@ export const initializeTransaction = async () => {
     return { txBuilder, datums, metadata, outputs };
 }
 
-export const finalizeTransaction = async () => {
+export const finalizeTransaction = async ({
+    txBuilder,
+    changeAddress,
+    utxos,
+    outputs,
+    datums,
+    metadata,
+    scriptUtxo,
+    action,
+  }: any) => {
+    
+    // Build the transaction witness set
     const transactionWitnessSet = Loader.Cardano.TransactionWitnessSet.new();
-    /*
-    let { input, change } = CoinSelection.randomImprove(
-        utxos,
-        outputs,
-        8,
-        scriptUtxo ? [scriptUtxo] : []
-      );
-      input.forEach((utxo) => {
-        txBuilder.add_input(
-          utxo.output().address(),
-          utxo.input(),
-          utxo.output().amount()
-        );
-      });
 
-    */
+    // Build the transaction inputs using the random improve algorithm
+    // Algorithm details: https://input-output-hk.github.io/cardano-coin-selection/haddock/cardano-coin-selection-1.0.1/Cardano-CoinSelection-Algorithm-RandomImprove.html
+    //@ts-ignore
+    let { input, change } : any = CoinSelection.randomImprove(utxos, outputs, 8, scriptUtxo ? [scriptUtxo] : []);
+    input.forEach((utxo: any) => { 
+        txBuilder.add_input(utxo.output().address(), utxo.input(), utxo.output().amount()); 
+    });
+
+    // Build the transaction outputs
+    for (let i = 0; i < outputs.len(); i++) 
+    {
+        txBuilder.add_output(outputs.get(i));
+    }
+
+    // TODO: What is this doing?
+    if (scriptUtxo) {
+        const redeemers = Loader.Cardano.Redeemers.new();
+        const redeemerIndex = txBuilder.index_of_input(scriptUtxo.input()).toString();
+        redeemers.add(action(redeemerIndex));
+        txBuilder.set_redeemers(
+            Loader.Cardano.Redeemers.from_bytes(redeemers.to_bytes())
+        );
+        txBuilder.set_plutus_data(
+            Loader.Cardano.PlutusList.from_bytes(datums.to_bytes())
+          );
+        txBuilder.set_plutus_scripts(
+            CONTRACT()
+        );
+
+        const collateral = await getCollateral();
+        if (collateral.length <= 0) throw new Error("NO_COLLATERAL");
+        setCollateral(txBuilder, collateral);
+
+        transactionWitnessSet.set_plutus_scripts(CONTRACT());
+        transactionWitnessSet.set_plutus_data(datums);
+        transactionWitnessSet.set_redeemers(redeemers);
+    }
+
+    // TODO: What is this doing?
+    let aux_data;
+    if (metadata) {
+        aux_data = Loader.Cardano.AuxiliaryData.new();
+        const generalMetadata = Loader.Cardano.GeneralTransactionMetadata.new();
+        Object.keys(metadata).forEach((label) => {
+          Object.keys(metadata[label]).length > 0 &&
+            generalMetadata.insert(
+              Loader.Cardano.BigNum.from_str(label),
+              Loader.Cardano.encode_json_str_to_metadatum(
+                JSON.stringify(metadata[label]),
+                1
+              )
+            );
+        });
+        aux_data.set_metadata(generalMetadata);
+        txBuilder.set_auxiliary_data(aux_data);
+    }
+
+    const changeMultiAssets = change.multiasset();
+
+    // TODO: What is this doing?
+    // Check if change value is too big for single output
+    if (changeMultiAssets && change.to_bytes().length * 2 > CardanoBlockchain.protocolParameters.maxValSize) {
+        const partialChange = Loader.Cardano.Value.new(Loader.Cardano.BigNum.from_str("0"));
+
+        const partialMultiAssets = Loader.Cardano.MultiAsset.new();
+        const policies = changeMultiAssets.keys();
+        const makeSplit = () => {
+            for (let j = 0; j < changeMultiAssets.len(); j++) {
+                const policy = policies.get(j);
+                const policyAssets = changeMultiAssets.get(policy);
+                const assetNames = policyAssets.keys();
+                const assets = Loader.Cardano.Assets.new();
+                for (let k = 0; k < assetNames.len(); k++) {
+                    const policyAsset = assetNames.get(k);
+                    const quantity = policyAssets.get(policyAsset);
+                    assets.insert(policyAsset, quantity);
+                    //check size
+                    const checkMultiAssets = Loader.Cardano.MultiAsset.from_bytes(partialMultiAssets.to_bytes());
+                    checkMultiAssets.insert(policy, assets);
+                    const checkValue = Loader.Cardano.Value.new(Loader.Cardano.BigNum.from_str("0"));
+                    checkValue.set_multiasset(checkMultiAssets);
+                    
+                    if (checkValue.to_bytes().length * 2 >= CardanoBlockchain.protocolParameters.maxValSize) 
+                    {
+                        partialMultiAssets.insert(policy, assets);
+                        return;
+                    }
+                }
+                partialMultiAssets.insert(policy, assets);
+            }
+        };
+        makeSplit();
+        partialChange.set_multiasset(partialMultiAssets);
+        const minAda = Loader.Cardano.min_ada_required(
+            partialChange,
+            Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.minUtxo)
+        );
+        partialChange.set_coin(minAda);
+
+        txBuilder.add_output(
+            Loader.Cardano.TransactionOutput.new(
+            changeAddress.to_address(),
+            partialChange
+            )
+        );
+    }
+
+    txBuilder.add_change_if_needed(changeAddress.to_address());
+    const txBody = txBuilder.build();
+    const tx = Loader.Cardano.Transaction.new(
+        txBody,
+        Loader.Cardano.TransactionWitnessSet.from_bytes(
+            transactionWitnessSet.to_bytes()
+        ),
+        aux_data
+    );
+
+    const size = tx.to_bytes().length * 2;
+    console.log("Transaction Size: ", size);
+    if (size > CardanoBlockchain.protocolParameters.maxTxSize)
+        throw new Error("MAX_SIZE_REACHED");
+
+    let txVKeyWitnesses = await signTx(tx);
+    txVKeyWitnesses = Loader.Cardano.TransactionWitnessSet.from_bytes(
+        fromHex(txVKeyWitnesses)
+    );
+    transactionWitnessSet.set_vkeys(txVKeyWitnesses.vkeys());
+
+    const signedTx = Loader.Cardano.Transaction.new(
+        tx.body(),
+        transactionWitnessSet,
+        tx.auxiliary_data()
+    );
+
+    console.log("Full Tx Size: ", signedTx.to_bytes().length);
+
+    const txHash = await submitTx(signedTx);
+    return txHash;
 }
 
 // Spacebudz createOutput function which will build the output of the transaction
@@ -72,4 +210,26 @@ export const createOutput = async (address : any, value: any, { datum, index, tr
     }
     
     return output;
+}
+
+// Split amount according to marketplace fees (potentially royalties later if additional assets)
+export const splitAmount = (lovelaceAmount: any, address: any, outputs: any) => {
+
+    const marketplaceFeeAmount = lovelacePercentage(lovelaceAmount, fee);
+    // TODO check if marketplace Fee amount < 1
+
+    outputs.add(createOutput(marketplaceAddress, Loader.Cardano.Value.new(marketplaceFeeAmount)));
+    outputs.add(createOutput(address, Loader.Cardano.Value.new(lovelaceAmount.checked_sub(marketplaceFeeAmount))));
+}
+
+export const lovelacePercentage = (amount: any, p: any) => {
+    return amount.checked_mul(Loader.Cardano.BigNum.from_str("10")).checked_div(p);
+};
+
+export const setCollateral = (txBuilder: any, utxos: any) => {
+    const inputs = Loader.Cardano.TransactionInputs.new();
+    utxos.forEach((utxo: any) => {
+        inputs.add(utxo.input());
+    });
+    txBuilder.set_collateral(inputs);
 }
