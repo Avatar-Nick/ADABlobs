@@ -61,6 +61,7 @@ export const getAddress = async () =>
     const walletConnected = await isConnected();
     if (!walletConnected) return null;
 
+    // cardano.changeAddress can also be used here
     const hexAddresses = await cardano.getUsedAddresses();
     const addressObject = Loader.Cardano.Address.from_bytes(fromHex(hexAddresses[0]));
     const address = addressObject.to_bech32();

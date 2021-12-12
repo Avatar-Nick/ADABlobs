@@ -1,4 +1,4 @@
-import { adablobsAPI, blockfrostAPI } from '../api/api';
+import { adablobsAPI, blockfrostAPI, clientBlockfrostAPI } from '../api/api';
 import { getAddress } from '../cardano/wallet/wallet';
 import { blockfrostAPIKey } from '../consts/consts';
 
@@ -30,6 +30,12 @@ export const fetchScriptAssets = async () => {
 }
 
 // Blockfrost Functions
+export const fetchProtocolParameters = async () => 
+{    
+    const response = await fetch(`${clientBlockfrostAPI.baseURL}${clientBlockfrostAPI.endpoints.epochs.latest.parameters()}`)
+    return response.json();
+}
+
 export const blockfrostAPIRequest = async (endpoint: string, headers? : any, body? : any) =>
 {
     const url = `${blockfrostAPI.baseURL}${endpoint}`;

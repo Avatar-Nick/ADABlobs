@@ -22,14 +22,31 @@ export const adablobsAPI = new API (
     }
 )
 
+export const clientBlockfrostAPI = new API(
+    {
+        baseURL: process.env.NEXT_PUBLIC_BLOCKFROST_CLIENT_API_URL,
+        endpoints: {
+            address: (address: string) => `/addresses/${address}`,
+            epochs: {
+                latest: {
+                    parameters: () => `/epochs/latest/parameters`
+                }
+            }
+        }
+    }
+)
+
 export const blockfrostAPI = new API(
     {
         baseURL: process.env.BLOCKFROST_API_URL,
         endpoints: {
             address: (address: string) => `/addresses/${address}`,
-        }
+            epochs: {
+                latest: {
+                    parameters: () => `/epochs/latest/parameters`
+                }
+            }
+        }        
     }
 )
-
-
     

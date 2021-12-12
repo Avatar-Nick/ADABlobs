@@ -21,10 +21,11 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         const adCurrency = blob.policy_id; // policy_id
         const adToken = blob.asset_name; // token_id
         const adDeadline = startDateTime.getTime().toString(); // December 11th 4pm
-        const adStartTime = endDateTime.getTime().toString; // December 11th 12pm,
+        const adStartTime = endDateTime.getTime().toString(); // December 11th 12pm,
         const adMinBid = reservePrice.toString();
         
-        //const datum = START(adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid);
+        const auctionDetails : AuctionDetails = { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid }
+        const datum = START(auctionDetails);
     }
 
     return (

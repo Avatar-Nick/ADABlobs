@@ -1,6 +1,8 @@
 import Loader from '../loader';
 
 import { fromHex } from '../serialization';
+import { initializeTransaction } from '../wallet/transact';
+import { getBaseAddress, getUtxos } from '../wallet/wallet';
 import { contract } from "./plutus";
 
 export const CONTRACT = () => 
@@ -20,7 +22,7 @@ export const CONTRACT_ADDRESS = () =>
 //--------------------------------------------------------------------------------//
 // Datums
 //--------------------------------------------------------------------------------//
-export const START = (adSeller: any, adCurrency: any, adToken: any, adDeadline: any, adStartTime: any, adMinBid: any) => 
+export const START = (startAuctionDetails: AuctionDetails) => 
 {
     // Code below creates this json format    
     /*
@@ -78,6 +80,8 @@ export const START = (adSeller: any, adCurrency: any, adToken: any, adDeadline: 
     ]
     }
     */
+
+    const { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid } = startAuctionDetails;
 
     // Data
     const marketplaceAddress = "67614c1b06ddbb100cb6cbe919594cac31771c25530b6c7f28da242b";
@@ -152,5 +156,17 @@ const GRAB = () =>
         )
     )
     return redeemer;
+}
+//--------------------------------------------------------------------------------//
+
+//--------------------------------------------------------------------------------//
+// Endpoints
+//--------------------------------------------------------------------------------//
+export const start = async (startDatum: any) => {
+    const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
+    const walletAddress = await getBaseAddress();
+    const utxos = await getUtxos();
+    
+    
 }
 //--------------------------------------------------------------------------------//
