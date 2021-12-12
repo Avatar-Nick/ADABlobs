@@ -6,7 +6,7 @@ import { start } from '../../../cardano/plutus/contract';
 export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 {
 
-    const submitTransaction = async (event : any) => {
+    const submitStartTransaction = async (event : any) => {
         event.preventDefault();
 
         const reservePrice = event.target.amount.value;
@@ -38,7 +38,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
                 <div className="col-8 ">
                     <span className="auction-title-text">Start An Auction For {blob.onchain_metadata.name}!</span>               
                     <hr className="divider" />
-                    <form className="blob-form" onSubmit={submitTransaction}>
+                    <form className="blob-form" onSubmit={submitStartTransaction}>
                         <label className="form-label label-text ">Reserve Price</label>
                         <div className="input-group mb-3">
                             <span className="input-group-text input-bid">₳</span>

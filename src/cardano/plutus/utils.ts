@@ -48,3 +48,13 @@ export const getAssetUtxos = async (asset: string) => {
     });
     return await Promise.all(utxosData);
 }
+
+export const getTradeDetails = (datum: any) => {
+    const auctionDetails = datum.as_contr_plutus_data().data().get(0).as_constr_plutus_data().data();
+    const bidDetails = datum.as_contr_plutus_data().data().get(1).as_constr_plutus_data().data();
+
+    const tradeOwner = Loader.Cardano.Ed25519KeyHashes.from_bytes(auctionDetails.get(0).as_bytes());
+    const assetId = toHex(auctionDetails.get(1).as_bytes());
+    const bidAmount = bidDetails.get(1).as_integer.as_u64();
+    return { tradeOwner, assetId, bidAmount };
+}

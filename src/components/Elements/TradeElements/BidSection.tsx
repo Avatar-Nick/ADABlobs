@@ -1,19 +1,26 @@
 import Image from 'next/image';
+import { bid } from '../../../cardano/plutus/contract';
 import { toHex } from '../../../cardano/serialization';
 import { getBaseAddress } from '../../../cardano/wallet/wallet';
 
 export const BidSection = ({ blob } : { blob : BlobChainAsset}) => 
 {
-    const submitTransaction = async (event : any) => {
+    const submitBidTransaction = async (event : any) => {
         event.preventDefault();
         const walletAddress = await getBaseAddress();
-        const bidAmount = event.target.amount.value;
-
-        // Need to get datum (from script metadata?)
 
         const bdBidder = toHex(walletAddress.payment_cred().to_keyhash().to_bytes());
+        const bidAmount = event.target.amount.value;
+        const bidDetails : BidDetails = { bdBidder, bdBid: bidAmount }
+        
+        const txHash = await bid(blob.asset, bidDetails);
 
-        //const bidDetails:  BidDetails { }
+        // Check transaction and twitter bot (lol nice)
+        console.log(txHash);
+    }
+
+    const submitCloseTransaction = async (event: any) => {
+        event.preventDefault();
     }
     return (
         <div className="blob-bid container rounded">
@@ -37,13 +44,14 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                     <hr className="divider" />
                     <span className="blob-purchase-title">Top Bid:&nbsp;</span>
                     <span className="blob-purchase-title blob-purchase-text">100 ADA</span>
-                    <form className="blob-form" onSubmit={submitTransaction}>
+                    <form className="blob-form" onSubmit={submitBidTransaction}>
                         <div className="input-group mt-3 mb-3">
                             <span className="input-group-text input-bid">₳</span>
                             <input type="number" name="amount" className="form-control input-bid" placeholder="Bid Amount" aria-describedby="blobBidPrice" />
                         </div>
                         <button type="submit" className="btn btn-success btn-trade mb-4">Place Bid</button>
                     </form>
+                    <button type="submit" className="btn btn-primary btn-trade mb-4" onClick={submitCloseTransaction}>Close (After Deadline Test)</button>
                     
                 </div>       
                 <div className="col-2"></div>                                          

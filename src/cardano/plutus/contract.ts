@@ -5,7 +5,7 @@ import { assetsToValue, fromHex } from '../serialization';
 import { createOutput, finalizeTransaction, initializeTransaction, splitAmount } from '../wallet/transact';
 import { getBaseAddress, getUtxos } from '../wallet/wallet';
 import { contract } from "./plutus";
-import { getAssetUtxos } from './utxo';
+import { getAssetUtxos, getTradeDetails } from './utils';
 
 export const CONTRACT = () => 
 {
@@ -278,6 +278,14 @@ const GRAB = () =>
 //--------------------------------------------------------------------------------//
 // Endpoints
 //--------------------------------------------------------------------------------//
+
+/*
+    Steps:
+    1: Get wallet utxos
+    2: Create an output sending an NFT asset to the script address
+    3: Sign and submit transaction
+*/
+
 export const start = async (auctionDetails: AuctionDetails) => {
 
     const datum = START(auctionDetails);
@@ -322,20 +330,84 @@ export const start = async (auctionDetails: AuctionDetails) => {
       return txHash;
 }
 
-export const bid = async (auctionDetails: AuctionDetails, bidDetails: BidDetails) => {
-    const asset = `${auctionDetails.adCurrency}${auctionDetails.adToken}`;
+/*
+    Steps:
+    1: Get wallet utxos
+    2: Get asset utxo that is on the script address
+    3: Create an output sending a blob NFT to the script address
+    3: Sign and submit transaction
+*/
+export const bid = async (asset: string, bidDetails: BidDetails) => {
     const assetUtxos = await getAssetUtxos(asset);
     if (assetUtxos.length > 1) {
         throw new Error("There can only be 1 utxo for an NFT asset");
     }
     const assetUtxo: any = assetUtxos[0];
+    const currentBidAmount = assetUtxo.utxo.output().amount(); // TODO Will this throw an error if no current Bid?
+    const auctionDetails: AuctionDetails = assetUtxo.datum.auctionDetails;    
 
-    const { txBuilder, datums, outputs } = await initializeTransaction();
+    const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
     const walletAddress = await getBaseAddress();
     const utxos = await getUtxos();
 
     datums.add(assetUtxo.datum);
 
+    if (bidDetails.bdBid < currentBidAmount || bidDetails.bdBid < parseInt(auctionDetails.adMinBid)) {
+        throw new Error("Bid is too low");
+    }
+
+    // TODO: Check time here as well?
+
+    const bidDatum = BID(auctionDetails, bidDetails);
+    datums.add(bidDatum);
+    outputs.add(
+        createOutput(
+            CONTRACT_ADDRESS(), 
+            assetsToValue([
+                { unit: "lovelace", quantity: bidDetails.bdBid},
+                { unit: assetUtxo.asset, quantity: "1"},
+            ]),
+            {
+                datum: bidDatum,
+                index: 0, // TODO: is this the txix?
+                tradeOwnerAddress: walletAddress,
+                metadata: metadata,
+            }))
+
+    // Check if bidder is owner of utxo. if so, not necessary to pay back to you own address
+    // TODO: I'm not sure if the spacebudz comment is the entire story, because shouldnt you pay the
+    // difference of your previous bid and the current bid?
+    // Temporarily Commented out
+    
+    /*
+    if (assetUtxo.tradeOwnerAddress.to_bech32() != walletAddress.to_address().to_bech32()){
+
+    }
+    */
+        
+    outputs.add(
+        createOutput(
+            assetUtxo.tradeOwnerAddress,
+            Loader.Cardano.Value.new(currentBidAmount.coin())
+        )
+    );
+
+    const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
+    requiredSigners.add(walletAddress.payment_cred().to_keyhash());
+    txBuilder.set_required_signers(requiredSigners);
+
+    const txHash = await finalizeTransaction({
+        txBuilder,
+        changeAddress: walletAddress,
+        utxos,
+        outputs,
+        datums,
+        metadata,
+        scriptUtxo: assetUtxo.utxo,
+        action: null,
+      });
+
+    return txHash;
 }
 
 export const close = () => {
