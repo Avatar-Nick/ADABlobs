@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import { START } from '../../../cardano/plutus/contract';
 import { toHex } from '../../../cardano/serialization';
-import { transact } from "../../../cardano/wallet/transact"
 import { getAddress, getBaseAddress } from '../../../cardano/wallet/wallet';
 import { getUTCDatetime } from '../../../utils/blobs/blobReveal';
 

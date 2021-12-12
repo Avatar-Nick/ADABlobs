@@ -167,6 +167,8 @@ export const start = async (startDatum: any) => {
     const walletAddress = await getBaseAddress();
     const utxos = await getUtxos();
     
-    
+    outputs.add(
+        
+    )
 }
 //--------------------------------------------------------------------------------//

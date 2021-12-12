@@ -6,17 +6,20 @@ import { ReactQueryDevtools  } from 'react-query/devtools';
 
 import { Layout } from '../src/components/Layouts/Layout';
 import Loader from '../src/cardano/loader';
+import TransactionParamers from '../src/cardano/cardanoBlockchain';
+import CardanoBlockchain from '../src/cardano/cardanoBlockchain';
 
 import '../public/styles/base.css';
 import '../public/styles/bootstrap/bootstrap.min.css'
+
 
 const queryClient = new QueryClient()
 
 const App = ({ Component, pageProps }: AppProps) =>
 {
     useEffect(() => {
-        const loadCardanoSerializationLib = async () => await load();
-        loadCardanoSerializationLib();
+        const loadCardanoLibraries = async () => await load();
+        loadCardanoLibraries();
     });
     return (
         <QueryClientProvider client={queryClient}>
@@ -31,7 +34,16 @@ const App = ({ Component, pageProps }: AppProps) =>
 export default App;
 
 const load = async () => {
+
+    const loadList = []
     if (!Loader.Cardano) {
-        await Loader.load();
-    }    
+        loadList.push(Loader.load());
+    }
+    
+    if (!CardanoBlockchain.protocolParameters) {
+        loadList.push(CardanoBlockchain.load());
+    }
+
+    // Load all Cardano data in Parallel
+    await Promise.all(loadList);
 }
