@@ -336,6 +336,8 @@ export const start = async (auctionDetails: AuctionDetails) => {
     2: Get asset utxo that is on the script address
     3: Create an output sending a blob NFT to the script address
     3: Sign and submit transaction
+
+    TODO: I need to fill this out
 */
 export const bid = async (asset: string, bidDetails: BidDetails) => {
     const assetUtxos = await getAssetUtxos(asset);
@@ -410,7 +412,48 @@ export const bid = async (asset: string, bidDetails: BidDetails) => {
     return txHash;
 }
 
-export const close = () => {
+/*
+    Steps:
+    1: Get wallet utxos
+    2: Get asset utxo that is on the script address
+    3: Create an output sending a blob NFT to the script address
+    3: Sign and submit transaction
 
+    TODO: I need to fill this out
+*/
+export const close = async (asset: string) => {
+    const assetUtxos = await getAssetUtxos(asset);
+    if (assetUtxos.length > 1) {
+        throw new Error("There can only be 1 utxo for an NFT asset");
+    }
+    const assetUtxo: any = assetUtxos[0];
+    const currentBidAmount = assetUtxo.utxo.output().amount(); // TODO Will this throw an error if no current Bid?
+    const auctionDetails: AuctionDetails = assetUtxo.datum.auctionDetails; 
+    const bidDetails: BidDetails = assetUtxo.datum.bidDetails;
+
+    const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
+    const walletAddress = await getBaseAddress();
+    const utxos = await getUtxos();
+
+    datums.add(assetUtxo.datum);
+
+    // Send NFT to bidder and ADA to seller
+    splitAmount(currentBidAmount, auctionDetails.adSeller, outputs);
+    outputs.add(createOutput(bidDetails.bdBidder, assetUtxo.utxo.output().amount())); // bidder probably needs type conversion // buyer receiving SpaceBud
+
+    const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
+    requiredSigners.add(walletAddress.payment_cred().to_keyhash());
+    txBuilder.set_required_signers(requiredSigners);
+
+    const txHash = await finalizeTransaction({
+      txBuilder,
+      changeAddress: walletAddress,
+      utxos,
+      outputs,
+      datums,
+      scriptUtxo: assetUtxo.utxo,
+      action: null,
+    });
+    return txHash;
 }
 //--------------------------------------------------------------------------------//

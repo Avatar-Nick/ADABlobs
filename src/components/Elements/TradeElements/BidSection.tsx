@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { bid } from '../../../cardano/plutus/contract';
+import { bid, close } from '../../../cardano/plutus/contract';
 import { toHex } from '../../../cardano/serialization';
 import { getBaseAddress } from '../../../cardano/wallet/wallet';
 
@@ -21,6 +21,11 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
 
     const submitCloseTransaction = async (event: any) => {
         event.preventDefault();
+
+        const txHash = await close(blob.asset);
+        
+        // Check transaction and twitter bot (lol nice)
+        console.log(txHash);
     }
     return (
         <div className="blob-bid container rounded">

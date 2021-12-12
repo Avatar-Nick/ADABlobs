@@ -15,6 +15,8 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 
         const walletAddress = await getBaseAddress();
 
+        // Test by chaning blob policy / assset to a sundaeswap coin
+
         const adSeller = toHex(walletAddress.payment_cred().to_keyhash().to_bytes())
         const adCurrency = blob.policy_id; // policy_id
         const adToken = blob.asset_name; // token_id
