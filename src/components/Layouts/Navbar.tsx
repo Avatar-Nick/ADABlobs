@@ -16,16 +16,16 @@ export const Navbar = () =>
                         <div className="d-none d-sm-flex">
                             <Link href="/">                    
                                 <a className="navbar-brand d-flex">
-                                    <Image src="/images/Logo.png" width={56} height={56} quality={100} alt="ADABlobs Icon" />
-                                    <Image src="/images/LogoText.png" width={260} height={56} quality={100}  alt="ADABlobs Logo" />
+                                    <Image src="/images/Logo.png" width={56} height={56} quality={100} alt="ADABlobs Icon" priority/>
+                                    <Image src="/images/LogoText.png" width={260} height={56} quality={100}  alt="ADABlobs Logo" priority/>
                                 </a>
                             </Link>
                         </div>
                         <div className="d-flex d-sm-none">
                             <Link href="/">                    
                                 <a className="navbar-brand d-flex">
-                                    <Image src="/images/Logo.png" width={42} height={42} quality={100} alt="ADABlobs Icon" />
-                                    <Image src="/images/LogoText.png" width={195} height={42} quality={100}  alt="ADABlobs Logo" />
+                                    <Image src="/images/Logo.png" width={42} height={42} quality={100} alt="ADABlobs Icon" priority/>
+                                    <Image src="/images/LogoText.png" width={195} height={42} quality={100}  alt="ADABlobs Logo" priority/>
                                 </a>
                             </Link>
                         </div>

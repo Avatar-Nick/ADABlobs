@@ -1,3 +1,4 @@
+import { marketplaceAddress } from '../consts';
 import Loader from '../loader';
 
 import { assetsToValue, fromHex } from '../serialization';
@@ -84,7 +85,6 @@ export const START = (startAuctionDetails: AuctionDetails) =>
     const { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid } = startAuctionDetails;
 
     // Data
-    const marketplaceAddress = "67614c1b06ddbb100cb6cbe919594cac31771c25530b6c7f28da242b";
     const adPayoutPercentages = Loader.Cardano.PlutusMap.new();
     adPayoutPercentages.insert(Loader.Cardano.PlutusData.new_bytes(fromHex(adSeller)), Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str("990")));
     adPayoutPercentages.insert(Loader.Cardano.PlutusData.new_bytes(fromHex(marketplaceAddress)), Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str("10")));
@@ -204,5 +204,13 @@ export const start = async (auctionDetails: AuctionDetails) => {
         action: null, // REDEEMERS HERE TODO (Need start redeemer?)
       });
       return txHash;
+}
+
+export const bid = () => {
+
+}
+
+export const close = () => {
+
 }
 //--------------------------------------------------------------------------------//

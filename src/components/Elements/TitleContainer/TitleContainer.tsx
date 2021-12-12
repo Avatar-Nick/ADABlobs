@@ -7,12 +7,14 @@ export const TitleContainer = () =>
 {
     const { isLoading, error, data } = useIsConnected();
     let connected = data;
+
+    const description = "Launched in December 2021, ADA Blobs is a collection of 300 Blob NFTs and is one of the first NFT projects on the Cardano Blockchain. There will only ever be 300 ADA Blobs available, with 1 new adorable and memeable Blob being available each week until all 300 are revealed.";
     return (
         <div className="title-container d-flex align-items-center">            
             <div className="container">
                 <div className="row d-flex d-md-none">
                     <div className="col-12">
-                        <Image src="/images/blobs/001 - Bob.png" width={"100%"} height={"100%"} layout="responsive" quality={100} alt={"Bob"} />  
+                        <Image src="/images/blobs/001 - Bob.png" width={"100%"} height={"100%"} layout="responsive" quality={100} alt={"Bob"} priority/>  
                     </div>
                 </div>
                 <div className="row d-flex d-md-none">
@@ -21,8 +23,7 @@ export const TitleContainer = () =>
                         <h1>Collection!</h1>
                         <br />
                         <p className="px-3">
-                            Launched on November 30th, 2021, ADA Blobs is a collection of 300 Blob NFTs and is one of the first NFT projects on the Cardano Blockchain. There will only ever be 300 ADA Blobs available,
-                            with 1 new adorable and memeable Blob being available each week until all 300 are revealed. 
+                            {description}
                         </p>
                     </div>
                 </div>
@@ -40,21 +41,20 @@ export const TitleContainer = () =>
                         <h1>Start Your Blob</h1>
                         <h1>Collection!</h1>
                         <p>
-                            Launched on November 30th, 2021, ADA Blobs is a collection of 300 Blob NFTs and is one of the first NFT projects on the Cardano Blockchain. There will only ever be 300 ADA Blobs available,
-                            with 1 new adorable and memeable pet Blob being available each week until all 300 are revealed. 
+                            {description}
                         </p>
                     </div>
                     <div className="col-4">
                         <div className="d-none d-lg-flex h-100">
                             <div className="title-blobs pb-2 pe-2">
-                                <Image className="first-image-width" src="/images/blobs/001 - Bob.png" height={"400%"} width={"400%"} quality={100} alt={"Bob"}/>                        
+                                <Image className="first-image-width" src="/images/blobs/001 - Bob.png" height={"400%"} width={"400%"} quality={100} alt={"Bob"} priority/>                        
                             </div>
                             <div className="title-blobs align-self-end pt-2 ps-2">
-                                <Image className="second-image-width" src="/images/YolgReverse.png" height={"400%"} width={"400%"} quality={100} alt={"Yolg"} />
+                                <Image className="second-image-width" src="/images/YolgReverse.png" height={"400%"} width={"400%"} quality={100} alt={"Yolg"} priority/>
                             </div>
                         </div>
                         <div className="d-block d-lg-none">
-                            <Image className="first-image-width-small" src="/images/blobs/001 - Bob.png" width={"100%"} height={"100%"} layout='responsive' quality={100} alt={"Bob"} />                     
+                            <Image className="first-image-width-small" src="/images/blobs/001 - Bob.png" width={"100%"} height={"100%"} layout='responsive' quality={100} alt={"Bob"} priority/>                     
                         </div>               
                     </div>
                 </div>
