@@ -1,15 +1,19 @@
 import Image from 'next/image';
-import { transact } from "../../../cardano/wallet/transact"
+import { toHex } from '../../../cardano/serialization';
+import { getBaseAddress } from '../../../cardano/wallet/wallet';
 
 export const BidSection = ({ blob } : { blob : BlobChainAsset}) => 
 {
     const submitTransaction = async (event : any) => {
         event.preventDefault();
-        console.log('test');
-        console.log(event);
-        console.log(event.target.amount.value);
-        console.log(blob.asset);
-        console.log(blob.onchain_metadata.name);
+        const walletAddress = await getBaseAddress();
+        const bidAmount = event.target.amount.value;
+
+        // Need to get datum (from script metadata?)
+
+        const bdBidder = toHex(walletAddress.payment_cred().to_keyhash().to_bytes());
+
+        //const bidDetails:  BidDetails { }
     }
     return (
         <div className="blob-bid container rounded">
