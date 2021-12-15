@@ -49,13 +49,13 @@ export const START = (startAuctionDetails: AuctionDetails) =>
                     "int": 1639241130000 // adStartTime
                 },
                 {
+                    "int": 8000000 // adMinBid
+                },
+                {
                     "int": 1 // adMarketplacePercent
                 },
                 {
                     "bytes": 1639241130000 // adMarketplaceAddress
-                },
-                {
-                    "int": 8000000 // adMinBid
                 },
             ]
             },
@@ -68,9 +68,9 @@ export const START = (startAuctionDetails: AuctionDetails) =>
     }
     */
 
-    const { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid } = startAuctionDetails;
+    const { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress } = startAuctionDetails;
 
-    // Construct Cardano Jason
+    // Construct Cardano Json
     const auctionDetailsFields = Loader.Cardano.PlutusList.new();
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adSeller)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adCurrency)))
@@ -79,7 +79,9 @@ export const START = (startAuctionDetails: AuctionDetails) =>
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adStartTime)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adStartTime)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMinBid)))
-
+    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMarketplacePercent)))
+    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adMarketplaceAddress)))
+    
     const auctionDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
             Loader.Cardano.Int.new_i32(0),
@@ -269,6 +271,8 @@ const GRAB = () =>
 export const start = async (auctionDetails: AuctionDetails) => {
 
     const datum = START(auctionDetails);
+    console.log('datum',datum);
+    return;
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
     const walletAddress = await getBaseAddress();

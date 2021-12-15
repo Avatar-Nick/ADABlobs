@@ -9,8 +9,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
     const { address } : any = req.query;
 
     try {
-        const addressData = await blockfrostAPIRequest(blockfrostAPI.endpoints.address(address))
-        if (!addressData) {
+        const addressData = await blockfrostAPIRequest(blockfrostAPI.endpoints.address.base(address))
+        if (!addressData || addressData.status_code === 400) {
+
+            // Testnet Code
+            if (process.env.NEXT_PUBLIC_ENVIRONMENT === "local") {
+                const owned : { [asset: string]: number } = { }
+                owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f6231'] = 1;
+                owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f623134'] = 1;
+                owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f62323637'] = 1;
+                res.status(200).json(owned);
+                return;
+            }
+
             res.status(400).json({ error: "Address Data Not Found" });
             return;
         }
@@ -34,7 +45,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
         owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f62323637'] = 1;
         res.status(200).json(owned);
     }
-    catch (error) {        
+    catch (error) {
         res.status(400).json({ error: error });
     }
     

@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { toHex } from '../../../cardano/serialization';
 import { getBaseAddress } from '../../../cardano/wallet/wallet';
 import { start } from '../../../cardano/plutus/contract';
+import { fee } from '../../../cardano/consts';
 
 export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 {
@@ -29,10 +30,11 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         const adDeadline = startDateTime.getTime().toString(); // December 11th 4pm
         const adStartTime = endDateTime.getTime().toString(); // December 11th 12pm,
         const adMinBid = reservePrice.toString();
-        const adMarketplacePercent = "1";
+        const adMarketplacePercent = fee; // Corresponds to 1%
         const adMarketplaceAddress = (process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string).toString();
         
         const auctionDetails : AuctionDetails = { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress }
+        console.log("auctionDetails", auctionDetails);
         const txHash = await start(auctionDetails);
 
         // Check transaction and twitter bot (lol nice)
