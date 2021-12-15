@@ -4,8 +4,10 @@ interface AuctionDetails
     adCurrency: string,
     adToken: string,
     adDeadline: string,
-    adStartTime: string,
+    adStartTime: string,    
     adMinBid: string,
+    adMarketplacePercent: string,
+    adMarketplaceAddress: string,
 }
 
 interface BidDetails 

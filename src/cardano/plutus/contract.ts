@@ -4,20 +4,19 @@ import Loader from '../loader';
 import { assetsToValue, fromHex } from '../serialization';
 import { createOutput, finalizeTransaction, initializeTransaction, splitAmount } from '../wallet/transact';
 import { getBaseAddress, getUtxos } from '../wallet/wallet';
-import { contract } from "./plutus";
 import { getAssetUtxos, getTradeDetails } from './utils';
 
 export const CONTRACT = () => 
 {
     const scripts = Loader.Cardano.PlutusScripts.new();
-    scripts.add(Loader.Cardano.PlutusScript.new(fromHex(contract)));
+    scripts.add(Loader.Cardano.PlutusScript.new(fromHex(process.env.NEXT_PUBLIC_HEX_CONTRACT)));
     return scripts;
 };
 
 export const CONTRACT_ADDRESS = () => 
 {
   return Loader.Cardano.Address.from_bech32(
-    "addr_test1wps56mehumyujyzs0jknzngkreuw5uf2eccpeczjn9e90zqnw5gn5"
+    process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
   );
 }
 
@@ -50,28 +49,14 @@ export const START = (startAuctionDetails: AuctionDetails) =>
                     "int": 1639241130000 // adStartTime
                 },
                 {
-                    "int": 8000000 // adMinBid
+                    "int": 1 // adMarketplacePercent
                 },
                 {
-                "map": [ // adPayoutPercentages
-                    {
-                        "v": {
-                            "int": 990
-                        },
-                        "k": {
-                            "bytes": "67614c1b06ddbb100cb6cbe919594cac31771c25530b6c7f28da242b" // adSeller PubKeyHash
-                        }
-                    },
-                    {
-                        "v": {
-                            "int": 10
-                        },
-                        "k": {
-                            "bytes": "1d0ab2689eed633f013b347ba5db41919367dfc86d0d74d0a809c3e0" // marketplace PubKeyHash (Mine)
-                        }
-                    }
-                ]
-                }
+                    "bytes": 1639241130000 // adMarketplaceAddress
+                },
+                {
+                    "int": 8000000 // adMinBid
+                },
             ]
             },
             {
@@ -85,11 +70,6 @@ export const START = (startAuctionDetails: AuctionDetails) =>
 
     const { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid } = startAuctionDetails;
 
-    // Data
-    const adPayoutPercentages = Loader.Cardano.PlutusMap.new();
-    adPayoutPercentages.insert(Loader.Cardano.PlutusData.new_bytes(fromHex(adSeller)), Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str("990")));
-    adPayoutPercentages.insert(Loader.Cardano.PlutusData.new_bytes(fromHex(marketplaceAddress)), Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str("10")));
-
     // Construct Cardano Jason
     const auctionDetailsFields = Loader.Cardano.PlutusList.new();
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adSeller)))
@@ -97,8 +77,8 @@ export const START = (startAuctionDetails: AuctionDetails) =>
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adToken)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adDeadline)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adStartTime)))
+    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adStartTime)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMinBid)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_map(adPayoutPercentages));
 
     const auctionDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(

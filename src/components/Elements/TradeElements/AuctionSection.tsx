@@ -15,16 +15,24 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 
         const walletAddress = await getBaseAddress();
 
-        // Test by chaning blob policy / assset to a sundaeswap coin
+        // If this is a local environment, use the testnet
+        let adCurrency = blob.policy_id; // policy_id
+        let adToken = blob.asset_name; // token_id
+        if (process.env.NEXT_PUBLIC_ENVIRONMENT === "local") {
+
+            // This is the Sundaeswap Mint test token
+            adCurrency = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf3916522";
+            adToken = "asset15gvggz5s3ptfadt3x6d8p7n5x3petfhrqeps6n";
+        }
 
         const adSeller = toHex(walletAddress.payment_cred().to_keyhash().to_bytes())
-        const adCurrency = blob.policy_id; // policy_id
-        const adToken = blob.asset_name; // token_id
         const adDeadline = startDateTime.getTime().toString(); // December 11th 4pm
         const adStartTime = endDateTime.getTime().toString(); // December 11th 12pm,
         const adMinBid = reservePrice.toString();
+        const adMarketplacePercent = "1";
+        const adMarketplaceAddress = (process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string).toString();
         
-        const auctionDetails : AuctionDetails = { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid }
+        const auctionDetails : AuctionDetails = { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress }
         const txHash = await start(auctionDetails);
 
         // Check transaction and twitter bot (lol nice)
