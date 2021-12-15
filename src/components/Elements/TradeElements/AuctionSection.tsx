@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { toHex } from '../../../cardano/serialization';
-import { getBaseAddress } from '../../../cardano/wallet/wallet';
+import { getAddress, getBaseAddress } from '../../../cardano/wallet/wallet';
 import { start } from '../../../cardano/plutus/contract';
 import { fee } from '../../../cardano/consts';
 
@@ -26,9 +26,11 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
             adToken = "asset15gvggz5s3ptfadt3x6d8p7n5x3petfhrqeps6n";
         }
 
+        // QUESTION: Why does the getBaseAddress not equal the getAddress?
+        // Will this be an error for the marketplace address since im using addr...
         const adSeller = toHex(walletAddress.payment_cred().to_keyhash().to_bytes())
-        const adDeadline = startDateTime.getTime().toString(); // December 11th 4pm
-        const adStartTime = endDateTime.getTime().toString(); // December 11th 12pm,
+        const adDeadline = endDateTime.getTime().toString();
+        const adStartTime =  startDateTime.getTime().toString();
         const adMinBid = reservePrice.toString();
         const adMarketplacePercent = fee; // Corresponds to 1%
         const adMarketplaceAddress = (process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string).toString();

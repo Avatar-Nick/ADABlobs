@@ -272,11 +272,14 @@ export const start = async (auctionDetails: AuctionDetails) => {
 
     const datum = START(auctionDetails);
     console.log('datum',datum);
-    return;
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
+    console.log('after initialization');
+
     const walletAddress = await getBaseAddress();
     const utxos = await getUtxos();
+
+    console.log('utxos', utxos);
     
     // Contract receives blob
     outputs.add(
@@ -297,6 +300,8 @@ export const start = async (auctionDetails: AuctionDetails) => {
     )
     datums.add(datum);
 
+    console.log('outputs', outputs);
+
     const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
     txBuilder.set_required_signers(requiredSigners);
@@ -309,7 +314,7 @@ export const start = async (auctionDetails: AuctionDetails) => {
         datums,
         metadata,
         scriptUtxo: null,
-        action: null, // REDEEMERS HERE TODO (Need start redeemer?)
+        action: null,
       });
       return txHash;
 }

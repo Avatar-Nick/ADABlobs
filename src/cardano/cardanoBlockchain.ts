@@ -42,7 +42,7 @@ class CardanoBlockchain {
             priceStep: 7.21e-5,
           };
 
-        this.protocolParameters = protocolParameters;
+        return protocolParameters;
     }
 }
 
