@@ -1,10 +1,9 @@
-import { marketplaceAddress } from '../consts';
 import Loader from '../loader';
 
 import { assetsToValue, fromHex } from '../serialization';
 import { createOutput, finalizeTransaction, initializeTransaction, splitAmount } from '../wallet/transact';
 import { getBaseAddress, getUtxos } from '../wallet/wallet';
-import { getAssetUtxos, getTradeDetails } from './utils';
+import { getAssetUtxos } from './utils';
 
 export const CONTRACT = () => 
 {
@@ -76,7 +75,6 @@ export const START = (startAuctionDetails: AuctionDetails) =>
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adCurrency)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adToken)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adDeadline)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adStartTime)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adStartTime)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMinBid)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMarketplacePercent)))
@@ -298,6 +296,7 @@ export const start = async (auctionDetails: AuctionDetails) => {
             }
         )
     )
+    
     datums.add(datum);
 
     console.log('outputs', outputs);

@@ -1,13 +1,11 @@
 import { AuctionSection } from "../TradeElements/AuctionSection";
 import { BidSection } from "../TradeElements/BidSection";
 import { useOwnedAssets, useScriptAssets } from "../../../hooks/assets.hooks";
-import { useIsConnected } from "../../../hooks/wallet.hooks";
 import { getBlobStatus } from "../../../utils/blobs/blobStatus";
 import { BlobStatus } from "../../../types/enum";
 
 export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) => 
 {
-    const connectedQuery = useIsConnected();
     const ownedAssetsQuery = useOwnedAssets();
     const scriptAssetsQuery = useScriptAssets()
     const blobStatus: BlobStatus = getBlobStatus(blob, ownedAssetsQuery.data, scriptAssetsQuery.data) as BlobStatus;

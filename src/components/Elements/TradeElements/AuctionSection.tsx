@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import { toHex } from '../../../cardano/serialization';
-import { getAddress, getBaseAddress } from '../../../cardano/wallet/wallet';
+import { getBaseAddress } from '../../../cardano/wallet/wallet';
 import { start } from '../../../cardano/plutus/contract';
-import { fee } from '../../../cardano/consts';
+import { adaToLovelace, fee } from '../../../cardano/consts';
 
 export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 {
@@ -11,6 +11,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         event.preventDefault();
 
         const reservePrice = event.target.amount.value;
+        const reservePriceLovelace = reservePrice * adaToLovelace;
         const startDateTime = new Date(event.target.startDatetime.value);
         const endDateTime = new Date(event.target.endDatetime.value);
 
@@ -19,19 +20,21 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         // If this is a local environment, use the testnet
         let adCurrency = blob.policy_id; // policy_id
         let adToken = blob.asset_name; // token_id
+        console.log(blob);
         if (process.env.NEXT_PUBLIC_ENVIRONMENT === "local") {
 
+            //adToken = "asset15gvggz5s3ptfadt3x6d8p7n5x3petfhrqeps6n";
             // This is the Sundaeswap Mint test token
             adCurrency = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf3916522";
-            adToken = "asset15gvggz5s3ptfadt3x6d8p7n5x3petfhrqeps6n";
+            adToken = "4d494e54";
         }
 
         // QUESTION: Why does the getBaseAddress not equal the getAddress?
         // Will this be an error for the marketplace address since im using addr...
         const adSeller = toHex(walletAddress.payment_cred().to_keyhash().to_bytes())
         const adDeadline = endDateTime.getTime().toString();
-        const adStartTime =  startDateTime.getTime().toString();
-        const adMinBid = reservePrice.toString();
+        const adStartTime = startDateTime.getTime().toString();
+        const adMinBid = reservePriceLovelace.toString();
         const adMarketplacePercent = fee; // Corresponds to 1%
         const adMarketplaceAddress = (process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string).toString();
         

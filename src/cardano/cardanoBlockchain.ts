@@ -1,11 +1,13 @@
 
 import { fetchProtocolParameters } from '../api/requests';
+import CoinSelection from './CoinSelection';
 
 class CardanoBlockchain {
     protocolParameters: any;
 
     load = async () => {
         this.protocolParameters = await this.loadProtocolParameters();
+        this.loadCoinSelection();
     }
 
     loadProtocolParameters = async () => {
@@ -43,6 +45,15 @@ class CardanoBlockchain {
           };
 
         return protocolParameters;
+    }
+
+    loadCoinSelection() {
+        CoinSelection.setProtocolParameters(
+            this.protocolParameters.minUtxo,
+            this.protocolParameters.linearFee.minFeeA,
+            this.protocolParameters.linearFee.minFeeB,
+            this.protocolParameters.maxTxSize.toString()
+          );
     }
 }
 

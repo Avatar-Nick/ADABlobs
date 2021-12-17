@@ -13,7 +13,8 @@ export const ADDRESS_LABEL = 406;
 const languageViews =
   "a141005901d59f1a000302590001011a00060bc719026d00011a000249f01903e800011a000249f018201a0025cea81971f70419744d186419744d186419744d186419744d186419744d186419744d18641864186419744d18641a000249f018201a000249f018201a000249f018201a000249f01903e800011a000249f018201a000249f01903e800081a000242201a00067e2318760001011a000249f01903e800081a000249f01a0001b79818f7011a000249f0192710011a0002155e19052e011903e81a000249f01903e8011a000249f018201a000249f018201a000249f0182001011a000249f0011a000249f0041a000194af18f8011a000194af18f8011a0002377c190556011a0002bdea1901f1011a000249f018201a000249f018201a000249f018201a000249f018201a000249f018201a000249f018201a000242201a00067e23187600010119f04c192bd200011a000249f018201a000242201a00067e2318760001011a000242201a00067e2318760001011a0025cea81971f704001a000141bb041a000249f019138800011a000249f018201a000302590001011a000249f018201a000249f018201a000249f018201a000249f018201a000249f018201a000249f018201a000249f018201a00330da70101ff";
 
-export const initializeTransaction = async () => {
+export const initializeTransaction = async () => 
+{
     const txBuilder = Loader.Cardano.TransactionBuilder.new(
         Loader.Cardano.LinearFee.new(
             Loader.Cardano.BigNum.from_str(
@@ -53,6 +54,10 @@ export const finalizeTransaction = async ({
     // Build the transaction witness set
     const transactionWitnessSet = Loader.Cardano.TransactionWitnessSet.new();
 
+    console.log(changeAddress);
+    console.log(utxos);
+    console.log('output', outputs.get(0).amount().multiasset().keys().get(0));
+
     // Build the transaction inputs using the random improve algorithm
     // Algorithm details: https://input-output-hk.github.io/cardano-coin-selection/haddock/cardano-coin-selection-1.0.1/Cardano-CoinSelection-Algorithm-RandomImprove.html
     //@ts-ignore
@@ -60,6 +65,8 @@ export const finalizeTransaction = async ({
     input.forEach((utxo: any) => { 
         txBuilder.add_input(utxo.output().address(), utxo.input(), utxo.output().amount()); 
     });
+
+    
 
     // Build the transaction outputs
     for (let i = 0; i < outputs.len(); i++) 
@@ -96,6 +103,7 @@ export const finalizeTransaction = async ({
     if (metadata) {
         aux_data = Loader.Cardano.AuxiliaryData.new();
         const generalMetadata = Loader.Cardano.GeneralTransactionMetadata.new();
+        console.log(metadata);
         Object.keys(metadata).forEach((label) => {
           Object.keys(metadata[label]).length > 0 &&
             generalMetadata.insert(
@@ -194,12 +202,13 @@ export const finalizeTransaction = async ({
 }
 
 // Spacebudz createOutput function which will build the output of the transaction
-export const createOutput = async (address : any, value: any, { datum, index, tradeOwnerAddress, metadata }: any = {}) => {
+export const createOutput = (address : any, value: any, { datum, index, tradeOwnerAddress, metadata }: any = {}) => {
     const minAda = Loader.Cardano.min_ada_required(
         value,
         Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.minUtxo),
         datum && Loader.Cardano.hash_plutus_data(datum)
       );
+      
     if (minAda.compare(value.coin()) == 1) value.set_coin(minAda);
 
     const output = Loader.Cardano.TransactionOutput.new(address, value);
@@ -220,7 +229,7 @@ export const splitAmount = (lovelaceAmount: any, address: any, outputs: any) => 
     const marketplaceFeeAmount = lovelacePercentage(lovelaceAmount, fee);
     // TODO check if marketplace Fee amount < 1
 
-    outputs.add(createOutput(marketplaceAddress, Loader.Cardano.Value.new(marketplaceFeeAmount)));
+    outputs.add(createOutput(process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS, Loader.Cardano.Value.new(marketplaceFeeAmount)));
     outputs.add(createOutput(address, Loader.Cardano.Value.new(lovelaceAmount.checked_sub(marketplaceFeeAmount))));
 }
 
