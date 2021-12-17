@@ -58,3 +58,8 @@ export const getTradeDetails = (datum: any) => {
     const bidAmount = bidDetails.get(1).as_integer.as_u64();
     return { tradeOwner, assetId, bidAmount };
 }
+
+export const metadata64Bytes = (datumHex: string) => {
+    const datumList = datumHex.match(/.{1,64}/g);
+    return datumList;
+}

@@ -5,6 +5,7 @@ import { fromHex, toHex } from '../serialization';
 import { fee } from '../consts';
 import { CONTRACT } from '../plutus/contract';
 import { getCollateral, signTx, submitTx } from './wallet';
+import { metadata64Bytes } from '../plutus/utils';
 
 export const DATUM_LABEL = 405;
 export const ADDRESS_LABEL = 406;
@@ -214,7 +215,7 @@ export const createOutput = (address : any, value: any, { datum, index, tradeOwn
     const output = Loader.Cardano.TransactionOutput.new(address, value);
     if (datum) {
         output.set_data_hash(Loader.Cardano.hash_plutus_data(datum));
-        metadata[DATUM_LABEL][index] = "0x" + toHex(datum.to_bytes());
+        metadata[DATUM_LABEL][index] = metadata64Bytes("0x" + toHex(datum.to_bytes()));
     }
     if (tradeOwnerAddress) {
         metadata[ADDRESS_LABEL].address = "0x" + toHex(tradeOwnerAddress.to_address().to_bytes());
