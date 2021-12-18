@@ -13,7 +13,7 @@ interface AuctionDetails
 interface BidDetails 
 {
     bdBidder: string,
-    bdBid: Number,
+    bdBid: string,
 }
 
 interface AuctionDatum 

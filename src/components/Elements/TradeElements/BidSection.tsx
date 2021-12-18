@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { adaToLovelace } from '../../../cardano/consts';
 import { bid, close } from '../../../cardano/plutus/contract';
 import { toHex } from '../../../cardano/serialization';
 import { getBaseAddress } from '../../../cardano/wallet/wallet';
@@ -10,15 +11,15 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
         const walletAddress = await getBaseAddress();
 
         let asset = blob.asset;
-        if (process.env.NEXT_PUBLIC_ENVIRONMENT === "local") {
+        if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
 
             // This is the SundaeSwap Mint test token
             asset = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf39165224d494e54";
         }
 
         const bdBidder = toHex(walletAddress.payment_cred().to_keyhash().to_bytes());
-        const bidAmount = event.target.amount.value;
-        const bidDetails : BidDetails = { bdBidder, bdBid: bidAmount }
+        const bidAmountLovelace = (event.target.amount.value * adaToLovelace).toString();
+        const bidDetails : BidDetails = { bdBidder, bdBid: bidAmountLovelace }
         
         const txHash = await bid(asset, bidDetails);
 

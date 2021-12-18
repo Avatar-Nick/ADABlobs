@@ -36,9 +36,10 @@ export const initializeTransaction = async () =>
     )
 
     const datums = Loader.Cardano.PlutusList.new();
+    const redeemers = Loader.Cardano.Redeemers.new();
     const metadata = { [DATUM_LABEL]: {}, [ADDRESS_LABEL]: {} };
     const outputs = Loader.Cardano.TransactionOutputs.new();
-    return { txBuilder, datums, metadata, outputs };
+    return { txBuilder, datums, redeemers, metadata, outputs };
 }
 
 export const finalizeTransaction = async ({
@@ -47,9 +48,9 @@ export const finalizeTransaction = async ({
     utxos,
     outputs,
     datums,
+    redeemers,
     metadata,
     scriptUtxo,
-    action,
   }: any) => {
     
     // Build the transaction witness set
@@ -70,10 +71,7 @@ export const finalizeTransaction = async ({
     }
 
     // Ensure proper redeemers for transaction
-    if (scriptUtxo) {
-        const redeemers = Loader.Cardano.Redeemers.new();
-        const redeemerIndex = txBuilder.index_of_input(scriptUtxo.input()).toString();
-        redeemers.add(action(redeemerIndex));
+    if (redeemers && redeemers.length > 0) {
         txBuilder.set_redeemers(
             Loader.Cardano.Redeemers.from_bytes(redeemers.to_bytes())
         );
@@ -196,7 +194,8 @@ export const finalizeTransaction = async ({
 }
 
 // Spacebudz createOutput function which will build the output of the transaction
-export const createOutput = (address : any, value: any, { datum, index, tradeOwnerAddress, metadata }: any = {}) => {
+export const createOutput = (address : any, value: any, { datum, index, tradeOwnerAddress, metadata }: any = {}) => 
+{
     const minAda = Loader.Cardano.min_ada_required(
         value,
         Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.minUtxo),

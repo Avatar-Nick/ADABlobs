@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
         if (!addressData || addressData.status_code === 400) {
 
             // Testnet Code
-            if (process.env.NEXT_PUBLIC_ENVIRONMENT === "local") {
+            if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
                 const owned : { [asset: string]: number } = { }
                 owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f6231'] = 1;
                 owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f623134'] = 1;

@@ -4,7 +4,9 @@ import Loader from '../loader';
 import { assetsToValue, fromHex, toHex } from '../serialization';
 import { createOutput, finalizeTransaction, initializeTransaction, splitAmount } from '../wallet/transact';
 import { getBaseAddress, getUtxos } from '../wallet/wallet';
-import { getAssetUtxos, getAuctionDatum, getTradeDetails } from './utils';
+import { BID_DATUM, START_DATUM } from './datum';
+import { BID_REDEEMER } from './redeemer';
+import { getAssetUtxos, getAuctionDatum, getValueLength } from './utils';
 
 export const CONTRACT = () => 
 {
@@ -21,238 +23,6 @@ export const CONTRACT_ADDRESS = () =>
 }
 
 //--------------------------------------------------------------------------------//
-// Datums
-//--------------------------------------------------------------------------------//
-export const START = (startAuctionDetails: AuctionDetails) => 
-{
-    // Code below creates this json format    
-    /*
-    {
-        "constructor": 0,
-        "fields": [
-            {
-            "constructor": 0, // AuctionDetails
-            "fields": [
-                {
-                    "bytes": "67614c1b06ddbb100cb6cbe919594cac31771c25530b6c7f28da242b" // adSeller
-                },
-                {
-                    "bytes": "d6cfdbedd242056674c0e51ead01785497e3a48afbbb146dc72ee1e2" // adCurrency
-                },
-                {
-                    "bytes": "123456" // adToken
-                },
-                {
-                    "int": 1639241530000 // adDealine
-                },
-                {
-                    "int": 1639241130000 // adStartTime
-                },
-                {
-                    "int": 8000000 // adMinBid
-                },
-                {
-                    "int": 1 // adMarketplacePercent
-                },
-                {
-                    "bytes": 1639241130000 // adMarketplaceAddress
-                },
-            ]
-            },
-            {
-                "constructor": 1,
-                "fields": [
-                ]
-            }
-        ]
-    }
-    */
-
-    const { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress } = startAuctionDetails;
-
-    // Construct Cardano Json
-    const auctionDetailsFields = Loader.Cardano.PlutusList.new();
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adSeller)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adCurrency)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adToken)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adDeadline)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adStartTime)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMinBid)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMarketplacePercent)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adMarketplaceAddress)))
-    
-    const auctionDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
-        Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
-            auctionDetailsFields,
-        )
-    )
-
-    const bidDetailsFields = Loader.Cardano.PlutusList.new();
-    const bidDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
-        Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(1),
-            bidDetailsFields,
-        )
-    )
-
-    const datumFields = Loader.Cardano.PlutusList.new();
-    datumFields.add(auctionDetails);
-    datumFields.add(bidDetails);
-
-    const datum = Loader.Cardano.PlutusData.new_constr_plutus_data(
-        Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
-            datumFields,
-        )
-    )
-    
-    return datum;
-}
-
-export const BID = (bidAuctionDetails: AuctionDetails, bidBidDetails: BidDetails) => {
-    // Code below creates this json format    
-    /*
-    {
-        "constructor": 0,
-        "fields": [
-            {
-                "constructor": 0, // AuctionDetails
-                "fields": [
-                    {
-                    "bytes": "67614c1b06ddbb100cb6cbe919594cac31771c25530b6c7f28da242b" // adSeller
-                    },
-                    {
-                    "bytes": "d6cfdbedd242056674c0e51ead01785497e3a48afbbb146dc72ee1e2" // adCurrency
-                    },
-                    {
-                    "bytes": "123456" // adToken
-                    },
-                    {
-                    "int": 1639241530000 // adDealine
-                    },
-                    {
-                    "int": 1639241130000 // adStartTime
-                    },
-                    {
-                    "int": 8000000 // adMinBid
-                    },
-                    {
-                    "map": [ // adPayoutPercentages
-                        {
-                            "v": {
-                                "int": 990
-                            },
-                            "k": {
-                                "bytes": "67614c1b06ddbb100cb6cbe919594cac31771c25530b6c7f28da242b" // adSeller PubKeyHash
-                            }
-                        },
-                        {
-                            "v": {
-                                "int": 10
-                            },
-                            "k": {
-                                "bytes": "1d0ab2689eed633f013b347ba5db41919367dfc86d0d74d0a809c3e0" // marketplace PubKeyHash (Mine)
-                            }
-                        }
-                    ]
-                    }
-                ]
-            },
-            {
-                "constructor": 1,
-                "fields": [
-                    {
-                        "bytes" : "5e96005ccd0c8ff27ef924bcbf7f3eae0c2e8597b5cc0c3b1cd5edaa"
-                    },
-                    {
-                        "int" : 10000000
-                    }
-                ]
-            }
-        ]
-    }
-    */
-
-    const { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress } = bidAuctionDetails;
-
-    // Construct Cardano Jason
-    const auctionDetailsFields = Loader.Cardano.PlutusList.new();
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adSeller)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adCurrency)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adToken)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adDeadline)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adStartTime)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMinBid)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMarketplacePercent)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adMarketplaceAddress)))
-
-    const auctionDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
-        Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
-            auctionDetailsFields,
-        )
-    )
-
-    const { bdBidder, bdBid } = bidBidDetails;
-
-    // TODO This was changed from the json in the tests, constr is now (1) etc. Is that okay?
-    const bidDetailsFields = Loader.Cardano.PlutusList.new();
-    bidDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(bdBidder)))
-    bidDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(bdBid)))
-    const bidDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
-        Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(1),
-            bidDetailsFields,
-        )
-    )
-
-    const datumFields = Loader.Cardano.PlutusList.new();
-    datumFields.add(auctionDetails);
-    datumFields.add(bidDetails);
-
-    const datum = Loader.Cardano.PlutusData.new_constr_plutus_data(
-        Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
-            datumFields,
-        )
-    )
-    
-    return datum;
-}
-//--------------------------------------------------------------------------------//
-
-//--------------------------------------------------------------------------------//
-// Redeemers
-//--------------------------------------------------------------------------------//
-const GRAB = () => 
-{
-    // The below code creates the following redeemer json
-    /*
-    {
-        "constructor": 0,
-        "fields":
-        [
-            {
-                "int": 7
-            }
-        ]
-    }
-    */
-
-    const fieldsInner = Loader.Cardano.PlutusList.new();
-    fieldsInner.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str("7")));
-    const redeemer = Loader.Cardano.PlutusData.new_constr_plutus_data(
-        Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
-            fieldsInner
-        )
-    )
-    return redeemer;
-}
-//--------------------------------------------------------------------------------//
-
-//--------------------------------------------------------------------------------//
 // Endpoints
 //--------------------------------------------------------------------------------//
 
@@ -262,9 +32,9 @@ const GRAB = () =>
     2: Create an output sending an NFT asset to the script address
     3: Sign and submit transaction
 */
-export const start = async (auctionDetails: AuctionDetails) => {
-
-    const datum = START(auctionDetails);
+export const start = async (auctionDetails: AuctionDetails) => 
+{
+    const datum = START_DATUM(auctionDetails);
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
 
     const walletAddress = await getBaseAddress();
@@ -290,6 +60,8 @@ export const start = async (auctionDetails: AuctionDetails) => {
     
     datums.add(datum);
 
+    const redeemers = null;
+
     const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
     txBuilder.set_required_signers(requiredSigners);
@@ -300,18 +72,15 @@ export const start = async (auctionDetails: AuctionDetails) => {
         utxos,
         outputs,
         datums,
+        redeemers,
         metadata,
         scriptUtxo: null,
-        action: null,
       });
       return txHash;
 }
 
-export const bid = async (asset: string, bidDetails: BidDetails) => {
-
-    console.log('asset', asset);
-    console.log('bidDetails', bidDetails);
-
+export const bid = async (asset: string, bidDetails: BidDetails) => 
+{
     const assetUtxos = await getAssetUtxos(asset);
     if (assetUtxos.length > 1) {
         if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'production') {
@@ -319,62 +88,55 @@ export const bid = async (asset: string, bidDetails: BidDetails) => {
         }        
     }
 
-    // TODO Pick the latest utxo
-
-    const assetUtxo: any = assetUtxos[0]; 
-    const currentBidAmount = assetUtxo.utxo.output().amount();
-    
+    const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
+    const currentValue = assetUtxo.utxo.output().amount();
+    const currentBidAmountLovelace = currentValue.coin().to_str();    
     const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum);
-    console.log(auctionDatum);
 
-
-
-
-    const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
+    const { txBuilder, datums, redeemers, metadata, outputs } = await initializeTransaction();
     const walletAddress = await getBaseAddress();
     const utxos = await getUtxos();
 
     datums.add(assetUtxo.datum);
 
-    if (bidDetails.bdBid < currentBidAmount || bidDetails.bdBid < parseInt(auctionDatum.auctionDetails.adMinBid)) {
+    const newBid = parseInt(bidDetails.bdBid);
+    if (newBid < currentBidAmountLovelace || newBid < parseInt(auctionDatum.adAuctionDetails.adMinBid)) {
         throw new Error("Bid is too low");
     }
 
-    // TODO: Check time here as well?
+    // Question: Check time here as well?
 
-    const bidDatum = BID(auctionDatum.auctionDetails, bidDetails);
+    const bidDatum = BID_DATUM(auctionDatum.adAuctionDetails, bidDetails);
     datums.add(bidDatum);
     outputs.add(
         createOutput(
             CONTRACT_ADDRESS(), 
             assetsToValue([
-                { unit: "lovelace", quantity: bidDetails.bdBid},
-                { unit: assetUtxo.asset, quantity: "1"},
+                { unit: "lovelace", quantity: newBid.toString() },
+                { unit: assetUtxo.asset, quantity: "1" },
             ]),
             {
                 datum: bidDatum,
-                index: 0, // TODO: is this the txix?
+                index: 0, // QUESTION: is this the txix?
                 tradeOwnerAddress: walletAddress,
                 metadata: metadata,
-            }))
-
-    // Check if bidder is owner of utxo. if so, not necessary to pay back to you own address
-    // TODO: I'm not sure if the spacebudz comment is the entire story, because shouldnt you pay the
-    // difference of your previous bid and the current bid?
-    // Temporarily Commented out
-    
-    /*
-    if (assetUtxo.tradeOwnerAddress.to_bech32() != walletAddress.to_address().to_bech32()){
-
-    }
-    */
-        
-    outputs.add(
-        createOutput(
-            assetUtxo.tradeOwnerAddress,
-            Loader.Cardano.Value.new(currentBidAmount.coin())
+            }
         )
     );
+    
+    // Pay back prevoius bidder if they exist
+    if (assetUtxo.tradeOwnerAddress) {
+        outputs.add(
+            createOutput(
+                assetUtxo.tradeOwnerAddress,
+                Loader.Cardano.Value.new(currentValue.coin())
+            )
+        );
+    }
+
+    // Add Redeemers
+    const redeemerIndex = txBuilder.index_of_input(assetUtxo.utxo.input()).toString();
+    redeemers.add(BID_REDEEMER(redeemerIndex, bidDetails))
 
     const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
@@ -386,9 +148,9 @@ export const bid = async (asset: string, bidDetails: BidDetails) => {
         utxos,
         outputs,
         datums,
+        redeemers,
         metadata,
         scriptUtxo: assetUtxo.utxo,
-        action: null,
       });
 
     return txHash;

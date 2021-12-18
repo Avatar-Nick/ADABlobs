@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { fromAscii, toHex } from '../../../cardano/serialization';
 import { getBaseAddress, getBaseAddressFromAddressString } from '../../../cardano/wallet/wallet';
 import { start } from '../../../cardano/plutus/contract';
-import { adaToLovelace, fee } from '../../../cardano/consts';
+import { adaToLovelace, blobPolicyId, fee } from '../../../cardano/consts';
 import Loader from '../../../cardano/loader';
 
 export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
@@ -18,10 +18,10 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         const walletAddress = await getBaseAddress();
         const marketplaceAddress = await getBaseAddressFromAddressString(process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string)
 
-        // If this is a local environment, use the testnet
-        let adCurrency = blob.policy_id; // policy_id
-        let adToken = blob.asset_name; // token_id
-        if (process.env.NEXT_PUBLIC_ENVIRONMENT === "local") {
+        // If this is not a production environment, use the testnet
+        let adCurrency = blob.policy_id;
+        let adToken = blob.asset_name;
+        if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
 
             // This is the SundaeSwap Mint test token
             adCurrency = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf3916522";
