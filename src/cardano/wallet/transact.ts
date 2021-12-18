@@ -89,9 +89,13 @@ export const finalizeTransaction = async ({
         if (collateral.length <= 0) throw new Error("NO_COLLATERAL");
         setCollateral(txBuilder, collateral);
 
+        console.log('transactionWitnessSet size: ', transactionWitnessSet.to_bytes().length);
         transactionWitnessSet.set_plutus_scripts(CONTRACT());
+        console.log('transactionWitnessSet size: ', transactionWitnessSet.to_bytes().length);
         transactionWitnessSet.set_plutus_data(datums);
+        console.log('transactionWitnessSet size: ', transactionWitnessSet.to_bytes().length);
         transactionWitnessSet.set_redeemers(redeemers);
+        console.log('transactionWitnessSet size: ', transactionWitnessSet.to_bytes().length);
     }
 
     // Attach Metadata to the transaction
@@ -115,7 +119,6 @@ export const finalizeTransaction = async ({
 
     const changeMultiAssets = change.multiasset();
 
-    // QUESTION: What is this doing?
     // Check if change value is too big for single output
     if (changeMultiAssets && change.to_bytes().length * 2 > CardanoBlockchain.protocolParameters.maxValSize) {
         const partialChange = Loader.Cardano.Value.new(Loader.Cardano.BigNum.from_str("0"));
@@ -172,6 +175,9 @@ export const finalizeTransaction = async ({
         ),
         aux_data
     );
+
+    console.log('txBody size: ', txBody.to_bytes().length);
+    console.log('transactionWitnessSet size: ', transactionWitnessSet.to_bytes().length);
 
     const size = tx.to_bytes().length * 2;
     console.log("Transaction Size: ", size);
