@@ -48,9 +48,9 @@ export const finalizeTransaction = async ({
     utxos,
     outputs,
     datums,
-    redeemers,
     metadata,
     scriptUtxo,
+    action,
   }: any) => {
     
     // Build the transaction witness set
@@ -71,7 +71,10 @@ export const finalizeTransaction = async ({
     }
 
     // Ensure proper redeemers for transaction
-    if (redeemers && redeemers.length > 0) {
+    if (scriptUtxo) {
+        const redeemers = Loader.Cardano.Redeemers.new();
+        const redeemerIndex = txBuilder.index_of_input(scriptUtxo.input()).toString();
+        redeemers.add(action(redeemerIndex));
         txBuilder.set_redeemers(
             Loader.Cardano.Redeemers.from_bytes(redeemers.to_bytes())
         );
@@ -172,6 +175,7 @@ export const finalizeTransaction = async ({
 
     const size = tx.to_bytes().length * 2;
     console.log("Transaction Size: ", size);
+    console.log(CardanoBlockchain.protocolParameters.maxTxSize);
     if (size > CardanoBlockchain.protocolParameters.maxTxSize)
         throw new Error("MAX_SIZE_REACHED");
 

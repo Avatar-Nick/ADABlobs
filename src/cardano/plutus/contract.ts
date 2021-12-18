@@ -134,10 +134,6 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         );
     }
 
-    // Add Redeemers
-    const redeemerIndex = txBuilder.index_of_input(assetUtxo.utxo.input()).toString();
-    redeemers.add(BID_REDEEMER(redeemerIndex, bidDetails))
-
     const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
     txBuilder.set_required_signers(requiredSigners);
@@ -148,9 +144,9 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         utxos,
         outputs,
         datums,
-        redeemers,
         metadata,
         scriptUtxo: assetUtxo.utxo,
+        action: (redeemerIndex: any) => BID_REDEEMER(redeemerIndex, bidDetails)
       });
 
     return txHash;

@@ -34,11 +34,14 @@ export const BID_REDEEMER = (redeemerIndex: number, bidDetails: BidDetails) =>
         )
     )
     
-    // QUESTION, spacebudz using ex units why dont I?
     const redeemer = Loader.Cardano.Redeemer.new(
         Loader.Cardano.RedeemerTag.new_spend(),
         Loader.Cardano.BigNum.from_str(redeemerIndex),
         redeemerData,
+        Loader.Cardano.ExUnits.new(
+            Loader.Cardano.BigNum.from_str("7000000"),
+            Loader.Cardano.BigNum.from_str("3000000000")
+        ) // ExUnits represents payment for computation (not sure about units, this was copied from SpaceBudz)
     )
 
     return redeemer;
