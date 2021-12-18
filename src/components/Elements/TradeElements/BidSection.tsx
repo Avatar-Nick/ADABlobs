@@ -9,13 +9,19 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
         event.preventDefault();
         const walletAddress = await getBaseAddress();
 
+        let asset = blob.asset;
+        if (process.env.NEXT_PUBLIC_ENVIRONMENT === "local") {
+
+            // This is the SundaeSwap Mint test token
+            asset = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf39165224d494e54";
+        }
+
         const bdBidder = toHex(walletAddress.payment_cred().to_keyhash().to_bytes());
         const bidAmount = event.target.amount.value;
         const bidDetails : BidDetails = { bdBidder, bdBid: bidAmount }
         
-        const txHash = await bid(blob.asset, bidDetails);
+        const txHash = await bid(asset, bidDetails);
 
-        // Check transaction and twitter bot (lol nice)
         console.log(txHash);
     }
 

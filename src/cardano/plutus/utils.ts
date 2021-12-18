@@ -12,14 +12,19 @@ import { assetsToValue, fromHex, toHex } from '../serialization';
     was initially used in the SpaceBudz contracts.
 */
 export const getAssetUtxos = async (asset: string) => {
-    const utxos = await fetchScriptAssetUtxos(CONTRACT_ADDRESS(), asset);
+    const utxos = await fetchScriptAssetUtxos(CONTRACT_ADDRESS().to_bech32(), asset);
 
+    console.log('utxos', utxos);
     const utxosData = utxos.map(async (utxo: any) => {
         const metadata = await fetchTxMetadata(utxo.tx_hash);
         let datum = null;
         let tradeOwnerAddress = null;
         try {
-            datum = metadata.find((m: any) => m.label == DATUM_LABEL).json_metadata[utxo.output_index].slice(2);
+            const datumArray = metadata.find((m: any) => m.label == DATUM_LABEL).json_metadata[utxo.output_index];
+            datum = arrayToBytes(datumArray);
+
+            console.log('datum', datum);
+            console.log('metadata', metadata);
             const tradeOwnerAddressMetadata = metadata.find((m: any) => m.label == ADDRESS_LABEL);
             if (tradeOwnerAddressMetadata) {
                 tradeOwnerAddress = tradeOwnerAddressMetadata.json_metadata.address.slice(2);
@@ -59,7 +64,16 @@ export const getTradeDetails = (datum: any) => {
     return { tradeOwner, assetId, bidAmount };
 }
 
-export const metadata64Bytes = (datumHex: string) => {
+export const bytesToArray = (datumHex: string) => {
     const datumList = datumHex.match(/.{1,64}/g);
     return datumList;
+}
+
+export const arrayToBytes = (metadataArray: [string]) => {
+    let datum = "";
+    metadataArray.map(item => {
+        datum += item;
+    })
+    datum = datum.slice(2); // Remove 0x which signifies a hex value
+    return datum;
 }

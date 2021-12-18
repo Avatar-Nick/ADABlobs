@@ -20,17 +20,13 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         // If this is a local environment, use the testnet
         let adCurrency = blob.policy_id; // policy_id
         let adToken = blob.asset_name; // token_id
-        console.log(blob);
         if (process.env.NEXT_PUBLIC_ENVIRONMENT === "local") {
 
-            //adToken = "asset15gvggz5s3ptfadt3x6d8p7n5x3petfhrqeps6n";
-            // This is the Sundaeswap Mint test token
+            // This is the SundaeSwap Mint test token
             adCurrency = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf3916522";
             adToken = "4d494e54";
         }
 
-        // QUESTION: Why does the getBaseAddress not equal the getAddress?
-        // Will this be an error for the marketplace address since im using addr...
         const adSeller = toHex(walletAddress.payment_cred().to_keyhash().to_bytes())
         const adDeadline = endDateTime.getTime().toString();
         const adStartTime = startDateTime.getTime().toString();
@@ -39,10 +35,8 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         const adMarketplaceAddress = (process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string).toString();
         
         const auctionDetails : AuctionDetails = { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress }
-        console.log("auctionDetails", auctionDetails);
         const txHash = await start(auctionDetails);
 
-        // Check transaction and twitter bot (lol nice)
         console.log(txHash);
     }
 

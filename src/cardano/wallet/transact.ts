@@ -5,7 +5,7 @@ import { fromHex, toHex } from '../serialization';
 import { fee } from '../consts';
 import { CONTRACT } from '../plutus/contract';
 import { getCollateral, signTx, submitTx } from './wallet';
-import { metadata64Bytes } from '../plutus/utils';
+import { bytesToArray, arrayToBytes } from '../plutus/utils';
 
 export const DATUM_LABEL = 405;
 export const ADDRESS_LABEL = 406;
@@ -55,10 +55,6 @@ export const finalizeTransaction = async ({
     // Build the transaction witness set
     const transactionWitnessSet = Loader.Cardano.TransactionWitnessSet.new();
 
-    console.log(changeAddress);
-    console.log(utxos);
-    console.log('output', outputs.get(0).amount().multiasset().keys().get(0));
-
     // Build the transaction inputs using the random improve algorithm
     // Algorithm details: https://input-output-hk.github.io/cardano-coin-selection/haddock/cardano-coin-selection-1.0.1/Cardano-CoinSelection-Algorithm-RandomImprove.html
     //@ts-ignore
@@ -67,15 +63,13 @@ export const finalizeTransaction = async ({
         txBuilder.add_input(utxo.output().address(), utxo.input(), utxo.output().amount()); 
     });
 
-    
-
     // Build the transaction outputs
     for (let i = 0; i < outputs.len(); i++) 
     {
         txBuilder.add_output(outputs.get(i));
     }
 
-    // QUESTION: What is this doing?
+    // Ensure proper redeemers for transaction
     if (scriptUtxo) {
         const redeemers = Loader.Cardano.Redeemers.new();
         const redeemerIndex = txBuilder.index_of_input(scriptUtxo.input()).toString();
@@ -99,7 +93,7 @@ export const finalizeTransaction = async ({
         transactionWitnessSet.set_redeemers(redeemers);
     }
 
-    // QUESTION: What is this doing?
+    // Attach Metadata to the transaction
     let aux_data;
     if (metadata) {
         aux_data = Loader.Cardano.AuxiliaryData.new();
@@ -215,8 +209,7 @@ export const createOutput = (address : any, value: any, { datum, index, tradeOwn
     const output = Loader.Cardano.TransactionOutput.new(address, value);
     if (datum) {
         output.set_data_hash(Loader.Cardano.hash_plutus_data(datum));
-        metadata[DATUM_LABEL][index] = metadata64Bytes("0x" + toHex(datum.to_bytes()));
-    }
+        metadata[DATUM_LABEL][index] = bytesToArray("0x" + toHex(datum.to_bytes()));}
     if (tradeOwnerAddress) {
         metadata[ADDRESS_LABEL].address = "0x" + toHex(tradeOwnerAddress.to_address().to_bytes());
     }

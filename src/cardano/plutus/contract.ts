@@ -1,3 +1,4 @@
+import { env } from 'process';
 import Loader from '../loader';
 
 import { assetsToValue, fromHex } from '../serialization';
@@ -173,12 +174,7 @@ export const BID = (bidAuctionDetails: AuctionDetails, bidBidDetails: BidDetails
     }
     */
 
-    const { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid } = bidAuctionDetails;
-
-    // Data
-    const adPayoutPercentages = Loader.Cardano.PlutusMap.new();
-    adPayoutPercentages.insert(Loader.Cardano.PlutusData.new_bytes(fromHex(adSeller)), Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str("990")));
-    adPayoutPercentages.insert(Loader.Cardano.PlutusData.new_bytes(fromHex(marketplaceAddress)), Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str("10")));
+    const { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress } = bidAuctionDetails;
 
     // Construct Cardano Jason
     const auctionDetailsFields = Loader.Cardano.PlutusList.new();
@@ -188,7 +184,8 @@ export const BID = (bidAuctionDetails: AuctionDetails, bidBidDetails: BidDetails
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adDeadline)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adStartTime)))
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMinBid)))
-    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_map(adPayoutPercentages));
+    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(adMarketplacePercent)))
+    auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adMarketplaceAddress)))
 
     const auctionDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
@@ -265,19 +262,13 @@ const GRAB = () =>
     2: Create an output sending an NFT asset to the script address
     3: Sign and submit transaction
 */
-
 export const start = async (auctionDetails: AuctionDetails) => {
 
     const datum = START(auctionDetails);
-    console.log('datum',datum);
-
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
-    console.log('after initialization');
 
     const walletAddress = await getBaseAddress();
     const utxos = await getUtxos();
-
-    console.log('utxos', utxos);
     
     // Contract receives blob
     outputs.add(
@@ -285,21 +276,19 @@ export const start = async (auctionDetails: AuctionDetails) => {
             CONTRACT_ADDRESS(),
             assetsToValue([
                 {
-                    unit: auctionDetails.adCurrency + auctionDetails.adToken, // TODO: Is this correct?
+                    unit: auctionDetails.adCurrency + auctionDetails.adToken,
                     quantity: "1",
                 }
             ]),
             {
                 datum: datum,
                 index: 0,
-                metadata: metadata, // TODO should I have the datum value here as well?
+                metadata: metadata,
             }
         )
     )
     
     datums.add(datum);
-
-    console.log('outputs', outputs);
 
     const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
@@ -318,19 +307,16 @@ export const start = async (auctionDetails: AuctionDetails) => {
       return txHash;
 }
 
-/*
-    Steps:
-    1: Get wallet utxos
-    2: Get asset utxo that is on the script address
-    3: Create an output sending a blob NFT to the script address
-    3: Sign and submit transaction
-
-    TODO: I need to fill this out
-*/
 export const bid = async (asset: string, bidDetails: BidDetails) => {
+
+    console.log('asset', asset);
+    console.log('bidDetails', bidDetails);
+
     const assetUtxos = await getAssetUtxos(asset);
     if (assetUtxos.length > 1) {
-        throw new Error("There can only be 1 utxo for an NFT asset");
+        if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'production') {
+            throw new Error("There can only be 1 utxo for an NFT asset");
+        }        
     }
     const assetUtxo: any = assetUtxos[0];
     const currentBidAmount = assetUtxo.utxo.output().amount(); // TODO Will this throw an error if no current Bid?

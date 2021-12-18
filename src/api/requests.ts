@@ -1,6 +1,6 @@
 import { adablobsAPI, blockfrostAPI } from '../api/api';
 import { getAddress } from '../cardano/wallet/wallet';
-import { blockfrostAPIKey } from '../consts/consts';
+import { blockfrostAPIKey, blockfrostAPIKeyTest } from '../consts/consts';
 
 // ADABlobs Functions
 export const fetchAssets = async ({ pageParam = 1 } : any) => {
@@ -36,8 +36,9 @@ export const fetchProtocolParameters = async () =>
     return response.json();
 }
 
-export const fetchScriptAssetUtxos = async (address: string, asset: string) => {
-    const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.addresses.utxos.base(address, asset)}`)
+export const fetchScriptAssetUtxos = async (address: string, asset: string) => 
+{
+    const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.addresses.utxos(address, asset)}`)
     return response.json();
 }
 

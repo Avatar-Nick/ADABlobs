@@ -32,7 +32,7 @@ export const blockfrostAPI = new API(
     {
         baseURL: process.env.BLOCKFROST_API_URL,
         endpoints: {
-            address: {
+            addresses: {
                 base: (address: string) => `/addresses/${address}`,
                 utxos: (address: string, asset: string) => `/addresses/${address}/utxos/${asset}`,
             },
@@ -47,7 +47,7 @@ export const blockfrostAPI = new API(
         },
         clientURL: process.env.NEXT_PUBLIC_BLOCKFROST_CLIENT_API_URL,
         clientEndpoints: {
-            address: {
+            addresses: {
                 base: (address: string) => `/addresses/${address}`,
                 utxos: (address: string, asset: string) => `/addresses/${address}/utxos/${asset}`,
             },

@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
     const { address } : any = req.query;
 
     try {
-        const addressData = await blockfrostAPIRequest(blockfrostAPI.endpoints.address.base(address))
+        const addressData = await blockfrostAPIRequest(blockfrostAPI.endpoints.addresses.base(address))
         if (!addressData || addressData.status_code === 400) {
 
             // Testnet Code
