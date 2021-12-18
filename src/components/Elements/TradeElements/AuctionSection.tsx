@@ -1,12 +1,12 @@
 import Image from 'next/image';
-import { toHex } from '../../../cardano/serialization';
-import { getBaseAddress } from '../../../cardano/wallet/wallet';
+import { fromAscii, toHex } from '../../../cardano/serialization';
+import { getBaseAddress, getBaseAddressFromAddressString } from '../../../cardano/wallet/wallet';
 import { start } from '../../../cardano/plutus/contract';
 import { adaToLovelace, fee } from '../../../cardano/consts';
+import Loader from '../../../cardano/loader';
 
 export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 {
-
     const submitStartTransaction = async (event : any) => {
         event.preventDefault();
 
@@ -16,6 +16,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         const endDateTime = new Date(event.target.endDatetime.value);
 
         const walletAddress = await getBaseAddress();
+        const marketplaceAddress = await getBaseAddressFromAddressString(process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string)
 
         // If this is a local environment, use the testnet
         let adCurrency = blob.policy_id; // policy_id
@@ -32,8 +33,8 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         const adStartTime = startDateTime.getTime().toString();
         const adMinBid = reservePriceLovelace.toString();
         const adMarketplacePercent = fee; // Corresponds to 1%
-        const adMarketplaceAddress = (process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string).toString();
-        
+        const adMarketplaceAddress = toHex(marketplaceAddress.payment_cred().to_keyhash().to_bytes())
+       
         const auctionDetails : AuctionDetails = { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress }
         const txHash = await start(auctionDetails);
 

@@ -98,7 +98,6 @@ export const finalizeTransaction = async ({
     if (metadata) {
         aux_data = Loader.Cardano.AuxiliaryData.new();
         const generalMetadata = Loader.Cardano.GeneralTransactionMetadata.new();
-        console.log(metadata);
         Object.keys(metadata).forEach((label) => {
           Object.keys(metadata[label]).length > 0 &&
             generalMetadata.insert(

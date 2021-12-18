@@ -1,10 +1,10 @@
 import { env } from 'process';
 import Loader from '../loader';
 
-import { assetsToValue, fromHex } from '../serialization';
+import { assetsToValue, fromHex, toHex } from '../serialization';
 import { createOutput, finalizeTransaction, initializeTransaction, splitAmount } from '../wallet/transact';
 import { getBaseAddress, getUtxos } from '../wallet/wallet';
-import { getAssetUtxos } from './utils';
+import { getAssetUtxos, getAuctionDatum, getTradeDetails } from './utils';
 
 export const CONTRACT = () => 
 {
@@ -194,7 +194,7 @@ export const BID = (bidAuctionDetails: AuctionDetails, bidBidDetails: BidDetails
         )
     )
 
-    const { bdBidder, bdBid} = bidBidDetails;
+    const { bdBidder, bdBid } = bidBidDetails;
 
     // TODO This was changed from the json in the tests, constr is now (1) etc. Is that okay?
     const bidDetailsFields = Loader.Cardano.PlutusList.new();
@@ -318,9 +318,17 @@ export const bid = async (asset: string, bidDetails: BidDetails) => {
             throw new Error("There can only be 1 utxo for an NFT asset");
         }        
     }
-    const assetUtxo: any = assetUtxos[0];
-    const currentBidAmount = assetUtxo.utxo.output().amount(); // TODO Will this throw an error if no current Bid?
-    const auctionDetails: AuctionDetails = assetUtxo.datum.auctionDetails;    
+
+    // TODO Pick the latest utxo
+
+    const assetUtxo: any = assetUtxos[0]; 
+    const currentBidAmount = assetUtxo.utxo.output().amount();
+    
+    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum);
+    console.log(auctionDatum);
+
+
+
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
     const walletAddress = await getBaseAddress();
@@ -328,13 +336,13 @@ export const bid = async (asset: string, bidDetails: BidDetails) => {
 
     datums.add(assetUtxo.datum);
 
-    if (bidDetails.bdBid < currentBidAmount || bidDetails.bdBid < parseInt(auctionDetails.adMinBid)) {
+    if (bidDetails.bdBid < currentBidAmount || bidDetails.bdBid < parseInt(auctionDatum.auctionDetails.adMinBid)) {
         throw new Error("Bid is too low");
     }
 
     // TODO: Check time here as well?
 
-    const bidDatum = BID(auctionDetails, bidDetails);
+    const bidDatum = BID(auctionDatum.auctionDetails, bidDetails);
     datums.add(bidDatum);
     outputs.add(
         createOutput(

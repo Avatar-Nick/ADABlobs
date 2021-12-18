@@ -81,6 +81,15 @@ export const getBaseAddress = async () =>
     return baseAddress;
 }
 
+export const getBaseAddressFromAddressString = async (addressBech32: string) => {
+    const cardano = window.cardano;
+    if (!cardano) return null;
+
+    const addressObject = Loader.Cardano.Address.from_bech32(addressBech32);
+    const baseAddress = Loader.Cardano.BaseAddress.from_address(addressObject);
+    return baseAddress;
+}
+
 export const getUtxos = async () => 
 {
     const cardano = window.cardano;

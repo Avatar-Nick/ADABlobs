@@ -1,6 +1,6 @@
 import { adablobsAPI, blockfrostAPI } from '../api/api';
 import { getAddress } from '../cardano/wallet/wallet';
-import { blockfrostAPIKey, blockfrostAPIKeyTest } from '../consts/consts';
+import { blockfrostAPIKey } from '../consts/consts';
 
 // ADABlobs Functions
 export const fetchAssets = async ({ pageParam = 1 } : any) => {
