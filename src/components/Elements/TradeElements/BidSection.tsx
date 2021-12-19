@@ -29,9 +29,14 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
     const submitCloseTransaction = async (event: any) => {
         event.preventDefault();
 
-        const txHash = await close(blob.asset);
+        let asset = blob.asset;
+        if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
+
+            // This is the SundaeSwap Mint test token
+            asset = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf39165224d494e54";
+        }
+        const txHash = await close(asset);
         
-        // Check transaction and twitter bot (lol nice)
         console.log(txHash);
     }
     return (

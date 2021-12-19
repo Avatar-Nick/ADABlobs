@@ -1,6 +1,6 @@
 import Loader from '../loader';
 import { fetchScriptAssetUtxos, fetchTxMetadata } from "../../api/requests";
-import { ADDRESS_LABEL, DATUM_LABEL } from "../wallet/transact";
+import { DATUM_LABEL, SELLER_ADDRESS_LABEL, BIDDER_ADDRESS_LABEL } from "../wallet/transact";
 import { CONTRACT_ADDRESS } from "./contract";
 import { assetsToValue, fromHex, toHex } from '../serialization';
 import { getAddress, getBaseAddress } from '../wallet/wallet';
@@ -18,15 +18,22 @@ export const getAssetUtxos = async (asset: string) => {
     const utxosData = utxos.map(async (utxo: any) => {
         const metadata = await fetchTxMetadata(utxo.tx_hash);
         let datum = null;
-        let tradeOwnerAddress = null;
+        let sellerAddress = null;
+        let bidderAddress = null;
         try {
             const datumArray = metadata.find((m: any) => m.label == DATUM_LABEL).json_metadata[utxo.output_index];
             datum = arrayToBytes(datumArray);
 
-            const tradeOwnerAddressMetadata = metadata.find((m: any) => m.label == ADDRESS_LABEL);
-            if (tradeOwnerAddressMetadata) {
-                tradeOwnerAddress = tradeOwnerAddressMetadata.json_metadata.address.slice(2);
-                tradeOwnerAddress = Loader.Cardano.Address.from_bytes(fromHex(tradeOwnerAddress));
+            const sellerAddressMetadata = metadata.find((m: any) => m.label == SELLER_ADDRESS_LABEL);
+            if (sellerAddressMetadata) {
+                sellerAddress = sellerAddressMetadata.json_metadata.address.slice(2);
+                sellerAddress = Loader.Cardano.Address.from_bytes(fromHex(sellerAddress));
+            }
+
+            const bidderAddressMetadata = metadata.find((m: any) => m.label == BIDDER_ADDRESS_LABEL);
+            if (bidderAddressMetadata) {
+                bidderAddress = bidderAddressMetadata.json_metadata.address.slice(2);
+                bidderAddress = Loader.Cardano.Address.from_bytes(fromHex(bidderAddress));
             }
         }        
         catch (e) {
@@ -47,7 +54,7 @@ export const getAssetUtxos = async (asset: string) => {
                 CONTRACT_ADDRESS(), assetsToValue(utxo.amount),
             )
         )
-        return { datum, tradeOwnerAddress, utxo, asset }            
+        return { datum, utxo, asset, bidderAddress, sellerAddress }            
     });
     return await Promise.all(utxosData);
 }

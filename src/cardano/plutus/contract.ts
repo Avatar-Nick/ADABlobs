@@ -50,9 +50,10 @@ export const start = async (auctionDetails: AuctionDetails) =>
                 }
             ]),
             {
-                datum: datum,
                 index: 0,
+                datum: datum,
                 metadata: metadata,
+                sellerAddress: walletAddress,
             }
         )
     )
@@ -115,19 +116,20 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
                 { unit: assetUtxo.asset, quantity: "1" },
             ]),
             {
-                datum: bidDatum,
-                index: 0, // QUESTION: is this the txix?
-                tradeOwnerAddress: walletAddress,
+                index: 0,
+                datum: bidDatum,                
                 metadata: metadata,
+                sellerAddress: assetUtxo.sellerAddress,
+                bidderAddress: walletAddress,
             }
         )
     );
     
     // Pay back prevoius bidder if they exist
-    if (assetUtxo.tradeOwnerAddress) {
+    if (assetUtxo.bidderAddress) {
         outputs.add(
             createOutput(
-                assetUtxo.tradeOwnerAddress,
+                assetUtxo.bidderAddress,
                 Loader.Cardano.Value.new(currentValue.coin())
             )
         );
@@ -146,7 +148,7 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         metadata,
         scriptUtxo: assetUtxo.utxo,
         action: (redeemerIndex: any) => BID_REDEEMER(redeemerIndex, bidDetails)
-        });
+    });
     
     return txHash;
 }
@@ -172,11 +174,11 @@ export const close = async (asset: string) =>
     datums.add(assetUtxo.datum);
 
     // If there is a bidder, Send NFT to bidder, ADA to seller, and ADA to marketplace 
-    if (auctionDatum.adBidDetails) {        
+    if (auctionDatum.adBidDetails && assetUtxo.bidderAddress) {        
         splitAmount(currentBidAmountLovelace, auctionDatum.adAuctionDetails.adSeller, outputs);
         outputs.add(
             createOutput(
-                auctionDatum.adBidDetails?.bdBidder,
+                assetUtxo.bidderAddress,                
                 assetsToValue([
                     {
                         unit: auctionDatum.adAuctionDetails.adCurrency + auctionDatum.adAuctionDetails.adToken,
@@ -184,19 +186,20 @@ export const close = async (asset: string) =>
                     }
                 ]),
                 {
-                    datum: assetUtxo.datum,
                     index: 0,
+                    datum: assetUtxo.datum,
                     metadata: metadata,
                 }
             )
         );
     }
     else {
-        console.log('no bid');
+        console.log('here');
+        console.log(assetUtxo);
         // QUESTION do I need to send residual ADA back? or is that accurate in createOutput
         outputs.add(
             createOutput(
-                auctionDatum.adAuctionDetails?.adSeller,
+                assetUtxo.sellerAddress,                
                 assetsToValue([
                     {
                         unit: auctionDatum.adAuctionDetails.adCurrency + auctionDatum.adAuctionDetails.adToken,
@@ -204,8 +207,8 @@ export const close = async (asset: string) =>
                     }
                 ]),
                 {
-                    datum: assetUtxo.datum,
                     index: 0,
+                    datum: assetUtxo.datum,
                     metadata: metadata,
                 }
             )
@@ -216,6 +219,7 @@ export const close = async (asset: string) =>
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
     txBuilder.set_required_signers(requiredSigners);
 
+    // QUESTION, could there be an issue with the change address being a wallet address?
     const txHash = await finalizeTransaction({
       txBuilder,
       changeAddress: walletAddress,

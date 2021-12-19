@@ -9,7 +9,8 @@ import { bytesToArray, getAuctionDatum, getAuctionRedeemer } from '../plutus/uti
 import { fetchCurrentSlot } from '../../api/requests';
 
 export const DATUM_LABEL = 405;
-export const ADDRESS_LABEL = 406;
+export const SELLER_ADDRESS_LABEL = 406;
+export const BIDDER_ADDRESS_LABEL = 406;
 
 // QUESTION, what is this?
 const languageViews =
@@ -37,7 +38,7 @@ export const initializeTransaction = async () =>
     )
 
     const datums = Loader.Cardano.PlutusList.new();
-    const metadata = { [DATUM_LABEL]: {}, [ADDRESS_LABEL]: {} };
+    const metadata = { [DATUM_LABEL]: {}, [SELLER_ADDRESS_LABEL]: {}, [BIDDER_ADDRESS_LABEL]: {} };
     const outputs = Loader.Cardano.TransactionOutputs.new();
     return { txBuilder, datums, metadata, outputs };
 }
@@ -92,6 +93,17 @@ export const finalizeTransaction = async ({
         transactionWitnessSet.set_plutus_scripts(CONTRACT());
         transactionWitnessSet.set_plutus_data(datums);
         transactionWitnessSet.set_redeemers(redeemers);
+
+        // QUESTION, Auction transaction fails on fee error if this is included in the auction transaction
+
+        // Add time to the transaction    
+        const currentTime = await fetchCurrentSlot()
+
+        // set_validity_start_interval is the current slot on the cardano blockchain
+        txBuilder.set_validity_start_interval(currentTime.slot);
+
+        // ttl is an absolute slot number greater than the current slot. This code sets the ttl to 15 minutes after the current slot
+        txBuilder.set_ttl(currentTime.slot + (15 * 60));
     }
 
     // Attach Metadata to the transaction
@@ -164,15 +176,6 @@ export const finalizeTransaction = async ({
 
     txBuilder.add_change_if_needed(changeAddress.to_address());
 
-    // Add time to the transaction    
-    const currentTime = await fetchCurrentSlot()
-
-    // set_validity_start_interval is the current slot on the cardano blockchain
-    txBuilder.set_validity_start_interval(currentTime.slot);
-
-    // ttl is an absolute slot number greater than the current slot. This code sets the ttl to 15 minutes after the current slot
-    txBuilder.set_ttl(currentTime.slot + (15 * 60));
-
     const txBody = txBuilder.build();
     const tx = Loader.Cardano.Transaction.new(
         txBody,
@@ -205,7 +208,7 @@ export const finalizeTransaction = async ({
 }
 
 // Spacebudz createOutput function which will build the output of the transaction
-export const createOutput = (address : any, value: any, { datum, index, tradeOwnerAddress, metadata }: any = {}) => 
+export const createOutput = (address : any, value: any, { index, datum, metadata, sellerAddress, bidderAddress }: any = {}) => 
 {
     const minAda = Loader.Cardano.min_ada_required(
         value,
@@ -218,9 +221,13 @@ export const createOutput = (address : any, value: any, { datum, index, tradeOwn
     const output = Loader.Cardano.TransactionOutput.new(address, value);
     if (datum) {
         output.set_data_hash(Loader.Cardano.hash_plutus_data(datum));
-        metadata[DATUM_LABEL][index] = bytesToArray("0x" + toHex(datum.to_bytes()));}
-    if (tradeOwnerAddress) {
-        metadata[ADDRESS_LABEL].address = "0x" + toHex(tradeOwnerAddress.to_address().to_bytes());
+        metadata[DATUM_LABEL][index] = bytesToArray("0x" + toHex(datum.to_bytes()));
+    }
+    if (sellerAddress) {
+        metadata[SELLER_ADDRESS_LABEL].address = "0x" + toHex(sellerAddress.to_address().to_bytes());
+    }
+    if (bidderAddress) {
+        metadata[BIDDER_ADDRESS_LABEL].address = "0x" + toHex(bidderAddress.to_address().to_bytes());
     }
     
     return output;
