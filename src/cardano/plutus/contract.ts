@@ -137,23 +137,18 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
     txBuilder.set_required_signers(requiredSigners);
 
-    try {
-        const txHash = await finalizeTransaction({
-            txBuilder,
-            changeAddress: walletAddress,
-            utxos,
-            outputs,
-            datums,
-            metadata,
-            scriptUtxo: assetUtxo.utxo,
-            action: (redeemerIndex: any) => BID_REDEEMER(redeemerIndex, bidDetails)
-          });
-        
-        return txHash;
-    }
-    catch (error) {
-        console.log(error);
-    }
+    const txHash = await finalizeTransaction({
+        txBuilder,
+        changeAddress: walletAddress,
+        utxos,
+        outputs,
+        datums,
+        metadata,
+        scriptUtxo: assetUtxo.utxo,
+        action: (redeemerIndex: any) => BID_REDEEMER(redeemerIndex, bidDetails)
+        });
+    
+    return txHash;
 }
 
 /*

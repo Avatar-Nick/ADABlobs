@@ -5,7 +5,7 @@ import { fromHex, toHex } from '../serialization';
 import { fee } from '../consts';
 import { CONTRACT } from '../plutus/contract';
 import { getCollateral, signTx, submitTx } from './wallet';
-import { bytesToArray, getAuctionDatum } from '../plutus/utils';
+import { bytesToArray, getAuctionDatum, getAuctionRedeemer } from '../plutus/utils';
 import { fetchCurrentSlot } from '../../api/requests';
 
 export const DATUM_LABEL = 405;
@@ -180,11 +180,7 @@ export const finalizeTransaction = async ({
             transactionWitnessSet.to_bytes()
         ),
         aux_data
-    );    
-
-    console.log(tx);
-    console.log(tx.is_valid());
-    console.log(tx.witness_set());
+    );
     
     const size = tx.to_bytes().length;
     if (size > CardanoBlockchain.protocolParameters.maxTxSize)

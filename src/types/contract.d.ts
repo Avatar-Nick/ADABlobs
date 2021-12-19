@@ -21,3 +21,8 @@ interface AuctionDatum
     adAuctionDetails: AuctionDetails,
     adBidDetails?: BidDetails,
 }
+
+interface AuctionRedeemer 
+{
+    arBidDetails?: BidDetails,
+}

@@ -79,6 +79,17 @@ export const getAuctionDatum = (datum: any) : AuctionDatum =>
     return auctionDatum;
 }
 
+export const getAuctionRedeemer = (redeemer: any): AuctionRedeemer => 
+{
+    const rawBidDetails = redeemer.data().as_constr_plutus_data().data();
+
+    const bdBidder = toHex(Loader.Cardano.Ed25519KeyHash.from_bytes(rawBidDetails.get(0).as_bytes()).to_bytes());
+    const bdBid = rawBidDetails.get(1).as_integer().as_u64().to_str();
+    const bidDetails: BidDetails = { bdBidder, bdBid };
+    const auctionRedeemer = { arBidDetails: bidDetails };
+    return auctionRedeemer;
+}
+
 export const bytesToArray = (datumHex: string) => {
     const datumList = datumHex.match(/.{1,64}/g);
     return datumList;
