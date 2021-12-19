@@ -184,7 +184,7 @@ export const finalizeTransaction = async ({
         ),
         aux_data
     );
-    
+
     const size = tx.to_bytes().length;
     if (size > CardanoBlockchain.protocolParameters.maxTxSize)
         throw new Error("MAX_SIZE_REACHED");
@@ -199,8 +199,9 @@ export const finalizeTransaction = async ({
         tx.body(),
         transactionWitnessSet,
         tx.auxiliary_data()
-    );
-
+    );    
+    
+    console.log(toHex(signedTx.to_bytes()));
     console.log("Full Tx Size: ", signedTx.to_bytes().length);
 
     const txHash = await submitTx(signedTx);

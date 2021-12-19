@@ -97,10 +97,6 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     const walletAddress = await getBaseAddress();
     const utxos = await getUtxos();
 
-    //30ca3887e827864907adf13322ea12c87d17e2ef0bea8601bb52f077
-
-    // BaseAddress, Address
-
     datums.add(assetUtxo.datum);
 
     const newBid = parseInt(bidDetails.bdBid);
@@ -108,8 +104,7 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         throw new Error("Bid is too low");
     }
 
-    // Question: Check time here as well?    
-    console.log(assetUtxo);
+    // Question: Check time here as well? 
 
     const bidDatum = BID_DATUM(auctionDatum.adAuctionDetails, bidDetails);
     datums.add(bidDatum);
