@@ -33,11 +33,21 @@ export const BID_REDEEMER = (redeemerIndex: number, bidDetails: BidDetails) =>
             bidDetailsFields,
         )
     )
+
+    // Need to wrap the a redeemer in another constructor due to the Haskell "Maybe"
+    const auctionRedeemerFields = Loader.Cardano.PlutusList.new();
+    auctionRedeemerFields.add(redeemerData);
+    const auctionRedeemerData = Loader.Cardano.PlutusData.new_constr_plutus_data(
+        Loader.Cardano.ConstrPlutusData.new(
+            Loader.Cardano.Int.new_i32(0),
+            auctionRedeemerFields,
+        )
+    )
     
     const redeemer = Loader.Cardano.Redeemer.new(
         Loader.Cardano.RedeemerTag.new_spend(),
         Loader.Cardano.BigNum.from_str(redeemerIndex),
-        redeemerData,
+        auctionRedeemerData,
         Loader.Cardano.ExUnits.new(
             Loader.Cardano.BigNum.from_str("7000000"),
             Loader.Cardano.BigNum.from_str("3000000000")

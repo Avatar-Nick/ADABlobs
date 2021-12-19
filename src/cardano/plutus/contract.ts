@@ -90,7 +90,7 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
     const currentValue = assetUtxo.utxo.output().amount();
-    const currentBidAmountLovelace = currentValue.coin().to_str();    
+    const currentBidAmountLovelace = parseInt(currentValue.coin().to_str());    
     const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum);
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
@@ -99,10 +99,13 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
 
     datums.add(assetUtxo.datum);
 
-    const newBid = parseInt(bidDetails.bdBid);
+    let newBid = parseInt(bidDetails.bdBid);
     if (newBid < currentBidAmountLovelace || newBid < parseInt(auctionDatum.adAuctionDetails.adMinBid)) {
         throw new Error("Bid is too low");
     }
+
+    // Need to add currentBidAmountLovelace to newBid to have the proper bid amount on the script at the output
+    newBid += currentBidAmountLovelace;
 
     // Question: Check time here as well? 
 

@@ -168,14 +168,24 @@ export const BID_DATUM = (bidAuctionDetails: AuctionDetails, bidBidDetails: BidD
     bidDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(bdBid)))
     const bidDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(1),
+            Loader.Cardano.Int.new_i32(0),
             bidDetailsFields,
+        )
+    )
+
+    // Need to wrap the bid details in another constructor due to the Haskell "Maybe"
+    const maybeBidDetailsFields = Loader.Cardano.PlutusList.new();
+    maybeBidDetailsFields.add(bidDetails);
+    const maybeBidDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
+        Loader.Cardano.ConstrPlutusData.new(
+            Loader.Cardano.Int.new_i32(0),
+            maybeBidDetailsFields,
         )
     )
 
     const datumFields = Loader.Cardano.PlutusList.new();
     datumFields.add(auctionDetails);
-    datumFields.add(bidDetails);
+    datumFields.add(maybeBidDetails);
 
     const datum = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
