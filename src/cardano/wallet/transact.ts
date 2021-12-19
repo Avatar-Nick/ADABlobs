@@ -230,7 +230,7 @@ export const createOutput = (address : any, value: any, { datum, index, tradeOwn
 export const splitAmount = (lovelaceAmount: any, address: any, outputs: any) => {
 
     const marketplaceFeeAmount = lovelacePercentage(lovelaceAmount, fee);
-    // TODO check if marketplace Fee amount < 1
+    // TODO check if marketplace Fee amount == 1%
 
     outputs.add(createOutput(process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS, Loader.Cardano.Value.new(marketplaceFeeAmount)));
     outputs.add(createOutput(address, Loader.Cardano.Value.new(lovelaceAmount.checked_sub(marketplaceFeeAmount))));

@@ -46,4 +46,36 @@ export const BID_REDEEMER = (redeemerIndex: number, bidDetails: BidDetails) =>
 
     return redeemer;
 }
+
+export const CLOSE_REDEEMER = (redeemerIndex: number) => 
+{
+    // The code below creates this json format    
+    /*
+    {
+        "constructor": 1,
+        "fields": [
+        ]
+    }
+    */
+
+    // Construct Cardano Json
+    const closeFields = Loader.Cardano.PlutusList.new();const redeemerData = Loader.Cardano.PlutusData.new_constr_plutus_data(
+        Loader.Cardano.ConstrPlutusData.new(
+            Loader.Cardano.Int.new_i32(1),
+            closeFields,
+        )
+    )
+    
+    const redeemer = Loader.Cardano.Redeemer.new(
+        Loader.Cardano.RedeemerTag.new_spend(),
+        Loader.Cardano.BigNum.from_str(redeemerIndex),
+        redeemerData,
+        Loader.Cardano.ExUnits.new(
+            Loader.Cardano.BigNum.from_str("5000000"),
+            Loader.Cardano.BigNum.from_str("2000000000")
+        )// ExUnits represents payment for computation (not sure about units, this was copied from SpaceBudz)
+    )
+
+    return redeemer;
+}
 //--------------------------------------------------------------------------------//

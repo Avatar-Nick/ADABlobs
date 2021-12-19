@@ -4,7 +4,7 @@ import { assetsToValue, fromHex, toHex } from '../serialization';
 import { createOutput, finalizeTransaction, initializeTransaction, splitAmount } from '../wallet/transact';
 import { getBaseAddress, getUtxos } from '../wallet/wallet';
 import { BID_DATUM, START_DATUM } from './datum';
-import { BID_REDEEMER } from './redeemer';
+import { BID_REDEEMER, CLOSE_REDEEMER } from './redeemer';
 import { getAssetUtxos, getAuctionDatum } from './utils';
 
 export const CONTRACT = () => 
@@ -151,24 +151,19 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     return txHash;
 }
 
-/*
-    Steps:
-    1: Get wallet utxos
-    2: Get asset utxo that is on the script address
-    3: Create an output sending a blob NFT to the script address
-    3: Sign and submit transaction
-
-    TODO: I need to fill this out
-*/
-export const close = async (asset: string) => {
+export const close = async (asset: string) => 
+{
     const assetUtxos = await getAssetUtxos(asset);
     if (assetUtxos.length > 1) {
-        throw new Error("There can only be 1 utxo for an NFT asset");
+        if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'production') {
+            throw new Error("There can only be 1 utxo for an NFT asset");
+        }        
     }
-    const assetUtxo: any = assetUtxos[0];
-    const currentBidAmount = assetUtxo.utxo.output().amount(); // TODO Will this throw an error if no current Bid?
-    const auctionDetails: AuctionDetails = assetUtxo.datum.auctionDetails; 
-    const bidDetails: BidDetails = assetUtxo.datum.bidDetails;
+
+    const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
+    const currentValue = assetUtxo.utxo.output().amount();
+    const currentBidAmountLovelace = currentValue.coin().to_str();    
+    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum);
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
     const walletAddress = await getBaseAddress();
@@ -176,9 +171,46 @@ export const close = async (asset: string) => {
 
     datums.add(assetUtxo.datum);
 
-    // Send NFT to bidder and ADA to seller
-    splitAmount(currentBidAmount, auctionDetails.adSeller, outputs);
-    outputs.add(createOutput(bidDetails.bdBidder, assetUtxo.utxo.output().amount())); // bidder probably needs type conversion // buyer receiving SpaceBud
+    // If there is a bidder, Send NFT to bidder, ADA to seller, and ADA to marketplace 
+    if (auctionDatum.adBidDetails) {        
+        splitAmount(currentBidAmountLovelace, auctionDatum.adAuctionDetails.adSeller, outputs);
+        outputs.add(
+            createOutput(
+                auctionDatum.adBidDetails?.bdBidder,
+                assetsToValue([
+                    {
+                        unit: auctionDatum.adAuctionDetails.adCurrency + auctionDatum.adAuctionDetails.adToken,
+                        quantity: "1",
+                    }
+                ]),
+                {
+                    datum: assetUtxo.datum,
+                    index: 0,
+                    metadata: metadata,
+                }
+            )
+        );
+    }
+    else {
+        console.log('no bid');
+        // QUESTION do I need to send residual ADA back? or is that accurate in createOutput
+        outputs.add(
+            createOutput(
+                auctionDatum.adAuctionDetails?.adSeller,
+                assetsToValue([
+                    {
+                        unit: auctionDatum.adAuctionDetails.adCurrency + auctionDatum.adAuctionDetails.adToken,
+                        quantity: "1",
+                    }
+                ]),
+                {
+                    datum: assetUtxo.datum,
+                    index: 0,
+                    metadata: metadata,
+                }
+            )
+        );
+    }
 
     const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
@@ -191,7 +223,7 @@ export const close = async (asset: string) => {
       outputs,
       datums,
       scriptUtxo: assetUtxo.utxo,
-      action: null,
+      action: (redeemerIndex: any) => CLOSE_REDEEMER(redeemerIndex),
     });
     return txHash;
 }
