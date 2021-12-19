@@ -27,13 +27,13 @@ export const getAssetUtxos = async (asset: string) => {
             const sellerAddressMetadata = metadata.find((m: any) => m.label == SELLER_ADDRESS_LABEL);
             if (sellerAddressMetadata) {
                 sellerAddress = sellerAddressMetadata.json_metadata.address.slice(2);
-                sellerAddress = Loader.Cardano.Address.from_bytes(fromHex(sellerAddress));
+                sellerAddress = Loader.Cardano.BaseAddress.from_address(Loader.Cardano.Address.from_bytes(fromHex(sellerAddress)));
             }
 
             const bidderAddressMetadata = metadata.find((m: any) => m.label == BIDDER_ADDRESS_LABEL);
             if (bidderAddressMetadata) {
                 bidderAddress = bidderAddressMetadata.json_metadata.address.slice(2);
-                bidderAddress = Loader.Cardano.Address.from_bytes(fromHex(bidderAddress));
+                bidderAddress = Loader.Cardano.BaseAddress.from_address(Loader.Cardano.Address.from_bytes(fromHex(bidderAddress)));
             }
         }        
         catch (e) {

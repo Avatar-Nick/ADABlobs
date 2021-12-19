@@ -1,9 +1,8 @@
 import Image from 'next/image';
-import { fromAscii, toHex } from '../../../cardano/serialization';
+import { toHex } from '../../../cardano/serialization';
 import { getBaseAddress, getBaseAddressFromAddressString } from '../../../cardano/wallet/wallet';
 import { start } from '../../../cardano/plutus/contract';
-import { adaToLovelace, blobPolicyId, fee } from '../../../cardano/consts';
-import Loader from '../../../cardano/loader';
+import { adaToLovelace, fee } from '../../../cardano/consts';
 
 export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 {

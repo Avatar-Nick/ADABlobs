@@ -10,7 +10,7 @@ import { fetchCurrentSlot } from '../../api/requests';
 
 export const DATUM_LABEL = 405;
 export const SELLER_ADDRESS_LABEL = 406;
-export const BIDDER_ADDRESS_LABEL = 406;
+export const BIDDER_ADDRESS_LABEL = 407;
 
 // QUESTION, what is this?
 const languageViews =
@@ -217,7 +217,7 @@ export const createOutput = (address : any, value: any, { index, datum, metadata
       );
       
     if (minAda.compare(value.coin()) == 1) value.set_coin(minAda);
-
+    
     const output = Loader.Cardano.TransactionOutput.new(address, value);
     if (datum) {
         output.set_data_hash(Loader.Cardano.hash_plutus_data(datum));

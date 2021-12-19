@@ -97,6 +97,10 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     const walletAddress = await getBaseAddress();
     const utxos = await getUtxos();
 
+    //30ca3887e827864907adf13322ea12c87d17e2ef0bea8601bb52f077
+
+    // BaseAddress, Address
+
     datums.add(assetUtxo.datum);
 
     const newBid = parseInt(bidDetails.bdBid);
@@ -104,7 +108,8 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         throw new Error("Bid is too low");
     }
 
-    // Question: Check time here as well?
+    // Question: Check time here as well?    
+    console.log(assetUtxo);
 
     const bidDatum = BID_DATUM(auctionDatum.adAuctionDetails, bidDetails);
     datums.add(bidDatum);
@@ -173,6 +178,8 @@ export const close = async (asset: string) =>
 
     datums.add(assetUtxo.datum);
 
+    // Question: Check time here as well?
+
     // If there is a bidder, Send NFT to bidder, ADA to seller, and ADA to marketplace 
     if (auctionDatum.adBidDetails && assetUtxo.bidderAddress) {        
         splitAmount(currentBidAmountLovelace, auctionDatum.adAuctionDetails.adSeller, outputs);
@@ -194,9 +201,6 @@ export const close = async (asset: string) =>
         );
     }
     else {
-        console.log('here');
-        console.log(assetUtxo);
-        // QUESTION do I need to send residual ADA back? or is that accurate in createOutput
         outputs.add(
             createOutput(
                 assetUtxo.sellerAddress,                
