@@ -69,7 +69,7 @@ export const getAuctionDatum = (datum: any) : AuctionDatum =>
     const auctionDetails : AuctionDetails = { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress };
     let auctionDatum : AuctionDatum = { adAuctionDetails: auctionDetails };
 
-    if (rawBidDetails.length > 0) {
+    if (rawBidDetails.len() > 0) {
         const bdBidder = toHex(Loader.Cardano.Ed25519KeyHash.from_bytes(rawBidDetails.get(0).as_bytes()).to_bytes());
         const bdBid = rawBidDetails.get(1).as_integer().as_u64().to_str();
         const bidDetails: BidDetails = { bdBidder, bdBid }

@@ -5,7 +5,8 @@ import { fromHex, toHex } from '../serialization';
 import { fee } from '../consts';
 import { CONTRACT } from '../plutus/contract';
 import { getCollateral, signTx, submitTx } from './wallet';
-import { bytesToArray, arrayToBytes } from '../plutus/utils';
+import { bytesToArray, getAuctionDatum } from '../plutus/utils';
+import { fetchCurrentSlot } from '../../api/requests';
 
 export const DATUM_LABEL = 405;
 export const ADDRESS_LABEL = 406;
@@ -36,10 +37,9 @@ export const initializeTransaction = async () =>
     )
 
     const datums = Loader.Cardano.PlutusList.new();
-    const redeemers = Loader.Cardano.Redeemers.new();
     const metadata = { [DATUM_LABEL]: {}, [ADDRESS_LABEL]: {} };
     const outputs = Loader.Cardano.TransactionOutputs.new();
-    return { txBuilder, datums, redeemers, metadata, outputs };
+    return { txBuilder, datums, metadata, outputs };
 }
 
 export const finalizeTransaction = async ({
@@ -80,7 +80,7 @@ export const finalizeTransaction = async ({
         );
         txBuilder.set_plutus_data(
             Loader.Cardano.PlutusList.from_bytes(datums.to_bytes())
-          );
+        );
         txBuilder.set_plutus_scripts(
             CONTRACT()
         );
@@ -89,13 +89,9 @@ export const finalizeTransaction = async ({
         if (collateral.length <= 0) throw new Error("NO_COLLATERAL");
         setCollateral(txBuilder, collateral);
 
-        console.log('transactionWitnessSet size: ', transactionWitnessSet.to_bytes().length);
         transactionWitnessSet.set_plutus_scripts(CONTRACT());
-        console.log('transactionWitnessSet size: ', transactionWitnessSet.to_bytes().length);
         transactionWitnessSet.set_plutus_data(datums);
-        console.log('transactionWitnessSet size: ', transactionWitnessSet.to_bytes().length);
         transactionWitnessSet.set_redeemers(redeemers);
-        console.log('transactionWitnessSet size: ', transactionWitnessSet.to_bytes().length);
     }
 
     // Attach Metadata to the transaction
@@ -167,6 +163,16 @@ export const finalizeTransaction = async ({
     }
 
     txBuilder.add_change_if_needed(changeAddress.to_address());
+
+    // Add time to the transaction    
+    const currentTime = await fetchCurrentSlot()
+
+    // set_validity_start_interval is the current slot on the cardano blockchain
+    txBuilder.set_validity_start_interval(currentTime.slot);
+
+    // ttl is an absolute slot number greater than the current slot. This code sets the ttl to 15 minutes after the current slot
+    txBuilder.set_ttl(currentTime.slot + (15 * 60));
+
     const txBody = txBuilder.build();
     const tx = Loader.Cardano.Transaction.new(
         txBody,
@@ -174,14 +180,13 @@ export const finalizeTransaction = async ({
             transactionWitnessSet.to_bytes()
         ),
         aux_data
-    );
+    );    
 
-    console.log('txBody size: ', txBody.to_bytes().length);
-    console.log('transactionWitnessSet size: ', transactionWitnessSet.to_bytes().length);
-
-    const size = tx.to_bytes().length * 2;
-    console.log("Transaction Size: ", size);
-    console.log(CardanoBlockchain.protocolParameters.maxTxSize);
+    console.log(tx);
+    console.log(tx.is_valid());
+    console.log(tx.witness_set());
+    
+    const size = tx.to_bytes().length;
     if (size > CardanoBlockchain.protocolParameters.maxTxSize)
         throw new Error("MAX_SIZE_REACHED");
 

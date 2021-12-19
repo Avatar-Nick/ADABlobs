@@ -47,6 +47,11 @@ export const fetchTxMetadata = async (tx_hash: string) => {
     return response.json();
 }
 
+export const fetchCurrentSlot = async () => {
+    const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.blocks.latest.base()}`)
+    return response.json();
+}
+
 export const blockfrostAPIRequest = async (endpoint: string, headers? : any, body? : any) =>
 {
     const url = `${blockfrostAPI.baseURL}${endpoint}`;

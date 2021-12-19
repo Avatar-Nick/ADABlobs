@@ -36,6 +36,11 @@ export const blockfrostAPI = new API(
                 base: (address: string) => `/addresses/${address}`,
                 utxos: (address: string, asset: string) => `/addresses/${address}/utxos/${asset}`,
             },
+            blocks: {
+                latest: {
+                    base: () => `/blocks/latest`,
+                }
+            },
             epochs: {
                 latest: {
                     parameters: () => `/epochs/latest/parameters`
@@ -50,6 +55,11 @@ export const blockfrostAPI = new API(
             addresses: {
                 base: (address: string) => `/addresses/${address}`,
                 utxos: (address: string, asset: string) => `/addresses/${address}/utxos/${asset}`,
+            },
+            blocks: {
+                latest: {
+                    base: () => `/blocks/latest`,
+                }
             },
             epochs: {
                 latest: {
