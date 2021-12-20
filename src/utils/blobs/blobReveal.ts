@@ -1,18 +1,17 @@
-// Hardcode the blob address here
-
 export const isBlobRevealed = (blob: BlobChainAsset, blobCount: number | undefined) => {
     return blobCount && blob.onchain_metadata.id <= blobCount;
 }
 
 export const isHomeAddress = (address: string | undefined) => {
-    const homeAddress = "";    
+    const homeAddress = process.env.NEXT_PUBLIC_BLOB_ADDRESS;
     return homeAddress === address;
 }
 
 // Blobs are revealed 1 per week until all 300 are revealed
 export const getBlobRevealCount = () => {
-    //const now = new Date(Date.now());
-    const now = new Date("2028-12-25T12:00:00.000Z");
+
+    //const now = new Date("2021-12-25T12:00:00.000Z"); // Test date
+    const now = new Date(Date.now());
     const daysSinceStart = getDaysSinceStartDate(now);
 
     const daysInWeek = 7;
@@ -28,7 +27,7 @@ export const getBlobRevealCount = () => {
 
 const getDaysSinceStartDate = (localDatetime: Date) => {
     const oneDay = 24 * 60 * 60 * 1000;
-    const startDatetime = new Date("2021-12-18T12:00:00.000Z");
+    const startDatetime = new Date("2021-11-20T12:00:00.000Z");
     const utcStartDatetime = getUTCDatetime(startDatetime);
     const utcNow = getUTCDatetime(localDatetime);
     

@@ -14,7 +14,7 @@ export const BlobContainer = () =>
     const scriptAssetsQuery = useScriptAssets(); 
     const revealedAssetsQuery = useRevealedAssets();
 
-    const { data,  fetchNextPage, hasNextPage, isFetchingNextPage } = assetsQuery;
+    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = assetsQuery;
     
     // Listen to scroll positions for loading more data on scroll
     useEffect(() => {
