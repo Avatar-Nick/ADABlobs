@@ -69,7 +69,8 @@ export const CLOSE_REDEEMER = (redeemerIndex: number) =>
     */
 
     // Construct Cardano Json
-    const closeFields = Loader.Cardano.PlutusList.new();const redeemerData = Loader.Cardano.PlutusData.new_constr_plutus_data(
+    const closeFields = Loader.Cardano.PlutusList.new();
+    const redeemerData = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
             Loader.Cardano.Int.new_i32(1),
             closeFields,

@@ -33,7 +33,7 @@ export const START_DATUM = (startAuctionDetails: AuctionDetails) =>
                     "int": 8000000 // adMinBid
                 },
                 {
-                    "int": 1 // adMarketplacePercent
+                    "int": 10 // adMarketplacePercent (this is 1%)
                 },
                 {
                     "bytes": 1639241130000 // adMarketplaceAddress

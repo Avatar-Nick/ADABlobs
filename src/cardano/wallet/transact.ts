@@ -3,7 +3,7 @@ import CardanoBlockchain from '../cardanoBlockchain';
 import CoinSelection from '../CoinSelection';
 import { fromHex, toHex } from '../serialization';
 import { fee } from '../consts';
-import { CONTRACT } from '../plutus/contract';
+import { CONTRACT, MARKETPLACE_ADDRESS } from '../plutus/contract';
 import { getCollateral, signTx, submitTx } from './wallet';
 import { bytesToArray, getAuctionDatum, getAuctionRedeemer } from '../plutus/utils';
 import { fetchCurrentSlot } from '../../api/requests';
@@ -96,14 +96,15 @@ export const finalizeTransaction = async ({
 
         // QUESTION, Auction transaction fails on fee error if this is included in the auction transaction
 
-        // Add time to the transaction    
+        // Add time to the transaction
         const currentTime = await fetchCurrentSlot()
 
         // set_validity_start_interval is the current slot on the cardano blockchain
         txBuilder.set_validity_start_interval(currentTime.slot);
 
         // ttl is an absolute slot number greater than the current slot. This code sets the ttl to 15 minutes after the current slot
-        txBuilder.set_ttl(currentTime.slot + (15 * 60));
+        // Transactions will silently fail and not place a bid if this time window is not before the end of the auction
+        txBuilder.set_ttl(currentTime.slot + (15 * 60)); 
     }
 
     // Attach Metadata to the transaction
@@ -201,7 +202,9 @@ export const finalizeTransaction = async ({
         tx.auxiliary_data()
     );    
     
-    console.log(toHex(signedTx.to_bytes()));
+    // Dump hex to read transactions with cardano-cli text-view decode-cbor
+    //console.log(toHex(signedTx.to_bytes()));
+    
     console.log("Full Tx Size: ", signedTx.to_bytes().length);
 
     const txHash = await submitTx(signedTx);
@@ -236,16 +239,18 @@ export const createOutput = (address : any, value: any, { index, datum, metadata
 
 // Split amount according to marketplace fees (potentially royalties later if additional assets)
 export const splitAmount = (lovelaceAmount: any, address: any, outputs: any) => {
-
     const marketplaceFeeAmount = lovelacePercentage(lovelaceAmount, fee);
     // TODO check if marketplace Fee amount == 1%
 
-    outputs.add(createOutput(process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS, Loader.Cardano.Value.new(marketplaceFeeAmount)));
+    outputs.add(createOutput(MARKETPLACE_ADDRESS(), Loader.Cardano.Value.new(marketplaceFeeAmount)));
     outputs.add(createOutput(address, Loader.Cardano.Value.new(lovelaceAmount.checked_sub(marketplaceFeeAmount))));
 }
 
 export const lovelacePercentage = (amount: any, p: any) => {
-    return amount.checked_mul(Loader.Cardano.BigNum.from_str("10")).checked_div(p);
+
+    //Might need minimum 1 ADA
+    console.log(amount);
+    return amount.checked_mul(Loader.Cardano.BigNum.from_str("10")).checked_div(Loader.Cardano.BigNum.from_str(fee))// p); //TODO UPDATE WITH P
 };
 
 export const setCollateral = (txBuilder: any, utxos: any) => {

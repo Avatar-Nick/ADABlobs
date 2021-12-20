@@ -21,6 +21,12 @@ export const CONTRACT_ADDRESS = () =>
   );
 }
 
+export const MARKETPLACE_ADDRESS = () => {
+    return Loader.Cardano.Address.from_bech32(
+        process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS
+    );
+}
+
 //--------------------------------------------------------------------------------//
 // Endpoints
 //--------------------------------------------------------------------------------//
@@ -104,10 +110,14 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         throw new Error("Bid is too low");
     }
 
-    // Need to add currentBidAmountLovelace to newBid to have the proper bid amount on the script at the output
-    newBid += currentBidAmountLovelace;
+    // Need to add the difference between the currentBidAmountLovelace and the old bid to the newBid
+    let oldBid = 0;
+    if (auctionDatum.adBidDetails) {
+        oldBid = parseInt(auctionDatum.adBidDetails?.bdBid)
+    }
+    newBid += (currentBidAmountLovelace - oldBid);
 
-    // Question: Check time here as well? 
+    // Question: Check time here as well?
 
     const bidDatum = BID_DATUM(auctionDatum.adAuctionDetails, bidDetails);
     datums.add(bidDatum);
@@ -132,8 +142,8 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     if (assetUtxo.bidderAddress) {
         outputs.add(
             createOutput(
-                assetUtxo.bidderAddress,
-                Loader.Cardano.Value.new(currentValue.coin())
+                assetUtxo.bidderAddress.to_address(),
+                Loader.Cardano.Value.new(Loader.Cardano.BigNum.from_str(auctionDatum.adBidDetails?.bdBid))
             )
         );
     }
@@ -166,8 +176,7 @@ export const close = async (asset: string) =>
     }
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
-    const currentValue = assetUtxo.utxo.output().amount();
-    const currentBidAmountLovelace = currentValue.coin().to_str();    
+    const currentValue = assetUtxo.utxo.output().amount();  
     const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum);
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
@@ -179,11 +188,11 @@ export const close = async (asset: string) =>
     // Question: Check time here as well?
 
     // If there is a bidder, Send NFT to bidder, ADA to seller, and ADA to marketplace 
-    if (auctionDatum.adBidDetails && assetUtxo.bidderAddress) {        
-        splitAmount(currentBidAmountLovelace, auctionDatum.adAuctionDetails.adSeller, outputs);
+    if (auctionDatum.adBidDetails && assetUtxo.sellerAddress && assetUtxo.bidderAddress) {        
+        splitAmount(currentValue.coin(), assetUtxo.sellerAddress.to_address(), outputs);
         outputs.add(
             createOutput(
-                assetUtxo.bidderAddress,                
+                assetUtxo.bidderAddress.to_address(),                
                 assetsToValue([
                     {
                         unit: auctionDatum.adAuctionDetails.adCurrency + auctionDatum.adAuctionDetails.adToken,
@@ -201,7 +210,7 @@ export const close = async (asset: string) =>
     else {
         outputs.add(
             createOutput(
-                assetUtxo.sellerAddress,                
+                assetUtxo.sellerAddress.to_address(),                
                 assetsToValue([
                     {
                         unit: auctionDatum.adAuctionDetails.adCurrency + auctionDatum.adAuctionDetails.adToken,
