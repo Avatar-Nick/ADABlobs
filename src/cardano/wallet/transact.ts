@@ -240,17 +240,15 @@ export const createOutput = (address : any, value: any, { index, datum, metadata
 // Split amount according to marketplace fees (potentially royalties later if additional assets)
 export const splitAmount = (lovelaceAmount: any, address: any, outputs: any) => {
     const marketplaceFeeAmount = lovelacePercentage(lovelaceAmount, fee);
-    // TODO check if marketplace Fee amount == 1%
-
     outputs.add(createOutput(MARKETPLACE_ADDRESS(), Loader.Cardano.Value.new(marketplaceFeeAmount)));
     outputs.add(createOutput(address, Loader.Cardano.Value.new(lovelaceAmount.checked_sub(marketplaceFeeAmount))));
 }
 
-export const lovelacePercentage = (amount: any, p: any) => {
-
-    //Might need minimum 1 ADA
-    console.log(amount);
-    return amount.checked_mul(Loader.Cardano.BigNum.from_str("10")).checked_div(Loader.Cardano.BigNum.from_str(fee))// p); //TODO UPDATE WITH P
+export const lovelacePercentage = (amount: any, p: any) => 
+{
+    // Check mul multiplies the value by 10, we then want to divide by 1000 to get 1%
+    const scaledFee = (parseInt(p) * 100).toString();
+    return amount.checked_mul(Loader.Cardano.BigNum.from_str("10")).checked_div(Loader.Cardano.BigNum.from_str(scaledFee));
 };
 
 export const setCollateral = (txBuilder: any, utxos: any) => {

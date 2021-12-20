@@ -27,6 +27,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
         }
         const addressAssetList = addressData.amount;
         if (!addressAssetList) {
+
+            // Testnet Code
+            if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
+                const owned : { [asset: string]: number } = { }
+                owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f6231'] = 1;
+                owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f623134'] = 1;
+                owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f62323637'] = 1;
+                res.status(200).json(owned);
+                return;
+            }
+            
             res.status(400).json({ error: "Address Asset List Is Null" });
             return;
         }
@@ -39,10 +50,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
             }
         }
         
-        // TODO Adding assets as an initial test
-        owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f6231'] = 1;
-        owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f623134'] = 1;
-        owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f62323637'] = 1;
+        // Testnet Code
+        if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
+            owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f6231'] = 1;
+            owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f623134'] = 1;
+            owned['4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318414441426c6f62323637'] = 1;
+        }
         res.status(200).json(owned);
     }
     catch (error) {
