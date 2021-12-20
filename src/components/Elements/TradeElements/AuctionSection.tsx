@@ -8,6 +8,25 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 {
     const submitStartTransaction = async (event : any) => {
         event.preventDefault();
+        console.log(event);
+        const buttonIndex = 3;
+        const auctionButton = event.target[buttonIndex];         
+        console.log(auctionButton);
+        auctionButton.classList.add("btn-loading");
+        auctionButton.disabled = true;
+
+
+        function timeout(ms: any) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        await timeout(3000);
+
+        auctionButton.classList.remove("btn-loading");
+        auctionButton.disabled = false;
+
+
+        return;
 
         const reservePrice = event.target.amount.value;
         const reservePriceLovelace = reservePrice * adaToLovelace;
@@ -144,6 +163,10 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 
                 .input-group-text {
                     background-color: #cde1f8;
+                }
+
+                .btn-loading {
+                    
                 }
             `}</style>
         </div>

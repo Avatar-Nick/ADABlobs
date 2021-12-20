@@ -3,7 +3,7 @@ export const isBlobRevealed = (blob: BlobChainAsset, blobCount: number | undefin
 }
 
 export const isHomeAddress = (address: string | undefined) => {
-    const homeAddress = process.env.NEXT_PUBLIC_BLOB_ADDRESS;
+    const homeAddress = ""; // process.env.NEXT_PUBLIC_BLOB_ADDRESS;
     return homeAddress === address;
 }
 
