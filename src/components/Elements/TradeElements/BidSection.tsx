@@ -14,8 +14,9 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
     const [errorString, setErrorString] = useState("Ensure all fields are correct, your Cardano wallet is connected, and that the page has not been updated. If you require help please reach out in our Discord channel.");
 
     const assetAuctionQuery = useAssetAuction(getAsset(blob.asset));
-    const { adDeadline, adStartTime, adMinBid } : any = (assetAuctionQuery.data as AuctionDatum)?.adAuctionDetails || { };
-    const { bdBid } : any = (assetAuctionQuery.data as AuctionDatum)?.adBidDetails || { };
+    const auctionDatum: AuctionDatum = (assetAuctionQuery.data as AuctionDatum);
+    const { adDeadline, adStartTime, adMinBid } : any = auctionDatum?.adAuctionDetails || { };
+    const { bdBid } : any = auctionDatum?.adBidDetails || { };
     
     const closeAlert = () => {
         setShowSuccess(false);
@@ -134,8 +135,9 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                         </div>
                     </div>                   
                     <hr className="divider" />
-                    <span className="blob-purchase-title">Top Bid:&nbsp;</span>
-                    <span className="blob-purchase-title blob-purchase-text">100 ADA</span>
+                    <span className="blob-purchase-title">{getTopBidText(auctionDatum)}  </span>
+                    {!auctionDatum && <div className="spinner-border spinner-border-sm" role="status"></div> }
+                    <span className="blob-purchase-title blob-purchase-text">{getTopBid(auctionDatum)}</span>
                     <form className="blob-form" onSubmit={submitBidTransaction}>
                         <div className="input-group mt-3 mb-3">
                             <span className="input-group-text input-bid">₳</span>
@@ -255,4 +257,40 @@ const getAsset = (blobAsset: string) => {
         asset = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf39165224d494e54";
     }
     return asset;
+}
+
+const getTopBid = (auctionDatum: AuctionDatum) => {
+    const { adMinBid } : any = auctionDatum?.adAuctionDetails || { };
+    const { bdBid } : any = auctionDatum?.adBidDetails || { };
+
+    if (!adMinBid && !bdBid) {
+        return "";
+    }
+
+    if (!bdBid) {
+        const reserveAmount = (parseInt(adMinBid) / adaToLovelace).toString();
+        return `${reserveAmount} ADA`;
+    }
+
+    const bidAmount = (parseInt(bdBid) / adaToLovelace).toString();
+    return `${bidAmount} ADA`;
+}
+
+const getTopBidText = (auctionDatum: AuctionDatum) => {
+    if (!auctionDatum) {
+        return "Loading...";
+    }
+
+    const { adMinBid } : any = auctionDatum?.adAuctionDetails || { };
+    const { bdBid } : any = auctionDatum?.adBidDetails || { };
+
+    if (!adMinBid && !bdBid) {
+        return "No Auction";
+    }
+
+    if (!bdBid) {
+        return "Reserve Amount: ";
+    }
+
+    return "Top Bid: ";
 }
