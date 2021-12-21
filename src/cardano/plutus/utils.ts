@@ -3,7 +3,6 @@ import { fetchAssetUtxos, fetchTxMetadata } from "../../api/requests";
 import { DATUM_LABEL, SELLER_ADDRESS_LABEL, BIDDER_ADDRESS_LABEL } from "../wallet/transact";
 import { CONTRACT_ADDRESS } from "./contract";
 import { assetsToValue, fromHex, toHex } from '../serialization';
-import { getAddress, getBaseAddress } from '../wallet/wallet';
 import { blobPolicyId } from '../consts';
 
 // Get's the UTXO associated with a given asset at the script address

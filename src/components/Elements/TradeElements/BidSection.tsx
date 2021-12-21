@@ -14,9 +14,9 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
     const [errorString, setErrorString] = useState("Ensure all fields are correct, your Cardano wallet is connected, and that the page has not been updated. If you require help please reach out in our Discord channel.");
 
     const assetAuctionQuery = useAssetAuction(getAsset(blob.asset));
-    console.log(assetAuctionQuery);
-    //const endDatetime = assetAuctionQuery.data.
-
+    const { adDeadline, adStartTime, adMinBid } : any = (assetAuctionQuery.data as AuctionDatum)?.adAuctionDetails || { };
+    const { bdBid } : any = (assetAuctionQuery.data as AuctionDatum)?.adBidDetails || { };
+    
     const closeAlert = () => {
         setShowSuccess(false);
         setShowError(false);
@@ -27,14 +27,13 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
             throw new Error("Bid Amount is required.");
         }
 
-        const reserveAmount = 10;
-        const newBid = target.amount.value;
+        const reserveAmount = parseInt(adMinBid);
+        const newBid = target.amount.value * adaToLovelace;
         if (newBid < reserveAmount) {
             throw new Error("Bid Amount must be larger than the reserve amount.");
         }
 
-        const bdBid = 10;
-        if (target.amount.value < bdBid) {
+        if (bdBid && target.amount.value < bdBid) {
             throw new Error("Bid Amount must be larger than the current bid.");
         }
 
