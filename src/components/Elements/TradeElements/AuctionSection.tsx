@@ -144,9 +144,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
                         
                         <button type="submit" className="btn btn-danger btn-trade mb-4">
                             <span>Start Auction</span>
-                            <div className="visually-hidden spinner-border spinner-border-sm" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                            </div>
+                            <div className="visually-hidden spinner-border spinner-border-sm" role="status"></div>
                         </button>
                     </form>
                 </div>       

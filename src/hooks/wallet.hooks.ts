@@ -6,9 +6,3 @@ const BASE_WALLET_KEY = "wallet"
 export const useIsConnected = () => useQuery(`${BASE_WALLET_KEY}.isConnected`, isConnected);
 
 export const useGetAddress = () => useQuery(`${BASE_WALLET_KEY}.address`, getAddress);
-
-// useStakeAddress
-// useAddress
-// useADA
-// useBlobs
-//export const useADA = () => useQuery(`${BASE_WALLET_KEY}.ada`, isConnected);

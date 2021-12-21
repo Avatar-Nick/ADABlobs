@@ -10,7 +10,7 @@ export const fetchAssets = async ({ pageParam = 1 } : any) => {
 
 export const fetchAsset = async ({ queryKey } : any) => {
     const [_key, asset] = queryKey
-    if (!asset) return {};
+    if (!asset) return { };
 
     const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.blobs.blob(asset)}`)
     return response.json();
@@ -49,6 +49,14 @@ export const fetchTxMetadata = async (tx_hash: string) => {
 
 export const fetchCurrentSlot = async () => {
     const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.blocks.latest.base()}`)
+    return response.json();
+}
+
+export const fetchAssetOwner = async ({ queryKey } : any) => {
+    const [_key, asset] = queryKey
+    if (!asset) return { };
+
+    const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.assets.addresses(asset)}`)
     return response.json();
 }
 
