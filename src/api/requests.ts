@@ -1,4 +1,5 @@
 import { adablobsAPI, blockfrostAPI } from '../api/api';
+import { getAssetUtxos, getAuctionDatum } from '../cardano/plutus/utils';
 import { getAddress } from '../cardano/wallet/wallet';
 import { blockfrostAPIKey } from '../consts/consts';
 
@@ -36,9 +37,8 @@ export const fetchProtocolParameters = async () =>
     return response.json();
 }
 
-export const fetchScriptAssetUtxos = async (address: string, asset: string) => 
-{
-    const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.addresses.utxos(address, asset)}`)
+export const fetchCurrentSlot = async () => {
+    const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.blocks.latest.base()}`)
     return response.json();
 }
 
@@ -47,8 +47,9 @@ export const fetchTxMetadata = async (tx_hash: string) => {
     return response.json();
 }
 
-export const fetchCurrentSlot = async () => {
-    const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.blocks.latest.base()}`)
+export const fetchAssetUtxos = async (address: string, asset: string) => 
+{
+    const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.addresses.utxos(address, asset)}`)
     return response.json();
 }
 
@@ -58,6 +59,20 @@ export const fetchAssetOwner = async ({ queryKey } : any) => {
 
     const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.assets.addresses(asset)}`)
     return response.json();
+}
+
+export const fetchAssetAuction = async ({ queryKey } : any) => {
+    const [_key, asset] = queryKey
+    if (!asset) return { };
+
+    const assetUtxos = await getAssetUtxos(asset);
+    if (assetUtxos.length > 1) {
+        throw new Error("There can only be 1 utxo for an NFT asset");       
+    }
+
+    const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
+    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum);
+    return auctionDatum;
 }
 
 export const blockfrostAPIRequest = async (endpoint: string, headers? : any, body? : any) =>

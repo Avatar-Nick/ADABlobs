@@ -1,5 +1,5 @@
 import Loader from '../loader';
-import { fetchScriptAssetUtxos, fetchTxMetadata } from "../../api/requests";
+import { fetchAssetUtxos, fetchTxMetadata } from "../../api/requests";
 import { DATUM_LABEL, SELLER_ADDRESS_LABEL, BIDDER_ADDRESS_LABEL } from "../wallet/transact";
 import { CONTRACT_ADDRESS } from "./contract";
 import { assetsToValue, fromHex, toHex } from '../serialization';
@@ -14,7 +14,9 @@ import { blobPolicyId } from '../consts';
     was initially used in the SpaceBudz contracts.
 */
 export const getAssetUtxos = async (asset: string) => {
-    const utxos = await fetchScriptAssetUtxos(CONTRACT_ADDRESS().to_bech32(), asset);
+    let utxos = await fetchAssetUtxos(CONTRACT_ADDRESS().to_bech32(), asset);
+    utxos = cleanUtxos(utxos);
+    
     const utxosData = utxos.map(async (utxo: any) => {
         const metadata = await fetchTxMetadata(utxo.tx_hash);
         let datum = null;
@@ -57,6 +59,14 @@ export const getAssetUtxos = async (asset: string) => {
         return { datum, utxo, asset, bidderAddress, sellerAddress }            
     });
     return await Promise.all(utxosData);
+}
+
+// If testnet just get the last utxo
+export const cleanUtxos = (utxos: any) => {
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
+        utxos = utxos.slice(-1);
+    }
+    return utxos;
 }
 
 export const getAuctionDatum = (datum: any) : AuctionDatum => 

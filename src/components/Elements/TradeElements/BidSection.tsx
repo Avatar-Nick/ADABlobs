@@ -13,8 +13,9 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
     const [showError, setShowError] = useState(false);
     const [errorString, setErrorString] = useState("Ensure all fields are correct, your Cardano wallet is connected, and that the page has not been updated. If you require help please reach out in our Discord channel.");
 
-    // TODO START HERE
-    const assetAuctionQuery = useAssetAuction(blob.asset);
+    const assetAuctionQuery = useAssetAuction(getAsset(blob.asset));
+    console.log(assetAuctionQuery);
+    //const endDatetime = assetAuctionQuery.data.
 
     const closeAlert = () => {
         setShowSuccess(false);
@@ -36,6 +37,8 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
         if (target.amount.value < bdBid) {
             throw new Error("Bid Amount must be larger than the current bid.");
         }
+
+        // Auction is over check
     }
 
     const submitBidTransaction = async (event : any) => {
@@ -55,14 +58,9 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
     
             validateFields(event.target);
             
-            const walletAddress = await getBaseAddress();    
-            let asset = blob.asset;
-            if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
-    
-                // This is the SundaeSwap Mint test token
-                asset = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf39165224d494e54";
-            }
-    
+            const walletAddress = await getBaseAddress();
+
+            let asset = getAsset(blob.asset);    
             const bdBidder = toHex(walletAddress.payment_cred().to_keyhash().to_bytes());
             const bidAmountLovelace = (event.target.amount.value * adaToLovelace).toString();
             const bidDetails : BidDetails = { bdBidder, bdBid: bidAmountLovelace }
@@ -248,4 +246,14 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
             `}</style>
         </div>
     )
+}
+
+const getAsset = (blobAsset: string) => {
+    let asset = blobAsset;
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
+
+        // This is the SundaeSwap Mint test token
+        asset = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf39165224d494e54";
+    }
+    return asset;
 }

@@ -97,9 +97,7 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
 {
     const assetUtxos = await getAssetUtxos(asset);
     if (assetUtxos.length > 1) {
-        if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'production') {
-            throw new Error("There can only be 1 utxo for an NFT asset");
-        }        
+        throw new Error("There can only be 1 utxo for an NFT asset");     
     }
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
@@ -178,9 +176,7 @@ export const close = async (asset: string) =>
 {
     const assetUtxos = await getAssetUtxos(asset);
     if (assetUtxos.length > 1) {
-        if (process.env.NEXT_PUBLIC_ENVIRONMENT === 'production') {
-            throw new Error("There can only be 1 utxo for an NFT asset");
-        }        
+        throw new Error("There can only be 1 utxo for an NFT asset");      
     }
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
