@@ -71,14 +71,20 @@ export const getAddress = async () =>
 // Transaction readable address
 export const getBaseAddress = async () => 
 {
-    const cardano = window.cardano;
-    if (!cardano) return null;
-
-    // cardano.changeAddress can also be used here
-    const hexAddresses = await cardano.getUsedAddresses();
-    const addressObject = Loader.Cardano.Address.from_bytes(fromHex(hexAddresses[0]));
-    const baseAddress = Loader.Cardano.BaseAddress.from_address(addressObject);
-    return baseAddress;
+    try {
+        const cardano = window.cardano;
+        if (!cardano) return null;
+    
+        // cardano.changeAddress can also be used here
+        const hexAddresses = await cardano.getUsedAddresses();
+        const addressObject = Loader.Cardano.Address.from_bytes(fromHex(hexAddresses[0]));
+        const baseAddress = Loader.Cardano.BaseAddress.from_address(addressObject);
+        return baseAddress;
+    }
+    catch (error) {
+        console.error(error);
+        throw new Error("Unable to get wallet address. Ensure your Cardano wallet is connected.");
+    } 
 }
 
 export const getBaseAddressFromAddressString = async (addressBech32: string) => {
@@ -92,12 +98,18 @@ export const getBaseAddressFromAddressString = async (addressBech32: string) => 
 
 export const getUtxos = async () => 
 {
-    const cardano = window.cardano;
-    if (!cardano) return;
-
-    const hexUtxos = await cardano.getUtxos();
-    const utxos = hexUtxos.map((utxo: any) => Loader.Cardano.TransactionUnspentOutput.from_bytes(fromHex(utxo)));
-    return utxos;
+    try {
+        const cardano = window.cardano;
+        if (!cardano) return;
+    
+        const hexUtxos = await cardano.getUtxos();
+        const utxos = hexUtxos.map((utxo: any) => Loader.Cardano.TransactionUnspentOutput.from_bytes(fromHex(utxo)));
+        return utxos;
+    }
+    catch (error) {
+        console.error(error);
+        throw new Error("Unable to get Utxos. Ensure your Cardano wallet is connected.");
+    }
 }
 
 export const getCollateral = async () => {

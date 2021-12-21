@@ -14,20 +14,36 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         setShowError(false);
     }
 
-    const checkFields = (target: any): boolean =>
+    const validateFields = (target: any) =>
     {
         if (!target?.amount?.value) {
-            throw new Error("Reserve Price is required")
+            throw new Error("Reserve Price is required");
         }
 
         if (target?.amount?.value < 0) {
-            throw new Error("Reserve Price cannot be negative")
+            throw new Error("Reserve Price cannot be negative");
         }
 
         if (!target?.startDatetime?.value) {
-            throw new Error("Start Date Time is required")
+            throw new Error("Start Date Time is required");
         }
-        return true;
+
+        if (!target?.endDatetime?.value) {
+            throw new Error("End Date Time is required");
+        }
+
+        // Increment the given end time by 15 minutes to allow for 15 minute time to live when transactions are submitted (ttl)
+        const fifteenMinutes = 1000 * 60 * 15;
+        const now = new Date(Date.now())
+        const startDatetime = new Date(target.startDatetime.value);
+        const endDatetime = new Date(target.endDatetime.value)
+        if ((endDatetime.getTime()) < (now.getTime() + fifteenMinutes)) {
+            throw new Error("End Date Time should be at least 15 minutes in the future");
+        }
+
+        if ((endDatetime.getTime()) < (startDatetime.getTime())) {
+            throw new Error("Start Date Time must be greater than End Date Time");
+        }
     }
 
     const submitStartTransaction = async (event : any) => {
@@ -44,12 +60,16 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
             auctionText.classList.add("visually-hidden");
             auctionSpinner.classList.remove("visually-hidden");
 
-            checkFields(event.target);
+            validateFields(event.target);
 
             const reservePrice = event.target.amount.value;
             const reservePriceLovelace = reservePrice * adaToLovelace;
             const startDateTime = new Date(event.target.startDatetime.value);
+
+            // Increment the given end time by 15 minutes to allow for 15 minute time to live when transactions are submitted (ttl)
+            const fifteenMinutes = 1000 * 60 * 15;
             const endDateTime = new Date(event.target.endDatetime.value);
+            const newEndDateTime = new Date(endDateTime.getTime() + fifteenMinutes);
 
             const walletAddress = await getBaseAddress();
             const marketplaceAddress = await getBaseAddressFromAddressString(process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string)
@@ -65,7 +85,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
             }
 
             const adSeller = toHex(walletAddress.payment_cred().to_keyhash().to_bytes())
-            const adDeadline = endDateTime.getTime().toString();
+            const adDeadline = newEndDateTime.getTime().toString();
             const adStartTime = startDateTime.getTime().toString();
             const adMinBid = reservePriceLovelace.toString();
             const adMarketplacePercent = fee; // Corresponds to 1%
@@ -82,7 +102,13 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         }
         catch (error: any) {  
             setShowError(true);
-            setErrorString(error?.message);
+
+            if (error?.message) {
+                setErrorString(error.message);
+            }
+            else {
+                setErrorString("An error has occured. Ensure all fields are correct, your Cardano wallet is connected, and refresh the page");
+            }
             
             auctionButton.disabled = false;
             auctionText.classList.remove("visually-hidden");

@@ -87,16 +87,14 @@ export const finalizeTransaction = async ({
         );
 
         const collateral = await getCollateral();
-        if (collateral.length <= 0) throw new Error("NO_COLLATERAL");
+        if (collateral.length <= 0) throw new Error("Your wallet has no collateral. Ensure your connected wallet has collateral. You can follow the guide page for instructions");
         setCollateral(txBuilder, collateral);
 
         transactionWitnessSet.set_plutus_scripts(CONTRACT());
         transactionWitnessSet.set_plutus_data(datums);
         transactionWitnessSet.set_redeemers(redeemers);
 
-        // QUESTION, Auction transaction fails on fee error if this is included in the auction transaction
-
-        // Add time to the transaction
+        // Get the current blockchain slot time
         const currentTime = await fetchCurrentSlot()
 
         // set_validity_start_interval is the current slot on the cardano blockchain
@@ -107,7 +105,7 @@ export const finalizeTransaction = async ({
         txBuilder.set_ttl(currentTime.slot + (15 * 60)); 
     }
 
-    // Attach Metadata to the transaction
+    // Attach metadata to the transaction
     let aux_data;
     if (metadata) {
         aux_data = Loader.Cardano.AuxiliaryData.new();
@@ -177,6 +175,7 @@ export const finalizeTransaction = async ({
 
     txBuilder.add_change_if_needed(changeAddress.to_address());
 
+    // Build the full transaction
     const txBody = txBuilder.build();
     const tx = Loader.Cardano.Transaction.new(
         txBody,
@@ -186,9 +185,10 @@ export const finalizeTransaction = async ({
         aux_data
     );
 
+    // Ensure the transaction size is below the max transaction size for the Cardano Blockchain
     const size = tx.to_bytes().length;
     if (size > CardanoBlockchain.protocolParameters.maxTxSize)
-        throw new Error("MAX_SIZE_REACHED");
+        throw new Error(`The maximum transaction size has been reached: ${CardanoBlockchain.protocolParameters.maxTxSize} bytes. Please contact us in our discord channel for help`);
 
     let txVKeyWitnesses = await signTx(tx);
     txVKeyWitnesses = Loader.Cardano.TransactionWitnessSet.from_bytes(
@@ -196,6 +196,8 @@ export const finalizeTransaction = async ({
     );
     transactionWitnessSet.set_vkeys(txVKeyWitnesses.vkeys());
 
+
+    // Sign the transaction
     const signedTx = Loader.Cardano.Transaction.new(
         tx.body(),
         transactionWitnessSet,
@@ -203,15 +205,14 @@ export const finalizeTransaction = async ({
     );    
     
     // Dump hex to read transactions with cardano-cli text-view decode-cbor
-    //console.log(toHex(signedTx.to_bytes()));
-    
+    //console.log(toHex(signedTx.to_bytes()));    
     console.log("Full Tx Size: ", signedTx.to_bytes().length);
 
     const txHash = await submitTx(signedTx);
     return txHash;
 }
 
-// Spacebudz createOutput function which will build the output of the transaction
+// This is the Spacebudz createOutput function (with some updates for ADABlobs to handle multiple addresses) which will build the output of the transaction
 export const createOutput = (address : any, value: any, { index, datum, metadata, sellerAddress, bidderAddress }: any = {}) => 
 {
     const minAda = Loader.Cardano.min_ada_required(
@@ -237,7 +238,7 @@ export const createOutput = (address : any, value: any, { index, datum, metadata
     return output;
 }
 
-// Split amount according to marketplace fees (potentially royalties later if additional assets)
+// Split amount according to marketplace fees
 export const splitAmount = (lovelaceAmount: any, address: any, outputs: any) => {
     const marketplaceFeeAmount = lovelacePercentage(lovelaceAmount, fee);
     outputs.add(createOutput(MARKETPLACE_ADDRESS(), Loader.Cardano.Value.new(marketplaceFeeAmount)));

@@ -39,15 +39,15 @@ export const MARKETPLACE_ADDRESS = () => {
 */
 export const start = async (auctionDetails: AuctionDetails) => 
 {
+    // Build the auction datum and initialize transaction data
     const datum = START_DATUM(auctionDetails);
-    
-    console.log('here');
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
 
+    // Get the connected wallet address and utxos to ensure they have enough ADA and the proper NFT to auction
     const walletAddress = await getBaseAddress();
     const utxos = await getUtxos();
     
-    // Contract receives blob
+    // The contract receives a blob NFT as an output
     outputs.add(
         createOutput(
             CONTRACT_ADDRESS(),
@@ -68,26 +68,31 @@ export const start = async (auctionDetails: AuctionDetails) =>
     
     datums.add(datum);
 
-    const redeemers = null;
-
+    // Set the required transaction signers
     const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
     txBuilder.set_required_signers(requiredSigners);
 
-    throw new Error("Test");
+    // Finish building and submitting the transaction!
     const txHash = await finalizeTransaction({
         txBuilder,
         changeAddress: walletAddress,
         utxos,
         outputs,
         datums,
-        redeemers,
         metadata,
         scriptUtxo: null,
+        action: null,
       });
       return txHash;
 }
 
+/*
+    Steps:
+    1: Get wallet utxos
+    2: Create an output sending an NFT asset to the script address
+    3: Sign and submit transaction
+*/
 export const bid = async (asset: string, bidDetails: BidDetails) => 
 {
     const assetUtxos = await getAssetUtxos(asset);
