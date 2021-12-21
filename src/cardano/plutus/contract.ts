@@ -40,6 +40,8 @@ export const MARKETPLACE_ADDRESS = () => {
 export const start = async (auctionDetails: AuctionDetails) => 
 {
     const datum = START_DATUM(auctionDetails);
+    
+    console.log('here');
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
 
     const walletAddress = await getBaseAddress();
@@ -72,6 +74,7 @@ export const start = async (auctionDetails: AuctionDetails) =>
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
     txBuilder.set_required_signers(requiredSigners);
 
+    throw new Error("Test");
     const txHash = await finalizeTransaction({
         txBuilder,
         changeAddress: walletAddress,
