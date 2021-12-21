@@ -139,9 +139,14 @@ export const signTx = async (tx: any) => {
 }
 
 export const submitTx = async (signedTx: any) => {
-    const cardano = window.cardano;
-    if (!cardano) return null;
-
-    const txHash = await cardano.submitTx(toHex(signedTx.to_bytes()));
-    return txHash;
+    try {
+        const cardano = window.cardano;
+        if (!cardano) return null;
+    
+        const txHash = await cardano.submitTx(toHex(signedTx.to_bytes()));
+        return txHash;
+    }
+    catch(error) {
+        throw new Error("Transaction Submit Error. Ensure all data is correct, check the guide, and reach out to our discord channel for help.");
+    }
 }

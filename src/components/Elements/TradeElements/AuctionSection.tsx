@@ -17,19 +17,19 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
     const validateFields = (target: any) =>
     {
         if (!target?.amount?.value) {
-            throw new Error("Reserve Price is required");
+            throw new Error("Reserve Price is required.");
         }
 
         if (target?.amount?.value < 0) {
-            throw new Error("Reserve Price cannot be negative");
+            throw new Error("Reserve Price cannot be negative.");
         }
 
         if (!target?.startDatetime?.value) {
-            throw new Error("Start Date Time is required");
+            throw new Error("Start Date Time is required.");
         }
 
         if (!target?.endDatetime?.value) {
-            throw new Error("End Date Time is required");
+            throw new Error("End Date Time is required.");
         }
 
         // Increment the given end time by 15 minutes to allow for 15 minute time to live when transactions are submitted (ttl)
@@ -38,11 +38,11 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         const startDatetime = new Date(target.startDatetime.value);
         const endDatetime = new Date(target.endDatetime.value)
         if ((endDatetime.getTime()) < (now.getTime() + fifteenMinutes)) {
-            throw new Error("End Date Time should be at least 15 minutes in the future");
+            throw new Error("End Date Time should be at least 15 minutes in the future.");
         }
 
         if ((endDatetime.getTime()) < (startDatetime.getTime())) {
-            throw new Error("Start Date Time must be greater than End Date Time");
+            throw new Error("End Date Time must be greater than Start Date Time.");
         }
     }
 
@@ -103,12 +103,9 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         catch (error: any) {  
             setShowError(true);
 
-            if (error?.message) {
-                setErrorString(error.message);
-            }
-            else {
-                setErrorString("An error has occured. Ensure all fields are correct, your Cardano wallet is connected, and refresh the page");
-            }
+            if (error?.info) setErrorString(error.info);
+            else if (error?.message) setErrorString(error.message);
+            else setErrorString("Ensure all fields are correct, your Cardano wallet is connected, and that the page has not been updated. If you require help please reach out in our Discord channel.");
             
             auctionButton.disabled = false;
             auctionText.classList.remove("visually-hidden");

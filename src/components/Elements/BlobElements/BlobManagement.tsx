@@ -29,10 +29,6 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
                             {blobStatus === BlobStatus.Sell && <AuctionSection blob={blob} />}
                             {blobStatus === BlobStatus.Auction && <AuctionSection blob={blob} />}
                         </>
-                        {/* Testing
-                        <AuctionSection blob={blob} />
-                        <BidSection blob={blob} />
-                        */}
                     </div>
                 </div>
             </div>
