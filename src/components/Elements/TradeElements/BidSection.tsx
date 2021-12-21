@@ -5,6 +5,8 @@ import { bid, close } from '../../../cardano/plutus/contract';
 import { toHex } from '../../../cardano/serialization';
 import { getBaseAddress } from '../../../cardano/wallet/wallet';
 import { useAssetAuction } from '../../../hooks/assets.hooks';
+import { getAuctionDatum } from '../../../cardano/plutus/utils';
+import { months } from '../../../consts/consts';
 
 export const BidSection = ({ blob } : { blob : BlobChainAsset}) => 
 {
@@ -15,7 +17,7 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
 
     const assetAuctionQuery = useAssetAuction(getAsset(blob.asset));
     const auctionDatum: AuctionDatum = (assetAuctionQuery.data as AuctionDatum);
-    const { adDeadline, adStartTime, adMinBid } : any = auctionDatum?.adAuctionDetails || { };
+    const { adDeadline, adMinBid } : any = auctionDatum?.adAuctionDetails || { };
     const { bdBid } : any = auctionDatum?.adBidDetails || { };
     
     const closeAlert = () => {
@@ -122,7 +124,7 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                     <Image src="/images/CardanoLogo.png" width={40} height={40} quality={100} alt="Cardano Logo" />
                 </div>
                 <div className="col-8 ">
-                    <span className="bid-title-text">Auction ends November 26, 2021 at 4:59pm EST</span>    
+                    <span className="bid-title-text">{getTimeText(auctionDatum)}</span>
                     <div className="bid-timer rounded pt-2 pb-2 mt-2">
                         <div>
                             00 Hours    
@@ -259,13 +261,34 @@ const getAsset = (blobAsset: string) => {
     return asset;
 }
 
+const getTimeText = (auctionDatum: AuctionDatum) => {
+    if (!auctionDatum) return "";
+    const { adDeadline } : any = auctionDatum?.adAuctionDetails || { };
+
+    // Get Datetime data
+    const datetime = new Date(parseInt(adDeadline));
+    const month = months[datetime.getMonth()];
+    const date = datetime.getDate()
+    const year = datetime.getFullYear()
+    const hours = datetime.getHours();
+    const minutes = datetime.getMinutes();
+    
+    // Get string data
+    const suffix = (hours >= 12) ? 'pm' : 'am';
+    let hour12 = (hours > 12) ? hours -12 : hours;
+    hour12 = hour12 === 0 ? hour12 = 12 : hour12;
+    const minuteText = (minutes > 10) ? minutes.toString() : `0${minutes.toString()}`;
+
+    // Combine everything into the auction string
+    const auctionString = `Auction ends ${month} ${date}, ${year} at ${hour12}:${minuteText}${suffix}`;
+    return auctionString
+}
+
 const getTopBid = (auctionDatum: AuctionDatum) => {
     const { adMinBid } : any = auctionDatum?.adAuctionDetails || { };
     const { bdBid } : any = auctionDatum?.adBidDetails || { };
 
-    if (!adMinBid && !bdBid) {
-        return "";
-    }
+    if (!adMinBid && !bdBid) return "";
 
     if (!bdBid) {
         const reserveAmount = (parseInt(adMinBid) / adaToLovelace).toString();
@@ -277,20 +300,12 @@ const getTopBid = (auctionDatum: AuctionDatum) => {
 }
 
 const getTopBidText = (auctionDatum: AuctionDatum) => {
-    if (!auctionDatum) {
-        return "Loading...";
-    }
+    if (!auctionDatum) return "Loading...";
 
     const { adMinBid } : any = auctionDatum?.adAuctionDetails || { };
     const { bdBid } : any = auctionDatum?.adBidDetails || { };
 
-    if (!adMinBid && !bdBid) {
-        return "No Auction";
-    }
-
-    if (!bdBid) {
-        return "Reserve Amount: ";
-    }
-
+    if (!adMinBid && !bdBid) return "No Auction";
+    if (!bdBid) return "Reserve Amount: ";
     return "Top Bid: ";
 }
