@@ -51,8 +51,8 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 
     const submitStartTransaction = async (event : any) => {
         event.preventDefault();        
-        setShowError(false);
         setShowSuccess(false);
+        setShowError(false);        
 
         const buttonIndex = 3;
         const auctionButton = event.target[buttonIndex];

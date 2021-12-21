@@ -22,3 +22,5 @@ export const useScriptAssets = () => useQuery(`${BASE_ASSET_KEY}.script`, fetchS
 export const useRevealedAssets = () => useQuery(`${BASE_ASSET_KEY}.revealed`, getBlobRevealCount);
 
 export const useAssetOwner = (asset: string) => useQuery([`${BASE_ASSET_KEY}.owner`, asset], fetchAssetOwner);
+
+export const useAssetAuction = (asset: string) => useQuery([`${BASE_ASSET_KEY}.auction`, asset], fetchAssetOwner);

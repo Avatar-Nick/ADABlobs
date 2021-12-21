@@ -1,31 +1,97 @@
+import { useState } from 'react';
 import Image from 'next/image';
 import { adaToLovelace } from '../../../cardano/consts';
 import { bid, close } from '../../../cardano/plutus/contract';
 import { toHex } from '../../../cardano/serialization';
 import { getBaseAddress } from '../../../cardano/wallet/wallet';
+import { useAssetAuction } from '../../../hooks/assets.hooks';
 
 export const BidSection = ({ blob } : { blob : BlobChainAsset}) => 
 {
-    const submitBidTransaction = async (event : any) => {
-        event.preventDefault();
-        const walletAddress = await getBaseAddress();
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [txHash, setTxHash] = useState("");
+    const [showError, setShowError] = useState(false);
+    const [errorString, setErrorString] = useState("Ensure all fields are correct, your Cardano wallet is connected, and that the page has not been updated. If you require help please reach out in our Discord channel.");
 
-        let asset = blob.asset;
-        if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
+    // TODO START HERE
+    const assetAuctionQuery = useAssetAuction(blob.asset);
 
-            // This is the SundaeSwap Mint test token
-            asset = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf39165224d494e54";
-        }
-
-        const bdBidder = toHex(walletAddress.payment_cred().to_keyhash().to_bytes());
-        const bidAmountLovelace = (event.target.amount.value * adaToLovelace).toString();
-        const bidDetails : BidDetails = { bdBidder, bdBid: bidAmountLovelace }
-        
-        const txHash = await bid(asset, bidDetails);
-
-        console.log(txHash);
+    const closeAlert = () => {
+        setShowSuccess(false);
+        setShowError(false);
     }
 
+    const validateFields = (target: any) => {
+        if (!target?.amount?.value) {
+            throw new Error("Bid Amount is required.");
+        }
+
+        const reserveAmount = 10;
+        const newBid = target.amount.value;
+        if (newBid < reserveAmount) {
+            throw new Error("Bid Amount must be larger than the reserve amount.");
+        }
+
+        const bdBid = 10;
+        if (target.amount.value < bdBid) {
+            throw new Error("Bid Amount must be larger than the current bid.");
+        }
+    }
+
+    const submitBidTransaction = async (event : any) => {
+        event.preventDefault();
+        setShowSuccess(false);
+        setShowError(false);
+
+        const buttonIndex = 1;
+        const bidButton = event.target[buttonIndex];        
+        const bidText = bidButton.children[0];
+        const bidSpinner = bidButton.children[1];
+
+        try {
+            bidButton.disabled = true;
+            bidText.classList.add("visually-hidden");
+            bidSpinner.classList.remove("visually-hidden");
+    
+            validateFields(event.target);
+            
+            const walletAddress = await getBaseAddress();    
+            let asset = blob.asset;
+            if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
+    
+                // This is the SundaeSwap Mint test token
+                asset = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf39165224d494e54";
+            }
+    
+            const bdBidder = toHex(walletAddress.payment_cred().to_keyhash().to_bytes());
+            const bidAmountLovelace = (event.target.amount.value * adaToLovelace).toString();
+            const bidDetails : BidDetails = { bdBidder, bdBid: bidAmountLovelace }
+            
+            const txHash = await bid(asset, bidDetails);
+    
+            bidButton.disabled = false;
+            bidText.classList.remove("visually-hidden");
+            bidSpinner.classList.add("visually-hidden");
+    
+            setShowSuccess(true);
+            setTxHash(txHash);
+        }
+        catch (error: any) {  
+            setShowError(true);
+
+            if (error?.info) setErrorString(error.info);
+            else if (error?.message) setErrorString(error.message);
+            else setErrorString("Ensure all fields are correct, your Cardano wallet is connected, and that the page has not been updated. If you require help please reach out in our Discord channel.");
+            
+            bidButton.disabled = false;
+            bidText.classList.remove("visually-hidden");
+            bidSpinner.classList.add("visually-hidden");
+            console.error(error);
+        }
+        
+    }
+
+    /*
     const submitCloseTransaction = async (event: any) => {
         event.preventDefault();
 
@@ -39,8 +105,20 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
         
         console.log(txHash);
     }
+    */
+
     return (
         <div className="blob-bid container rounded">
+            {showError && <div className="alert alert-danger alert-dismissible fade show mt-3">
+                <strong>Error!</strong> {errorString}
+                <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
+            </div> }
+            {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 truncate">
+                <strong>Success!</strong> Transaction successfully submitted! 
+                <br />
+                <strong>Transaction hash:</strong> {txHash}
+                <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
+            </div>}
             <div className="row pt-3">
                 <div className="col-2">
                     <Image src="/images/CardanoLogo.png" width={40} height={40} quality={100} alt="Cardano Logo" />
@@ -66,10 +144,11 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                             <span className="input-group-text input-bid">₳</span>
                             <input type="number" name="amount" className="form-control input-bid" placeholder="Bid Amount" aria-describedby="blobBidPrice" />
                         </div>
-                        <button type="submit" className="btn btn-success btn-trade mb-4">Place Bid</button>
-                    </form>
-                    <button type="submit" className="btn btn-primary btn-trade mb-4" onClick={submitCloseTransaction}>Close (After Deadline Test)</button>
-                    
+                        <button type="submit" className="btn btn-success btn-trade mb-4">
+                            <span>Place Bid</span>
+                            <div className="visually-hidden spinner-border spinner-border-sm" role="status"></div>
+                        </button>
+                    </form>                    
                 </div>       
                 <div className="col-2"></div>                                          
             </div>
