@@ -7,10 +7,13 @@ import { adaToLovelace, fee } from '../../../cardano/consts';
 
 export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 {
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [txHash, setTxHash] = useState("");
     const [showError, setShowError] = useState(false);
-    const [errorString, setErrorString] = useState(" A problem has been occurred while submitting your data.");
+    const [errorString, setErrorString] = useState("Ensure all fields are correct, your Cardano wallet is connected, and that the page has not been updated. If you require help please reach out in our Discord channel.");
 
-    const closeError = () => {
+    const closeAlert = () => {
+        setShowSuccess(false);
         setShowError(false);
     }
 
@@ -49,6 +52,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
     const submitStartTransaction = async (event : any) => {
         event.preventDefault();        
         setShowError(false);
+        setShowSuccess(false);
 
         const buttonIndex = 3;
         const auctionButton = event.target[buttonIndex];
@@ -98,7 +102,8 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
             auctionText.classList.remove("visually-hidden");
             auctionSpinner.classList.add("visually-hidden");
 
-            console.log(txHash);
+            setShowSuccess(true);
+            setTxHash(txHash);
         }
         catch (error: any) {  
             setShowError(true);
@@ -118,8 +123,14 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
         <div className="blob-auction container rounded">
             {showError && <div className="alert alert-danger alert-dismissible fade show mt-3">
                 <strong>Error!</strong> {errorString}
-                <button type="button" className="btn-close" onClick={closeError} data-bs-dismiss="alert"></button>
+                <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
             </div> }
+            {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 truncate">
+                <strong>Success!</strong> Transaction successfully submitted! 
+                <br />
+                <strong>Transaction hash:</strong> {txHash}
+                <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
+            </div>}
             <div className="row pt-3">
                 <div className="col-2">
                     <Image src="/images/CardanoLogo.png" width={40} height={40} quality={100} alt="Cardano Logo" />
@@ -150,8 +161,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
                 </div>       
                 <div className="col-2"></div>                                          
             </div>
-            <style jsx>{`
-                
+            <style jsx>{`                
                 .blob-auction {
                     background-color: #e9f1fa;
                     color: #0a2e53;
@@ -225,6 +235,12 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
 
                 .input-group-text {
                     background-color: #cde1f8;
+                }
+
+                .truncate {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
                 }
             `}</style>
         </div>
