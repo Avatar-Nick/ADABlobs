@@ -10,19 +10,20 @@ export const useFetchAssets = () => useInfiniteQuery(BASE_ASSET_KEY, fetchAssets
             return lastPage.curPage + 1;
         } 
         return undefined;   
-    }
+    },
+    refetchOnWindowFocus: false
 });
 
-export const useFetchAsset = (asset: string) => useQuery([BASE_ASSET_KEY, asset], fetchAsset);
+export const useFetchAsset = (asset: string) => useQuery([BASE_ASSET_KEY, asset], fetchAsset, { refetchOnWindowFocus: false });
 
-export const useOwnedAssets = () => useQuery(`${BASE_ASSET_KEY}.owned`, fetchOwnedAssets);
+export const useOwnedAssets = () => useQuery(`${BASE_ASSET_KEY}.owned`, fetchOwnedAssets, { refetchOnWindowFocus: false });
 
-export const useScriptAssets = () => useQuery(`${BASE_ASSET_KEY}.script`, fetchScriptAssets);
+export const useScriptAssets = () => useQuery(`${BASE_ASSET_KEY}.script`, fetchScriptAssets, { refetchOnWindowFocus: false });
 
-export const useRevealedAssets = () => useQuery(`${BASE_ASSET_KEY}.revealed`, getBlobRevealCount);
+export const useRevealedAssets = () => useQuery(`${BASE_ASSET_KEY}.revealed`, getBlobRevealCount, { refetchOnMount: false, refetchOnWindowFocus: false });
 
-export const useAssetOwner = (asset: string) => useQuery([`${BASE_ASSET_KEY}.owner`, asset], fetchAssetOwner);
+export const useAssetOwner = (asset: string) => useQuery([`${BASE_ASSET_KEY}.owner`, asset], fetchAssetOwner, { refetchOnWindowFocus: false });
 
-export const useAssetAuction = (asset: string) => useQuery([`${BASE_ASSET_KEY}.auction`, asset], fetchAssetAuction);
+export const useAssetAuction = (asset: string) => useQuery([`${BASE_ASSET_KEY}.auction`, asset], fetchAssetAuction, { refetchOnWindowFocus: false });
 
-export const useAssetClose = (asset: string) => useQuery([`${BASE_ASSET_KEY}.close`, asset], fetchAssetClose);
+export const useAssetClose = (asset: string) => useQuery([`${BASE_ASSET_KEY}.close`, asset], fetchAssetClose, { refetchOnWindowFocus: false });

@@ -1,6 +1,6 @@
 import {  useState } from 'react';
 import Image from 'next/image';
-import { adaToLovelace } from '../../../cardano/consts';
+import { adaToLovelace, lovelaceToAda } from '../../../cardano/consts';
 import {  close } from '../../../cardano/plutus/contract';
 import { useAssetAuction, useAssetClose } from '../../../hooks/assets.hooks';
 import { useGetAddress } from '../../../hooks/wallet.hooks';
@@ -19,7 +19,9 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
     const assetCloseQuery = useAssetClose(asset);
     const assetAddressQuery = useGetAddress();
 
-    const auctionDatum: AuctionDatum = (assetAuctionQuery.data as AuctionDatum);
+    const auctionDatum: AuctionDatum = (assetAuctionQuery?.data as AuctionDatum);
+    const bdBid = auctionDatum?.adBidDetails?.bdBid;
+
     const address = assetAddressQuery?.data;
     const bidderAddress = assetCloseQuery?.data?.bidderAddress;
     const sellerAddress = assetCloseQuery?.data?.sellerAddress;    
@@ -93,37 +95,48 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
                     <Image src="/images/CardanoLogo.png" width={40} height={40} quality={100} alt="Cardano Logo" />
                 </div>
                 <div className="col-8 ">
-                    {(!address || !bidderAddress || !sellerAddress) &&
+                    {address && <span className="bid-title-text">{getTimeText(auctionDatum)}</span>}
+                    {(!address || !sellerAddress) &&
                         <div className={"d-flex justify-content-center mt-4 mb-4 pb-3"}>
                             <div className="spinner-border" role="status"></div>
                         </div>
                     }
-                    {address && bidderAddress && sellerAddress && <span className="bid-title-text">{getTimeText(auctionDatum)}</span>}     
-                                
+
+                    {/* Case if Blob is bought in the auction */}
                     {address && bidderAddress && sellerAddress && (trader === Trader.Buyer || trader === Trader.Seller) &&
                     <div className="bid-timer rounded pt-2 pb-2 mt-2">
                         {!blob?.onchain_metadata?.name && <div className="spinner-border spinner-border-sm" role="status"></div> }  
-                        {blob?.onchain_metadata?.name && 
+                        {blob?.onchain_metadata?.name && bdBid &&
                         <div>
-                            {trader == Trader.Seller && <><strong>Wumb</strong> was sold for 100₳!</>}
-                            {trader === Trader.Buyer && <>You bought <strong>Wumb</strong> for 100₳!</>}
-                        </div>
-                        }
+                            {trader == Trader.Seller && <><strong>{blob?.onchain_metadata?.name}</strong> was sold for {(parseInt(bdBid) * lovelaceToAda).toFixed(2)}₳!</>}
+                            {trader === Trader.Buyer && <>You bought <strong>{blob?.onchain_metadata?.name}</strong> for {(parseInt(bdBid) * lovelaceToAda).toFixed(2)}₳!</>}
+                        </div>}
                     </div>}
                     {address && bidderAddress && sellerAddress && trader === Trader.Buyer &&
                     <div className='pet-blob pt-3 px-2'>
                         Make sure your new Pet Blob is happy and well fed!
                     </div>
                     }
+
+                    {/* Case if Blob is not bought in the auction */}
+                    {address && !bidderAddress && sellerAddress && trader === Trader.Seller &&
+                    <div className="bid-timer rounded pt-2 pb-2 mt-2">
+                        {!blob?.onchain_metadata?.name && <div className="spinner-border spinner-border-sm" role="status"></div> }  
+                        {blob?.onchain_metadata?.name &&
+                        <div>
+                            {trader == Trader.Seller && <><strong>{blob?.onchain_metadata?.name}</strong> was not sold</>}
+                        </div>}
+                    </div>}
                     {address && bidderAddress && sellerAddress && trader === Trader.None && 
                     <div className="bid-timer rounded pt-2 pb-2 mt-2">
                         {!blob?.onchain_metadata?.name && <div className="spinner-border spinner-border-sm" role="status"></div> }  
                         {blob?.onchain_metadata?.name && 
                         <div>
-                            <strong>{blob?.onchain_metadata?.name}</strong> was bought for 100₳!
+                            <strong>{blob?.onchain_metadata?.name}</strong> was bought for {(parseInt(bdBid) * lovelaceToAda).toFixed(2)}₳!
                         </div>
                         }
-                    </div>}                             
+                    </div>}
+
                     <hr className="divider" />
                     <form className="blob-form" onSubmit={submitCloseTransaction}>
                         <button type="submit" className="btn btn-primary btn-trade mb-4">
@@ -260,7 +273,9 @@ const getTimeText = (auctionDatum: AuctionDatum) => {
     const { adDeadline } : any = auctionDatum?.adAuctionDetails || { };
 
     // Get Datetime data
-    const datetime = new Date(parseInt(adDeadline));
+    // Decrement endDateTime by 15 minutes to account for ttl (time to live)
+    const fifteenMinutes = 1000 * 60 * 15;
+    const datetime = new Date(parseInt(adDeadline) - fifteenMinutes);
     const month = months[datetime.getMonth()];
     const date = datetime.getDate()
     const year = datetime.getFullYear()
@@ -276,72 +291,4 @@ const getTimeText = (auctionDatum: AuctionDatum) => {
     // Combine everything into the auction string
     const auctionString = `Auction ended ${month} ${date}, ${year} at ${hour12}:${minuteText} ${suffix}`;
     return auctionString
-}
-
-const getCountdown = (auctionDatum: AuctionDatum): Countdown => {
-    if (!auctionDatum) return { } as Countdown;
-    const endDatetime = parseInt(auctionDatum.adAuctionDetails.adDeadline);
-    const now = Date.now();
-    const difference = endDatetime - now;
-
-    const countdown: Countdown = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60)
-    };
-    return countdown;
-}
-
-const getCountdownText = (count: Number) => {
-    if (!count) return "";
-
-    if (count >= 0 && count <= 9) {
-        return `0${count.toString()}`;
-    }
-
-    return count.toString()
-}
-
-const getAllCountdownText = (countdown: Countdown) => {
-    if (!countdown || !countdown.days || !countdown.hours || !countdown.minutes || !countdown.seconds) return null;
-
-    return { 
-        days: getCountdownText(countdown.days), 
-        hours: getCountdownText(countdown.hours), 
-        minutes: getCountdownText(countdown.minutes), 
-        seconds: getCountdownText(countdown.seconds), 
-    };
-}
-
-const isAuctionEnded = (countdown: Countdown): boolean => {
-    if (!countdown) return false;
-
-    return (countdown.days < 0 || countdown.hours < 0 || countdown.minutes < 0 || countdown.seconds < 0);
-}
-
-const getTopBid = (auctionDatum: AuctionDatum) => {
-    const { adMinBid } : any = auctionDatum?.adAuctionDetails || { };
-    const { bdBid } : any = auctionDatum?.adBidDetails || { };
-
-    if (!adMinBid && !bdBid) return "";
-
-    if (!bdBid) {
-        const reserveAmount = (parseInt(adMinBid) / adaToLovelace).toString();
-        return `${reserveAmount} ADA`;
-    }
-
-    const bidAmount = (parseInt(bdBid) / adaToLovelace).toString();
-    return `${bidAmount} ADA`;
-}
-
-const getTopBidText = (auctionDatum: AuctionDatum) => {
-    if (!auctionDatum) return "Loading...";
-
-    const { adMinBid } : any = auctionDatum?.adAuctionDetails || { };
-    const { bdBid } : any = auctionDatum?.adBidDetails || { };
-
-    if (!adMinBid && !bdBid) return "No Auction";
-    if (!bdBid) return "Reserve Amount: ";
-    return "Top Bid: ";
 }

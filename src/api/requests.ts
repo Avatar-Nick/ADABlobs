@@ -85,8 +85,8 @@ export const fetchAssetClose = async ({ queryKey } : any) => {
     }
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1];
-    const sellerAddress = assetUtxo.sellerAddress.to_address().to_bech32();
-    const bidderAddress = assetUtxo.sellerAddress.to_address().to_bech32();
+    const sellerAddress = assetUtxo.sellerAddress?.to_address().to_bech32();
+    const bidderAddress = assetUtxo.bidderAddress?.to_address().to_bech32();
     return { sellerAddress: sellerAddress, bidderAddress: bidderAddress};
 }
 

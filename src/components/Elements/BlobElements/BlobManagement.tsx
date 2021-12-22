@@ -59,7 +59,6 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
                 </div>
                 <div className="row pb-4">
                     <div className="col-12">
-                        {/*
                         <>
                             {blobStatus === BlobStatus.Waiting && <></>}
                             {blobStatus === BlobStatus.Sold && <></>}
@@ -68,7 +67,6 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
                             {blobStatus === BlobStatus.Sell && <AuctionSection blob={blob} />}
                             {blobStatus === BlobStatus.Auction && <AuctionSection blob={blob} />}
                         </>
-                        */}
                         <CloseSection blob={blob} />
                     </div>
                 </div>

@@ -111,7 +111,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset }) =>
     }
 
     return (
-        <div className="blob-auction container rounded">
+        <div className="blob-auction container rounded mb-4">
             {showError && <div className="alert alert-danger alert-dismissible fade show mt-3">
                 <strong>Error!</strong> {errorString}
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
@@ -133,7 +133,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset }) =>
                         <label className="form-label label-text ">Reserve Price</label>
                         <div className="input-group mb-3">
                             <span className="input-group-text input-bid">₳</span>
-                            <input type="number" name="amount" className="form-control input-bid" placeholder="Reserve Price" aria-describedby="blobBidPrice" />
+                            <input type="number" step="0.01" min="0" name="amount" className="form-control input-bid" placeholder="Reserve Price" aria-describedby="blobBidPrice" />
                         </div>
                         <label className="form-label label-text ">Start Date Time</label>
                         <div className="input-group mb-3">

@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { adaToLovelace } from '../../../cardano/consts';
-import { bid, close } from '../../../cardano/plutus/contract';
+import { bid } from '../../../cardano/plutus/contract';
 import { toHex } from '../../../cardano/serialization';
 import { getBaseAddress } from '../../../cardano/wallet/wallet';
 import { useAssetAuction } from '../../../hooks/assets.hooks';
-import { getAuctionDatum } from '../../../cardano/plutus/utils';
 import { months } from '../../../consts/consts';
 
 export const BidSection = ({ blob } : { blob : BlobChainAsset}) => 
@@ -17,22 +16,21 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
 
     const assetAuctionQuery = useAssetAuction(getAsset(blob.asset));
     const auctionDatum: AuctionDatum = (assetAuctionQuery.data as AuctionDatum);
-    const { adDeadline, adMinBid } : any = auctionDatum?.adAuctionDetails || { };
+    const { adMinBid } : any = auctionDatum?.adAuctionDetails || { };
     const { bdBid } : any = auctionDatum?.adBidDetails || { };
 
     const [countdown, setCountdown] = useState(getCountdown(auctionDatum));
     const countdownText = getAllCountdownText(countdown);
     const auctionEnded = isAuctionEnded(countdown);
 
+    let intervalId = setInterval(() => {
+        setCountdown(getCountdown(auctionDatum));
+    }, 1000);
+
     useEffect(() => {
-        let intervalId = setInterval(() => {
-            if (!auctionDatum) {
-                clearInterval(intervalId);
-                return;
-            }
-            setCountdown(getCountdown(auctionDatum));
-        }, 1000);
-    }, [auctionDatum]);
+        return () => clearInterval(intervalId);
+    }, [intervalId]);
+    
     
     const closeAlert = () => {
         setShowSuccess(false);
@@ -45,16 +43,14 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
         }
 
         const reserveAmount = parseInt(adMinBid);
-        const newBid = target.amount.value * adaToLovelace;
-        if (newBid < reserveAmount) {
+        const newBid = target.amount.value * adaToLovelace;        
+        if (newBid <= reserveAmount) {
             throw new Error("Bid Amount must be larger than the reserve amount.");
         }
 
-        if (bdBid && target.amount.value < bdBid) {
+        if (bdBid && newBid <= bdBid) {
             throw new Error("Bid Amount must be larger than the current bid.");
         }
-
-        // Auction is over check
     }
 
     const submitBidTransaction = async (event : any) => {
@@ -141,15 +137,18 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                             The Auction For <strong>{`${blob.onchain_metadata.name}`}</strong> Has Ended
                         </div>
                         }
-                    </div>                   
+                    </div>      
+                    {auctionEnded && <div className="close-text mt-2">
+                        Please wait 15 minutes for the auction to confirm on the blockchain before you can close.
+                    </div> }             
                     <hr className="divider" />
                     <span className="blob-purchase-title">{getTopBidText(auctionDatum)}  </span>
-                    {!auctionDatum && <div className="spinner-border spinner-border-sm" role="status"></div> }
+                    {!auctionDatum && <div className="spinner-border spinner-border-sm" role="status"></div>}
                     <span className="blob-purchase-title blob-purchase-text">{getTopBid(auctionDatum)}</span>
                     <form className="blob-form" onSubmit={submitBidTransaction}>
                         <div className="input-group mt-3 mb-3">
                             <span className="input-group-text input-bid">₳</span>
-                            <input type="number" name="amount" className="form-control input-bid" placeholder="Bid Amount" aria-describedby="blobBidPrice" />
+                            <input type="number" step="0.01" min="0" name="amount" className="form-control input-bid" placeholder="Bid Amount" aria-describedby="blobBidPrice" />
                         </div>
                         <button type="submit" className="btn btn-success btn-trade mb-4">
                             <span>Place Bid</span>
@@ -193,6 +192,10 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
 
                 .blob-purchase-title {
                     font-size: 1.0rem;
+                }
+
+                .close-text {
+                    font-size: 1.4vw;
                 }
                 
                 @media screen and (min-width: 576px) {
@@ -272,7 +275,9 @@ const getTimeText = (auctionDatum: AuctionDatum) => {
     const { adDeadline } : any = auctionDatum?.adAuctionDetails || { };
 
     // Get Datetime data
-    const datetime = new Date(parseInt(adDeadline));
+    // Decrement endDateTime by 15 minutes to account for ttl (time to live)
+    const fifteenMinutes = 1000 * 60 * 15;
+    const datetime = new Date(parseInt(adDeadline) - fifteenMinutes);
     const month = months[datetime.getMonth()];
     const date = datetime.getDate()
     const year = datetime.getFullYear()
@@ -285,8 +290,15 @@ const getTimeText = (auctionDatum: AuctionDatum) => {
     hour12 = hour12 === 0 ? hour12 = 12 : hour12;
     const minuteText = (minutes > 10) ? minutes.toString() : `0${minutes.toString()}`;
 
+    // Check if the auction has ended
+    let isAuctionEnded = false;
+    const now = Date.now();
+    if (now > (datetime.getTime())) {
+        isAuctionEnded = true;
+    }
+
     // Combine everything into the auction string
-    const auctionString = `Auction ends ${month} ${date}, ${year} at ${hour12}:${minuteText} ${suffix}`;
+    const auctionString = `Auction ${isAuctionEnded ? 'ended' : 'ends'} ${month} ${date}, ${year} at ${hour12}:${minuteText} ${suffix}`;
     return auctionString
 }
 
@@ -309,7 +321,7 @@ const getCountdown = (auctionDatum: AuctionDatum): Countdown => {
 }
 
 const getCountdownText = (count: Number) => {
-    if (!count) return "";
+    if (count === null || count === undefined) return "";
 
     if (count >= 0 && count <= 9) {
         return `0${count.toString()}`;
@@ -319,7 +331,7 @@ const getCountdownText = (count: Number) => {
 }
 
 const getAllCountdownText = (countdown: Countdown) => {
-    if (!countdown || !countdown.days || !countdown.hours || !countdown.minutes || !countdown.seconds) return null;
+    if (!countdown) return null;
 
     return { 
         days: getCountdownText(countdown.days), 

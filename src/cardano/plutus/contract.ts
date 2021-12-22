@@ -1,3 +1,4 @@
+import { adaToLovelace, lovelaceToAda } from '../consts';
 import Loader from '../loader';
 
 import { assetsToValue, fromHex, toHex } from '../serialization';
@@ -116,7 +117,7 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
 
     let newBid = parseInt(bidDetails.bdBid);
     if (newBid < currentBidAmountLovelace || newBid < parseInt(auctionDatum.adAuctionDetails.adMinBid)) {
-        throw new Error("Bid is too low.");
+        throw new Error(`Bid is too low. Must bid at least ${(Math.ceil((currentBidAmountLovelace * lovelaceToAda) * 100) / 100).toFixed(2)}₳`);
     }
 
     // Need to add the difference between the currentBidAmountLovelace and the old bid to the newBid
