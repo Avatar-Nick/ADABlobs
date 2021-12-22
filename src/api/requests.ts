@@ -21,7 +21,7 @@ export const fetchOwnedAssets = async () => {
     const address = await getAddress();
     if (!address) return { }
 
-    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.address(address)}`)
+    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.address.base(address)}`)
     return response.json();
 }
 

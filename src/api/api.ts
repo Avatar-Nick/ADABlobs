@@ -23,7 +23,10 @@ export const adablobsAPI = new API (
                 blob: (asset: string) => `/blobs/${asset}`,
                 script: () => `/blobs/scripts`
             },
-            address: (address: string) => `/addresses/${address}`,
+            address: {
+                base: (address: string) => `/addresses/${address}`,
+                auctions: (address: string) => `/addresses/${address}/auctions`,
+            }
         }
     }
 )
@@ -34,7 +37,10 @@ export const blockfrostAPI = new API(
         endpoints: {
             addresses: {
                 base: (address: string) => `/addresses/${address}`,
-                utxos: (address: string, asset: string) => `/addresses/${address}/utxos/${asset}`,
+                utxos: {
+                    base: (address: string) => `/addresses/${address}/utxos`,
+                    asset: (address: string, asset: string) => `/addresses/${address}/utxos/${asset}`
+                },
             },
             assets: {
                 addresses: (asset: string) => `/assets/${asset}/addresses`,
@@ -57,7 +63,10 @@ export const blockfrostAPI = new API(
         clientEndpoints: {
             addresses: {
                 base: (address: string) => `/addresses/${address}`,
-                utxos: (address: string, asset: string) => `/addresses/${address}/utxos/${asset}`,
+                utxos: {
+                    base: (address: string) => `/addresses/${address}/utxos`,
+                    asset: (address: string, asset: string) => `/addresses/${address}/utxos/${asset}`
+                },
             },
             assets: {
                 addresses: (asset: string) => `/assets/${asset}/addresses`,

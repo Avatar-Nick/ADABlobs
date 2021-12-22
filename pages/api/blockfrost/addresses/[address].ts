@@ -95,7 +95,7 @@ const handler = async (req : NextApiRequest, res : NextApiResponse) =>
     console.log(data.length);
     */
     //console.log(data);
-    res.status(200).json(data);    
+    res.status(200).json({ test: "Hello"});    
 }
 
 export default handler;
