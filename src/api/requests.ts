@@ -75,6 +75,21 @@ export const fetchAssetAuction = async ({ queryKey } : any) => {
     return auctionDatum;
 }
 
+export const fetchAssetClose = async ({ queryKey } : any) => {
+    const [_key, asset] = queryKey
+    if (!asset) return { };
+
+    const assetUtxos = await getAssetUtxos(asset);
+    if (assetUtxos.length > 1) {
+        throw new Error("There can only be 1 utxo for an NFT asset");       
+    }
+
+    const assetUtxo: any = assetUtxos[assetUtxos.length - 1];
+    const sellerAddress = assetUtxo.sellerAddress.to_address().to_bech32();
+    const bidderAddress = assetUtxo.sellerAddress.to_address().to_bech32();
+    return { sellerAddress: sellerAddress, bidderAddress: bidderAddress};
+}
+
 export const blockfrostAPIRequest = async (endpoint: string, headers? : any, body? : any) =>
 {
     const url = `${blockfrostAPI.baseURL}${endpoint}`;

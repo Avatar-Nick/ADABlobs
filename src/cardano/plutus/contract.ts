@@ -89,15 +89,18 @@ export const start = async (auctionDetails: AuctionDetails) =>
 
 /*
     Steps:
-    1: Get wallet utxos
-    2: Create an output sending an NFT asset to the script address
-    3: Sign and submit transaction
+    1: Get asset utxos
+    2: Get wallet utxos
+    3: Ensure transaction will be valid by checking bid and auction time
+    4: Create an output sending ADA the script address
+    5: If there was already a previous bid, create an output to send ADA back to the previous bidder
+    6: Sign and submit transaction
 */
 export const bid = async (asset: string, bidDetails: BidDetails) => 
 {
     const assetUtxos = await getAssetUtxos(asset);
     if (assetUtxos.length > 1) {
-        throw new Error("There can only be 1 utxo for an NFT asset");     
+        throw new Error("There can only be 1 utxo for an NFT asset.");     
     }
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
@@ -113,7 +116,7 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
 
     let newBid = parseInt(bidDetails.bdBid);
     if (newBid < currentBidAmountLovelace || newBid < parseInt(auctionDatum.adAuctionDetails.adMinBid)) {
-        throw new Error("Bid is too low");
+        throw new Error("Bid is too low.");
     }
 
     // Need to add the difference between the currentBidAmountLovelace and the old bid to the newBid
@@ -123,7 +126,13 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     }
     newBid += (currentBidAmountLovelace - oldBid);
 
-    // Question: Check time here as well?
+    // Decrement endDateTime by 15 minutes to account for ttl (time to live)
+    const fifteenMinutes = 1000 * 60 * 15;
+    const endDateTime = parseInt(auctionDatum.adAuctionDetails.adDeadline);
+    const now = Date.now();
+    if (now > (endDateTime - fifteenMinutes)) {
+        throw new Error("The auction has ended.");
+    }
 
     const bidDatum = BID_DATUM(auctionDatum.adAuctionDetails, bidDetails);
     datums.add(bidDatum);
@@ -172,11 +181,20 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     return txHash;
 }
 
+/*
+    Steps:
+    1: Get asset utxos
+    2: Get wallet utxos
+    3: Ensure transaction will be valid by checking if the auction has ended
+    4: Create an output sending the NFT asset to the highest bidder
+    5: Create an output sending ADA to the seller and marketplace
+    6: Sign and submit transaction
+*/
 export const close = async (asset: string) => 
 {
     const assetUtxos = await getAssetUtxos(asset);
     if (assetUtxos.length > 1) {
-        throw new Error("There can only be 1 utxo for an NFT asset");      
+        throw new Error("There can only be 1 utxo for an NFT asset.");      
     }
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
@@ -189,7 +207,13 @@ export const close = async (asset: string) =>
 
     datums.add(assetUtxo.datum);
 
-    // Question: Check time here as well?
+    // Decrement endDateTime by 15 minutes to account for ttl (time to live)
+    const fifteenMinutes = 1000 * 60 * 15;
+    const endDateTime = parseInt(auctionDatum.adAuctionDetails.adDeadline);
+    const now = Date.now();
+    if (now < (endDateTime - fifteenMinutes)) {
+        throw new Error("The auction has not ended yet.");
+    }
 
     // If there is a bidder, Send NFT to bidder, ADA to seller, and ADA to marketplace 
     if (auctionDatum.adBidDetails && assetUtxo.sellerAddress && assetUtxo.bidderAddress) {        
@@ -234,7 +258,6 @@ export const close = async (asset: string) =>
     requiredSigners.add(walletAddress.payment_cred().to_keyhash());
     txBuilder.set_required_signers(requiredSigners);
 
-    // QUESTION, could there be an issue with the change address being a wallet address?
     const txHash = await finalizeTransaction({
       txBuilder,
       changeAddress: walletAddress,

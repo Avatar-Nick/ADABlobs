@@ -6,3 +6,9 @@ export enum BlobStatus {
     Sell = 4,
     Auction = 5,
 }
+
+export enum Trader { 
+    None = 0,
+    Buyer = 1,
+    Seller = 2,
+}

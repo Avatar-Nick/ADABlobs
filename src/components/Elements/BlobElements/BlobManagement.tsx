@@ -4,7 +4,8 @@ import { useAssetOwner, useOwnedAssets, useScriptAssets } from "../../../hooks/a
 import { getBlobStatus } from "../../../utils/blobs/blobStatus";
 import { BlobStatus } from "../../../types/enum";
 import { useState } from "react";
-import { timeout } from "../../../utils/timer";
+import { timeout } from "../../../utils/time";
+import { CloseSection } from "../TradeElements/CloseSection";
 
 export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) => 
 {
@@ -15,7 +16,7 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
     const assetOwnerQuery = useAssetOwner(blob.asset);
 
     const copyAddress = async () => {
-        if (!assetOwnerQuery?.data?.[0].address) return;
+        if (!assetOwnerQuery?.data?.[0]?.address) return;
         const address = assetOwnerQuery?.data?.[0].address;
 
         setCopy(true);
@@ -58,6 +59,7 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
                 </div>
                 <div className="row pb-4">
                     <div className="col-12">
+                        {/*
                         <>
                             {blobStatus === BlobStatus.Waiting && <></>}
                             {blobStatus === BlobStatus.Sold && <></>}
@@ -66,6 +68,8 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
                             {blobStatus === BlobStatus.Sell && <AuctionSection blob={blob} />}
                             {blobStatus === BlobStatus.Auction && <AuctionSection blob={blob} />}
                         </>
+                        */}
+                        <CloseSection blob={blob} />
                     </div>
                 </div>
             </div>

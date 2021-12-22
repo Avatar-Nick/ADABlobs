@@ -5,7 +5,7 @@ import { getBaseAddress, getBaseAddressFromAddressString } from '../../../cardan
 import { start } from '../../../cardano/plutus/contract';
 import { adaToLovelace, fee } from '../../../cardano/consts';
 
-export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
+export const AuctionSection = ({ blob } : { blob : BlobChainAsset }) =>
 {
     const [showSuccess, setShowSuccess] = useState(false);
     const [txHash, setTxHash] = useState("");
@@ -78,16 +78,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
             const walletAddress = await getBaseAddress();
             const marketplaceAddress = await getBaseAddressFromAddressString(process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string)
 
-            // If this is not a production environment, use the testnet
-            let adCurrency = blob.policy_id;
-            let adToken = blob.asset_name;
-            if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
-
-                // This is the SundaeSwap Mint test token
-                adCurrency = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf3916522";
-                adToken = "4d494e54";
-            }
-
+            let { adCurrency, adToken } = getAsset(blob);
             const adSeller = toHex(walletAddress.payment_cred().to_keyhash().to_bytes())
             const adDeadline = newEndDateTime.getTime().toString();
             const adStartTime = startDateTime.getTime().toString();
@@ -245,4 +236,19 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset}) =>
             `}</style>
         </div>
     )
+}
+
+const getAsset = (blob : BlobChainAsset ) => {    
+    let adCurrency = blob.policy_id;
+    let adToken = blob.asset_name;
+
+    // If this is not a production environment, use testnet tokens
+    if (process.env.NEXT_PUBLIC_ENVIRONMENT !== "production") {
+
+        // This is the SundaeSwap Mint test token
+        adCurrency = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf3916522";
+        adToken = "4d494e54";
+    }
+
+    return { adCurrency, adToken }
 }

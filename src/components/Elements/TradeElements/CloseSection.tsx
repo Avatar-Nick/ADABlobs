@@ -1,111 +1,83 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import Image from 'next/image';
 import { adaToLovelace } from '../../../cardano/consts';
-import { bid, close } from '../../../cardano/plutus/contract';
-import { toHex } from '../../../cardano/serialization';
-import { getBaseAddress } from '../../../cardano/wallet/wallet';
-import { useAssetAuction } from '../../../hooks/assets.hooks';
-import { getAuctionDatum } from '../../../cardano/plutus/utils';
+import {  close } from '../../../cardano/plutus/contract';
+import { useAssetAuction, useAssetClose } from '../../../hooks/assets.hooks';
+import { useGetAddress } from '../../../hooks/wallet.hooks';
 import { months } from '../../../consts/consts';
+import { Trader } from '../../../types/enum';
 
-export const BidSection = ({ blob } : { blob : BlobChainAsset}) => 
+export const CloseSection = ({ blob } : { blob : BlobChainAsset}) => 
 {
     const [showSuccess, setShowSuccess] = useState(false);
     const [txHash, setTxHash] = useState("");
     const [showError, setShowError] = useState(false);
     const [errorString, setErrorString] = useState("Ensure all fields are correct, your Cardano wallet is connected, and that the page has not been updated. If you require help please reach out in our Discord channel.");
 
-    const assetAuctionQuery = useAssetAuction(getAsset(blob.asset));
+    const asset = getAsset(blob.asset);
+    const assetAuctionQuery = useAssetAuction(asset);
+    const assetCloseQuery = useAssetClose(asset);
+    const assetAddressQuery = useGetAddress();
+
     const auctionDatum: AuctionDatum = (assetAuctionQuery.data as AuctionDatum);
-    const { adDeadline, adMinBid } : any = auctionDatum?.adAuctionDetails || { };
-    const { bdBid } : any = auctionDatum?.adBidDetails || { };
+    const address = assetAddressQuery?.data;
+    const bidderAddress = assetCloseQuery?.data?.bidderAddress;
+    const sellerAddress = assetCloseQuery?.data?.sellerAddress;    
 
-    const [countdown, setCountdown] = useState(getCountdown(auctionDatum));
-    const countdownText = getAllCountdownText(countdown);
-    const auctionEnded = isAuctionEnded(countdown);
-
-    useEffect(() => {
-        let intervalId = setInterval(() => {
-            if (!auctionDatum) {
-                clearInterval(intervalId);
-                return;
-            }
-            setCountdown(getCountdown(auctionDatum));
-        }, 1000);
-    }, [auctionDatum]);
+    let trader = Trader.None;
+    if (address && bidderAddress && address === bidderAddress) {
+        trader = Trader.Buyer;
+    }
+    else if (address && sellerAddress && address === sellerAddress) {
+        trader = Trader.Seller;
+    }
     
     const closeAlert = () => {
         setShowSuccess(false);
         setShowError(false);
     }
 
-    const validateFields = (target: any) => {
-        if (!target?.amount?.value) {
-            throw new Error("Bid Amount is required.");
-        }
-
-        const reserveAmount = parseInt(adMinBid);
-        const newBid = target.amount.value * adaToLovelace;
-        if (newBid < reserveAmount) {
-            throw new Error("Bid Amount must be larger than the reserve amount.");
-        }
-
-        if (bdBid && target.amount.value < bdBid) {
-            throw new Error("Bid Amount must be larger than the current bid.");
-        }
-
-        // Auction is over check
-    }
-
-    const submitBidTransaction = async (event : any) => {
+    const submitCloseTransaction = async (event: any) => {
         event.preventDefault();
         setShowSuccess(false);
         setShowError(false);
 
-        const buttonIndex = 1;
-        const bidButton = event.target[buttonIndex];        
-        const bidText = bidButton.children[0];
-        const bidSpinner = bidButton.children[1];
+        const buttonIndex = 0;
+        const closeButton = event.target[buttonIndex];        
+        const closeText = closeButton.children[0];
+        const closeSpinner = closeButton.children[1];
 
         try {
-            bidButton.disabled = true;
-            bidText.classList.add("visually-hidden");
-            bidSpinner.classList.remove("visually-hidden");
-    
-            validateFields(event.target);
-            
-            const walletAddress = await getBaseAddress();
+            closeButton.disabled = true;
+            closeText.classList.add("visually-hidden");
+            closeSpinner.classList.remove("visually-hidden");
 
-            let asset = getAsset(blob.asset);    
-            const bdBidder = toHex(walletAddress.payment_cred().to_keyhash().to_bytes());
-            const bidAmountLovelace = (event.target.amount.value * adaToLovelace).toString();
-            const bidDetails : BidDetails = { bdBidder, bdBid: bidAmountLovelace }
+            let asset = getAsset(blob.asset);
+            const txHash = await close(asset);
             
-            const txHash = await bid(asset, bidDetails);
-    
-            bidButton.disabled = false;
-            bidText.classList.remove("visually-hidden");
-            bidSpinner.classList.add("visually-hidden");
+            closeButton.disabled = false;
+            closeText.classList.remove("visually-hidden");
+            closeSpinner.classList.add("visually-hidden");
     
             setShowSuccess(true);
             setTxHash(txHash);
         }
-        catch (error: any) {  
+        catch (error: any) {
             setShowError(true);
 
             if (error?.info) setErrorString(error.info);
             else if (error?.message) setErrorString(error.message);
             else setErrorString("Ensure all fields are correct, your Cardano wallet is connected, and that the page has not been updated. If you require help please reach out in our Discord channel.");
             
-            bidButton.disabled = false;
-            bidText.classList.remove("visually-hidden");
-            bidSpinner.classList.add("visually-hidden");
+            closeButton.disabled = false;
+            closeText.classList.remove("visually-hidden");
+            closeSpinner.classList.add("visually-hidden");
             console.error(error);
-        }  
+        }
     }
 
     return (
-        <div className="blob-bid container rounded mb-4">
+        <div className="blob-bid container rounded">
             {showError && <div className="alert alert-danger alert-dismissible fade show mt-3">
                 <strong>Error!</strong> {errorString}
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
@@ -121,38 +93,41 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                     <Image src="/images/CardanoLogo.png" width={40} height={40} quality={100} alt="Cardano Logo" />
                 </div>
                 <div className="col-8 ">
-                    <span className="bid-title-text">{getTimeText(auctionDatum)}</span>
+                    {(!address || !bidderAddress || !sellerAddress) &&
+                        <div className={"d-flex justify-content-center mt-4 mb-4 pb-3"}>
+                            <div className="spinner-border" role="status"></div>
+                        </div>
+                    }
+                    {address && bidderAddress && sellerAddress && <span className="bid-title-text">{getTimeText(auctionDatum)}</span>}     
+                                
+                    {address && bidderAddress && sellerAddress && (trader === Trader.Buyer || trader === Trader.Seller) &&
                     <div className="bid-timer rounded pt-2 pb-2 mt-2">
-                        {!countdownText && <div className="spinner-border spinner-border-sm" role="status"></div> }
-                        {countdownText && !auctionEnded && <div>
-                            {countdownText.days} Days    
-                        </div>}
-                        {countdownText && !auctionEnded && <div>
-                            {countdownText.hours} Hours    
-                        </div>}
-                        {countdownText && !auctionEnded && <div>
-                            {countdownText.minutes} Minutes   
-                        </div>}
-                        {countdownText && !auctionEnded && <div>
-                            {countdownText.seconds} Seconds   
-                        </div>}
-                        {auctionEnded && blob?.onchain_metadata?.name &&
+                        {!blob?.onchain_metadata?.name && <div className="spinner-border spinner-border-sm" role="status"></div> }  
+                        {blob?.onchain_metadata?.name && 
                         <div>
-                            The Auction For <strong>{`${blob.onchain_metadata.name}`}</strong> Has Ended
+                            {trader == Trader.Seller && <><strong>Wumb</strong> was sold for 100₳!</>}
+                            {trader === Trader.Buyer && <>You bought <strong>Wumb</strong> for 100₳!</>}
                         </div>
                         }
-                    </div>                   
-                    <hr className="divider" />
-                    <span className="blob-purchase-title">{getTopBidText(auctionDatum)}  </span>
-                    {!auctionDatum && <div className="spinner-border spinner-border-sm" role="status"></div> }
-                    <span className="blob-purchase-title blob-purchase-text">{getTopBid(auctionDatum)}</span>
-                    <form className="blob-form" onSubmit={submitBidTransaction}>
-                        <div className="input-group mt-3 mb-3">
-                            <span className="input-group-text input-bid">₳</span>
-                            <input type="number" name="amount" className="form-control input-bid" placeholder="Bid Amount" aria-describedby="blobBidPrice" />
+                    </div>}
+                    {address && bidderAddress && sellerAddress && trader === Trader.Buyer &&
+                    <div className='pet-blob pt-3 px-2'>
+                        Make sure your new Pet Blob is happy and well fed!
+                    </div>
+                    }
+                    {address && bidderAddress && sellerAddress && trader === Trader.None && 
+                    <div className="bid-timer rounded pt-2 pb-2 mt-2">
+                        {!blob?.onchain_metadata?.name && <div className="spinner-border spinner-border-sm" role="status"></div> }  
+                        {blob?.onchain_metadata?.name && 
+                        <div>
+                            <strong>{blob?.onchain_metadata?.name}</strong> was bought for 100₳!
                         </div>
-                        <button type="submit" className="btn btn-success btn-trade mb-4">
-                            <span>Place Bid</span>
+                        }
+                    </div>}                             
+                    <hr className="divider" />
+                    <form className="blob-form" onSubmit={submitCloseTransaction}>
+                        <button type="submit" className="btn btn-primary btn-trade mb-4">
+                            <span>Close Auction</span>
                             <div className="visually-hidden spinner-border spinner-border-sm" role="status"></div>
                         </button>
                     </form>                    
@@ -194,6 +169,11 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                 .blob-purchase-title {
                     font-size: 1.0rem;
                 }
+
+                .pet-blob {
+                    font-size: 1.8vw;
+                    font-weight: 500;
+                }
                 
                 @media screen and (min-width: 576px) {
                     .bid-title-text {
@@ -206,6 +186,10 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
 
                     .blob-purchase-title {
                         font-size: 1.4rem;
+                    }
+
+                    .pet-blob {
+                        font-size: 1.6vw;
                     }
                 }
                 
@@ -220,6 +204,10 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
 
                     .bid-timer {
                         font-size: 1.4vw;
+                    }
+
+                    .pet-blob {
+                        font-size: 1.2vw;
                     }
                 }
 
@@ -286,18 +274,15 @@ const getTimeText = (auctionDatum: AuctionDatum) => {
     const minuteText = (minutes > 10) ? minutes.toString() : `0${minutes.toString()}`;
 
     // Combine everything into the auction string
-    const auctionString = `Auction ends ${month} ${date}, ${year} at ${hour12}:${minuteText} ${suffix}`;
+    const auctionString = `Auction ended ${month} ${date}, ${year} at ${hour12}:${minuteText} ${suffix}`;
     return auctionString
 }
 
 const getCountdown = (auctionDatum: AuctionDatum): Countdown => {
     if (!auctionDatum) return { } as Countdown;
-
-    // Decrement endDateTime by 15 minutes to account for ttl (time to live)
-    const fifteenMinutes = 1000 * 60 * 15;
     const endDatetime = parseInt(auctionDatum.adAuctionDetails.adDeadline);
     const now = Date.now();
-    const difference = (endDatetime - fifteenMinutes) - now;
+    const difference = endDatetime - now;
 
     const countdown: Countdown = {
         days: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -343,11 +328,11 @@ const getTopBid = (auctionDatum: AuctionDatum) => {
 
     if (!bdBid) {
         const reserveAmount = (parseInt(adMinBid) / adaToLovelace).toString();
-        return `${reserveAmount} ₳`;
+        return `${reserveAmount} ADA`;
     }
 
     const bidAmount = (parseInt(bdBid) / adaToLovelace).toString();
-    return `${bidAmount} ₳`;
+    return `${bidAmount} ADA`;
 }
 
 const getTopBidText = (auctionDatum: AuctionDatum) => {
