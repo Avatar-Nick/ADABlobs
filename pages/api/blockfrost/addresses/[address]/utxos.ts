@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { blockfrostAPI } from "../../../../../src/api/api";
 import { blockfrostAPIRequest } from "../../../../../src/api/requests";
 
-
 // Getting all Utxos at a script address only is currently unused
 const handler = async (req : NextApiRequest, res : NextApiResponse) =>
 {
