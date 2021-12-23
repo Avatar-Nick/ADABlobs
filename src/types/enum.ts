@@ -1,10 +1,11 @@
 export enum BlobStatus {   
-    Waiting = 0, 
-    Sold = 1,
+    Loading = 0, 
+    Sold = 1,    
+    Auction = 3,
     Bid = 2,
-    Buy = 3,
-    Sell = 4,
-    Auction = 5,
+    Close = 4,
+    Buy = 5,
+    Sell = 6,
 }
 
 export enum Trader { 

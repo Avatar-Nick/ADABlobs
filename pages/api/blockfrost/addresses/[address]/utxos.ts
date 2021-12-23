@@ -11,7 +11,6 @@ const handler = async (req : NextApiRequest, res : NextApiResponse) =>
     const endpoint = blockfrostAPI.endpoints.addresses.utxos.base(address);
     const data = await blockfrostAPIRequest(endpoint);
 
-    console.log(data);
     res.status(200).json(data);
 }
 

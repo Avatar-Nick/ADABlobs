@@ -60,8 +60,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) =>
     }
     catch (error) {
         res.status(400).json({ error: error });
-    }
-    
+    }    
 }
 
 export default handler;

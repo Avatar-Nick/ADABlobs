@@ -68,32 +68,37 @@ export const cleanUtxos = (utxos: any) => {
     return utxos;
 }
 
-export const getAuctionDatum = (datum: any) : AuctionDatum => 
+export const getAuctionDatum = (datum: any) : AuctionDatum | null => 
 {
-    const rawAuctionDetails = datum.as_constr_plutus_data().data().get(0).as_constr_plutus_data().data();
-    const rawBidDetails = datum.as_constr_plutus_data().data().get(1).as_constr_plutus_data().data();
-
-    const adSeller = toHex(Loader.Cardano.Ed25519KeyHash.from_bytes(rawAuctionDetails.get(0).as_bytes()).to_bytes());
-    const adCurrency = toHex(rawAuctionDetails.get(1).as_bytes());
-    const adToken = toHex(rawAuctionDetails.get(2).as_bytes());
-    const adDeadline = rawAuctionDetails.get(3).as_integer().as_u64().to_str();
-    const adStartTime = rawAuctionDetails.get(4).as_integer().as_u64().to_str();
-    const adMinBid = rawAuctionDetails.get(5).as_integer().as_u64().to_str();
-    const adMarketplacePercent = rawAuctionDetails.get(6).as_integer().as_u64().to_str();
-    const adMarketplaceAddress = toHex(Loader.Cardano.Ed25519KeyHash.from_bytes(rawAuctionDetails.get(7).as_bytes()).to_bytes());
+    try {
+        const rawAuctionDetails = datum.as_constr_plutus_data().data().get(0).as_constr_plutus_data().data();
+        const rawBidDetails = datum.as_constr_plutus_data().data().get(1).as_constr_plutus_data().data();
     
-    const auctionDetails : AuctionDetails = { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress };
-    let auctionDatum : AuctionDatum = { adAuctionDetails: auctionDetails };
-
-    if (rawBidDetails.len() > 0) {
-        const rawMaybeBidDetails = rawBidDetails.get(0).as_constr_plutus_data().data()
-        const bdBidder = toHex(Loader.Cardano.Ed25519KeyHash.from_bytes(rawMaybeBidDetails.get(0).as_bytes()).to_bytes());
-        const bdBid = rawMaybeBidDetails.get(1).as_integer().as_u64().to_str();
-        const bidDetails: BidDetails = { bdBidder, bdBid }
-        auctionDatum['adBidDetails'] = bidDetails;
+        const adSeller = toHex(Loader.Cardano.Ed25519KeyHash.from_bytes(rawAuctionDetails.get(0).as_bytes()).to_bytes());
+        const adCurrency = toHex(rawAuctionDetails.get(1).as_bytes());
+        const adToken = toHex(rawAuctionDetails.get(2).as_bytes());
+        const adDeadline = rawAuctionDetails.get(3).as_integer().as_u64().to_str();
+        const adStartTime = rawAuctionDetails.get(4).as_integer().as_u64().to_str();
+        const adMinBid = rawAuctionDetails.get(5).as_integer().as_u64().to_str();
+        const adMarketplacePercent = rawAuctionDetails.get(6).as_integer().as_u64().to_str();
+        const adMarketplaceAddress = toHex(Loader.Cardano.Ed25519KeyHash.from_bytes(rawAuctionDetails.get(7).as_bytes()).to_bytes());
+        
+        const auctionDetails : AuctionDetails = { adSeller, adCurrency, adToken, adDeadline, adStartTime, adMinBid, adMarketplacePercent, adMarketplaceAddress };
+        let auctionDatum : AuctionDatum = { adAuctionDetails: auctionDetails };
+    
+        if (rawBidDetails.len() > 0) {
+            const rawMaybeBidDetails = rawBidDetails.get(0).as_constr_plutus_data().data()
+            const bdBidder = toHex(Loader.Cardano.Ed25519KeyHash.from_bytes(rawMaybeBidDetails.get(0).as_bytes()).to_bytes());
+            const bdBid = rawMaybeBidDetails.get(1).as_integer().as_u64().to_str();
+            const bidDetails: BidDetails = { bdBidder, bdBid }
+            auctionDatum['adBidDetails'] = bidDetails;
+        }
+    
+        return auctionDatum;
     }
-
-    return auctionDatum;
+    catch (error) {
+        return null;
+    }    
 }
 
 export const getAuctionRedeemer = (redeemer: any): AuctionRedeemer => 

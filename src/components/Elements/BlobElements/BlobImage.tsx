@@ -9,7 +9,7 @@ interface BlobImageProps  {
     blobStatus: BlobStatus,
 
 }
-export const BlobImage = ({ blob, blobStatus = BlobStatus.Waiting } : BlobImageProps) => 
+export const BlobImage = ({ blob, blobStatus = BlobStatus.Loading } : BlobImageProps) => 
 {
     if (!blob) return <></>;
     
@@ -21,12 +21,14 @@ export const BlobImage = ({ blob, blobStatus = BlobStatus.Waiting } : BlobImageP
                         <Image src={convertIPFSToHTTP(blob.onchain_metadata.image)} quality={100} width={"400%"} height={"400%"} alt={blob.onchain_metadata.name}  />
                         <div className="blob-name mb-2">{blob.onchain_metadata.name} {idToLongString(blob.onchain_metadata.id)}</div>
                         <>
-                            { blobStatus === BlobStatus.Waiting && <></>}
+                            { blobStatus === BlobStatus.Loading && <button type="button" className="btn btn-shade btn-block btn-text"><div className="spinner-border spinner-border-sm" role="status"></div></button>}
                             { blobStatus === BlobStatus.Sold && <button type="button" className="btn btn-shade btn-block btn-text">Sold</button>}
+                            { blobStatus === BlobStatus.Auction && <button type="button" className="btn btn-danger btn-block btn-text">Auction</button>}
                             { blobStatus === BlobStatus.Bid && <button type="button" className="btn btn-success btn-block btn-text">Bid</button>}
+                            { blobStatus === BlobStatus.Close && <button type="button" className="btn btn-primary btn-block btn-text">Close</button>}
                             { blobStatus === BlobStatus.Buy && <button type="button" className="btn btn-success btn-block btn-text">Buy</button>}
                             { blobStatus === BlobStatus.Sell && <button type="button" className="btn btn-danger btn-block btn-text">Sell</button>}
-                            { blobStatus === BlobStatus.Auction && <button type="button" className="btn btn-danger btn-block btn-text">Auction</button>}
+                            
                         </>
                     </div>  
                 </div>

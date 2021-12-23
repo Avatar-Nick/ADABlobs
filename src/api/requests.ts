@@ -21,7 +21,15 @@ export const fetchOwnedAssets = async () => {
     const address = await getAddress();
     if (!address) return { }
 
-    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.address.base(address)}`)
+    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.addresses.base(address)}`)
+    return response.json();
+}
+
+export const fetchAddressAuctions = async ({ queryKey }: any) => {
+    const [_key, address] = queryKey
+    if (!address) return { };
+    
+    const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.addresses.auctions(address)}`)
     return response.json();
 }
 
@@ -49,7 +57,7 @@ export const fetchTxMetadata = async (tx_hash: string) => {
 
 export const fetchAssetUtxos = async (address: string, asset: string) => 
 {
-    const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.addresses.utxos(address, asset)}`)
+    const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.addresses.utxos.base(address, asset)}`)
     return response.json();
 }
 
@@ -71,7 +79,7 @@ export const fetchAssetAuction = async ({ queryKey } : any) => {
     }
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
-    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum);
+    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum) as AuctionDatum;
     return auctionDatum;
 }
 

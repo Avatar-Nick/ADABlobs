@@ -107,7 +107,7 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
     const currentValue = assetUtxo.utxo.output().amount();
     const currentBidAmountLovelace = parseInt(currentValue.coin().to_str());    
-    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum);
+    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum) as AuctionDatum;
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
     const walletAddress = await getBaseAddress();
@@ -200,7 +200,7 @@ export const close = async (asset: string) =>
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
     const currentValue = assetUtxo.utxo.output().amount();  
-    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum);
+    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum) as AuctionDatum;
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
     const walletAddress = await getBaseAddress();

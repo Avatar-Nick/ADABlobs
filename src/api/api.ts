@@ -23,7 +23,7 @@ export const adablobsAPI = new API (
                 blob: (asset: string) => `/blobs/${asset}`,
                 script: () => `/blobs/scripts`
             },
-            address: {
+            addresses: {
                 base: (address: string) => `/addresses/${address}`,
                 auctions: (address: string) => `/addresses/${address}/auctions`,
             }

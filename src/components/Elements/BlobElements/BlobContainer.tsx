@@ -1,7 +1,7 @@
 
 import React, { useEffect } from "react";
 import { BlobImage } from "./BlobImage";
-import { useFetchAssets, useOwnedAssets, useRevealedAssets, useScriptAssets } from "../../../hooks/assets.hooks";
+import { useAddressAuctions, useFetchAssets, useOwnedAssets, useRevealedAssets,  } from "../../../hooks/assets.hooks";
 import { useGetAddress } from "../../../hooks/wallet.hooks";
 import { getBlobStatus } from "../../../utils/blobs/blobStatus";
 import { isBlobRevealed, isHomeAddress } from "../../../utils/blobs/blobReveal";
@@ -11,7 +11,7 @@ export const BlobContainer = () =>
     const addressQuery = useGetAddress();
     const assetsQuery = useFetchAssets();
     const ownedAssetsQuery = useOwnedAssets();
-    const scriptAssetsQuery = useScriptAssets(); 
+    const addressAuctionsQuery = useAddressAuctions(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string); 
     const revealedAssetsQuery = useRevealedAssets();
 
     const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = assetsQuery;
@@ -41,6 +41,7 @@ export const BlobContainer = () =>
         }
     }
 
+    console.log(addressAuctionsQuery.data);
     return (
         <div className="blob-container">
             <div className="blob-content container pt-3">
@@ -48,7 +49,7 @@ export const BlobContainer = () =>
                     {data?.pages.map((group, i) => (
                         <React.Fragment key={i}>
                             {group.blobs.map((blob : BlobChainAsset) => {
-                                const blobStatus = getBlobStatus(blob, ownedAssetsQuery.data, scriptAssetsQuery.data);
+                                const blobStatus = getBlobStatus(blob, ownedAssetsQuery.data, addressAuctionsQuery.data);
                                 if (isBlobRevealed(blob, revealedAssetsQuery.data) || isHomeAddress(addressQuery.data))  {
                                     return (
                                         <div className="blob col" key={blob.asset}>

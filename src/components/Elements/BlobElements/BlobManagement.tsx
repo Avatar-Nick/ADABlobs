@@ -1,6 +1,6 @@
 import { AuctionSection } from "../TradeElements/AuctionSection";
 import { BidSection } from "../TradeElements/BidSection";
-import { useAssetOwner, useOwnedAssets, useScriptAssets } from "../../../hooks/assets.hooks";
+import { useAssetOwner, useOwnedAssets, useAddressAuctions } from "../../../hooks/assets.hooks";
 import { getBlobStatus } from "../../../utils/blobs/blobStatus";
 import { BlobStatus } from "../../../types/enum";
 import { useState } from "react";
@@ -12,7 +12,7 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
     const [copy, setCopy] = useState(false);
 
     const ownedAssetsQuery = useOwnedAssets();
-    const scriptAssetsQuery = useScriptAssets();
+    const addressAuctionsQuery = useAddressAuctions(process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as string);
     const assetOwnerQuery = useAssetOwner(blob.asset);
 
     const copyAddress = async () => {
@@ -28,7 +28,7 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
         setCopy(false);
     }
 
-    const blobStatus: BlobStatus = getBlobStatus(blob, ownedAssetsQuery.data, scriptAssetsQuery.data) as BlobStatus;
+    const blobStatus: BlobStatus = getBlobStatus(blob, ownedAssetsQuery.data, addressAuctionsQuery.data) as BlobStatus;
     return (
         <div className="blob-container">
             <div className="container d-flex flex-column align-items-center">
@@ -60,14 +60,14 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
                 <div className="row pb-4">
                     <div className="col-12">
                         <>
-                            {blobStatus === BlobStatus.Waiting && <></>}
+                            {blobStatus === BlobStatus.Loading && <></>}                            
                             {blobStatus === BlobStatus.Sold && <></>}
+                            {blobStatus === BlobStatus.Auction && <AuctionSection blob={blob} />}                            
                             {blobStatus === BlobStatus.Bid && <BidSection blob={blob} />}
+                            {blobStatus === BlobStatus.Close && <CloseSection blob={blob} />}
                             {blobStatus === BlobStatus.Buy && <BidSection blob={blob} />}
                             {blobStatus === BlobStatus.Sell && <AuctionSection blob={blob} />}
-                            {blobStatus === BlobStatus.Auction && <AuctionSection blob={blob} />}
                         </>
-                        <CloseSection blob={blob} />
                     </div>
                 </div>
             </div>
