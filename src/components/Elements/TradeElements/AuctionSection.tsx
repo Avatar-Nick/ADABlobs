@@ -116,7 +116,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset }) =>
                 <strong>Error!</strong> {errorString}
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
             </div> }
-            {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 truncate">
+            {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 wrap">
                 <strong>Success!</strong> Transaction successfully submitted! 
                 <br />
                 <strong>Transaction hash:</strong> {txHash}
@@ -228,10 +228,8 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset }) =>
                     background-color: #cde1f8;
                 }
 
-                .truncate {
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
+                .wrap {
+                    overflow-wrap: anywhere;
                 }
             `}</style>
         </div>

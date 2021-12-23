@@ -6,6 +6,7 @@ import { toHex } from '../../../cardano/serialization';
 import { getBaseAddress } from '../../../cardano/wallet/wallet';
 import { useAssetAuction } from '../../../hooks/assets.hooks';
 import { months } from '../../../consts/consts';
+import { getCountdown } from '../../../utils/time';
 
 export const BidSection = ({ blob } : { blob : BlobChainAsset}) => 
 {
@@ -26,6 +27,12 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
     let intervalId = setInterval(() => {
         setCountdown(getCountdown(auctionDatum));
     }, 1000);
+
+    useEffect(() => {
+        if (auctionDatum) {
+            setCountdown(getCountdown(auctionDatum as AuctionDatum));
+        }
+    }, [auctionDatum, setCountdown])
 
     useEffect(() => {
         return () => clearInterval(intervalId);
@@ -106,7 +113,7 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                 <strong>Error!</strong> {errorString}
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
             </div> }
-            {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 truncate">
+            {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 wrap">
                 <strong>Success!</strong> Transaction successfully submitted! 
                 <br />
                 <strong>Transaction hash:</strong> {txHash}
@@ -168,7 +175,7 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                     border-style: solid;
                     border-color: #bbc9ec; 
                     
-                    width: 80vw;
+                    width: 80vw;                    
                 }
                 
                 .bid-title-text {
@@ -255,6 +262,10 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                 .input-group-text {
                     background-color: #cde1f8;
                 }
+
+                .wrap {
+                    overflow-wrap: anywhere;
+                }
             `}</style>
         </div>
     )
@@ -302,24 +313,6 @@ const getTimeText = (auctionDatum: AuctionDatum) => {
     return auctionString
 }
 
-const getCountdown = (auctionDatum: AuctionDatum): Countdown => {
-    if (!auctionDatum) return { } as Countdown;
-
-    // Decrement endDateTime by 15 minutes to account for ttl (time to live)
-    const fifteenMinutes = 1000 * 60 * 15;
-    const endDatetime = parseInt(auctionDatum.adAuctionDetails.adDeadline);
-    const now = Date.now();
-    const difference = (endDatetime - fifteenMinutes) - now;
-
-    const countdown: Countdown = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
-        seconds: Math.floor((difference / 1000) % 60)
-    };
-    return countdown;
-}
-
 const getCountdownText = (count: Number) => {
     if (count === null || count === undefined) return "";
 
@@ -331,7 +324,7 @@ const getCountdownText = (count: Number) => {
 }
 
 const getAllCountdownText = (countdown: Countdown) => {
-    if (!countdown) return null;
+    if (!countdown || !('days' in countdown) || !('hours' in countdown) || !('minutes' in countdown) || !('seconds' in countdown)) return null;
 
     return { 
         days: getCountdownText(countdown.days), 

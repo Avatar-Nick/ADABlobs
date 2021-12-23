@@ -3,16 +3,39 @@ import Image from 'next/image';
 import { BlobStatus } from '../../../types/enum';
 import { idToLongString } from '../../../utils/idToLongString';
 import { convertIPFSToHTTP } from '../../../utils/ipfsToHttp';
+import { lovelaceToAda } from '../../../cardano/consts';
+import { useEffect, useState } from 'react';
+import { getCountdown } from '../../../utils/time';
 
 interface BlobImageProps  {
     blob: BlobChainAsset,
     blobStatus: BlobStatus,
+    auctionDatum?: AuctionDatum,
 
 }
-export const BlobImage = ({ blob, blobStatus = BlobStatus.Loading } : BlobImageProps) => 
+export const BlobImage = ({ blob, blobStatus = BlobStatus.Loading, auctionDatum } : BlobImageProps) => 
 {
-    if (!blob) return <></>;
-    
+    const [countdown, setCountdown] = useState(getCountdown(auctionDatum as AuctionDatum));
+
+    // Set the conditions for updating the countdown
+    let intervalId : any;
+    if (countdown?.days <= 0 && blobStatus === BlobStatus.Bid) {
+        intervalId = setInterval(() => {
+            setCountdown(getCountdown(auctionDatum as AuctionDatum));
+        }, 1000);
+    }
+
+    useEffect(() => {
+        if (auctionDatum) {
+            setCountdown(getCountdown(auctionDatum as AuctionDatum));
+        }
+    }, [auctionDatum, setCountdown])
+
+    useEffect(() => {
+        return () => clearInterval(intervalId);
+    }, [intervalId]);
+
+    if (!blob) return <></>;    
     return (
         <Link href={`/blobs/${blob.asset}`} passHref>
             <div className="blob-content d-flex justify-content-center rounded pb-4 mb-4" >
@@ -24,13 +47,15 @@ export const BlobImage = ({ blob, blobStatus = BlobStatus.Loading } : BlobImageP
                             { blobStatus === BlobStatus.Loading && <button type="button" className="btn btn-shade btn-block btn-text"><div className="spinner-border spinner-border-sm" role="status"></div></button>}
                             { blobStatus === BlobStatus.Sold && <button type="button" className="btn btn-shade btn-block btn-text">Sold</button>}
                             { blobStatus === BlobStatus.Auction && <button type="button" className="btn btn-danger btn-block btn-text">Auction</button>}
-                            { blobStatus === BlobStatus.Bid && <button type="button" className="btn btn-success btn-block btn-text">Bid</button>}
+                            { blobStatus === BlobStatus.Bid && <button type="button" className="btn btn-success btn-block btn-text">Bid{`${getBidAmountText(auctionDatum as AuctionDatum)}`}</button>}
                             { blobStatus === BlobStatus.Close && <button type="button" className="btn btn-primary btn-block btn-text">Close</button>}
                             { blobStatus === BlobStatus.Buy && <button type="button" className="btn btn-success btn-block btn-text">Buy</button>}
-                            { blobStatus === BlobStatus.Sell && <button type="button" className="btn btn-danger btn-block btn-text">Sell</button>}
-                            
+                            { blobStatus === BlobStatus.Sell && <button type="button" className="btn btn-danger btn-block btn-text">Sell</button>}                            
                         </>
-                    </div>  
+                        { blobStatus === BlobStatus.Bid && countdown?.days <= 0 && <div className="d-flex justify-content-center auction-timer-container">
+                            { <div className="rounded-3 auction-timer">{`${getCountdownText(countdown)}`}</div> }    
+                        </div>}
+                    </div>
                 </div>
                 <style jsx>{`
                     .blob-content {                        
@@ -63,8 +88,76 @@ export const BlobImage = ({ blob, blobStatus = BlobStatus.Loading } : BlobImageP
                     .btn-text {
                         font-weight: 700;
                     }
+
+                    .auction-timer-container {
+                        position: relative;
+                        width: 75%;
+                    }
+
+                    .auction-timer {
+                        position: absolute;
+                        display: block;
+                        
+                        background-color: #1b2a4e;/*#3d4142;*/
+                        color: white;
+                        text-align: center;
+                        
+                        font-weight: 500;
+                        font-size: 0.75rem;
+
+                        top: 0.75rem;
+                        padding-top: 0.2rem;
+                        padding-bottom: 0.2rem;
+                        padding-left: 1rem;
+                        padding-right: 1rem;
+                    }
                 `}</style> 
             </div>
         </Link>
     )
+}
+
+const getBidAmountText = (blobAuctionDatum : AuctionDatum) => {
+    if (!blobAuctionDatum) return "";
+
+    if (!blobAuctionDatum.adBidDetails) {
+        const reserveAmount = parseInt(blobAuctionDatum.adAuctionDetails.adMinBid) * lovelaceToAda;
+        return ` - ₳${numberWithCommas(reserveAmount)}`;
+    }
+
+    const reserveAmount = parseInt(blobAuctionDatum.adAuctionDetails.adMinBid) * lovelaceToAda;
+    return ` - ₳${numberWithCommas(reserveAmount)}`;
+}
+
+const numberWithCommas = (lovelaces : Number) => {
+    return lovelaces.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+const getCountdownText = (countdown: Countdown) => {
+    if (countdown.days > 1) {
+        return `${countdown.days} days`;
+    }
+    else if (countdown.days === 1) {
+        return `${countdown.days} day`;
+    }
+    else if (countdown.hours > 1) {
+        return `${countdown.hours} hours`;
+    }
+    else if (countdown.hours === 1) {
+        return `${countdown.hours} hour`;
+    }
+    else if (countdown.minutes > 1) {
+        return `${countdown.minutes} minutes`;
+    }
+    else if (countdown.minutes === 1) {
+        return `${countdown.minutes} minute`;
+    }
+    else if (countdown.seconds > 1) {
+        return `${countdown.seconds} seconds`;
+    }
+    else if (countdown.seconds === 1) {
+        return `${countdown.seconds} second`;
+    }
+
+    return "Completed";
 }

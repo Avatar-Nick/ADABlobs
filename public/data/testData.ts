@@ -7,7 +7,7 @@ export const getTestBidData = () =>
             adDeadline: (now + 3600 * 1000).toString(),
             adMarketplaceAddress: "8277b5c2f4553e874dd6bfe6b044826104a862fff33813c513461529",
             adMarketplacePercent: "10",
-            adMinBid: "10000000",
+            adMinBid: "1200000000",
             adSeller: "30ca3887e827864907adf13322ea12c87d17e2ef0bea8601bb52f077",
             adStartTime: now.toString(),
             adToken: "4d494e54",

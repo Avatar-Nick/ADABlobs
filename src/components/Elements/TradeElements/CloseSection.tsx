@@ -1,6 +1,6 @@
 import {  useState } from 'react';
 import Image from 'next/image';
-import { adaToLovelace, lovelaceToAda } from '../../../cardano/consts';
+import { lovelaceToAda } from '../../../cardano/consts';
 import {  close } from '../../../cardano/plutus/contract';
 import { useAssetAuction, useAssetClose } from '../../../hooks/assets.hooks';
 import { useGetAddress } from '../../../hooks/wallet.hooks';
@@ -84,7 +84,7 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
                 <strong>Error!</strong> {errorString}
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
             </div> }
-            {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 truncate">
+            {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 wrap">
                 <strong>Success!</strong> Transaction successfully submitted! 
                 <br />
                 <strong>Transaction hash:</strong> {txHash}
@@ -132,7 +132,7 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
                         {!blob?.onchain_metadata?.name && <div className="spinner-border spinner-border-sm" role="status"></div> }  
                         {blob?.onchain_metadata?.name && 
                         <div>
-                            <strong>{blob?.onchain_metadata?.name}</strong> was bought for {(parseInt(bdBid) * lovelaceToAda).toFixed(2)}₳!
+                            <strong>{blob?.onchain_metadata?.name}</strong> was bought for {(parseInt(bdBid as string) * lovelaceToAda).toFixed(2)}₳!
                         </div>
                         }
                     </div>}
@@ -252,6 +252,10 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
 
                 .input-group-text {
                     background-color: #cde1f8;
+                }
+
+                .wrap {
+                    overflow-wrap: anywhere;
                 }
             `}</style>
         </div>

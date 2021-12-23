@@ -8,7 +8,7 @@ export const TitleContainer = () =>
     const { isLoading, error, data } = useIsConnected();
     let connected = data;
 
-    const description = "Launched in December 2021, ADA Blobs is a collection of 300 Blob NFTs and is one of the first NFT projects on the Cardano Blockchain. There will only ever be 300 ADA Blobs available, with 1 new adorable and memeable Blob being available each week until all 300 are revealed.";
+    const description = "Launched in December 2021, ADA Blobs is a collection of 300 Blob NFTs and is the first auction NFT project on the Cardano Blockchain. There will only ever be 300 ADA Blobs available, with 1 new adorable and memeable Blob being available each week until all 300 are revealed.";
     return (
         <div className="title-container d-flex align-items-center">            
             <div className="container">

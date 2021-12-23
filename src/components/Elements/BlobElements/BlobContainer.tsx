@@ -5,6 +5,7 @@ import { useAddressAuctions, useFetchAssets, useOwnedAssets, useRevealedAssets, 
 import { useGetAddress } from "../../../hooks/wallet.hooks";
 import { getBlobStatus } from "../../../utils/blobs/blobStatus";
 import { isBlobRevealed, isHomeAddress } from "../../../utils/blobs/blobReveal";
+import { getBlobAuctionDatum } from "../../../utils/blobs/blobAuction";
 
 export const BlobContainer = () => 
 {
@@ -40,8 +41,6 @@ export const BlobContainer = () =>
             }
         }
     }
-
-    console.log(addressAuctionsQuery.data);
     return (
         <div className="blob-container">
             <div className="blob-content container pt-3">
@@ -49,15 +48,15 @@ export const BlobContainer = () =>
                     {data?.pages.map((group, i) => (
                         <React.Fragment key={i}>
                             {group.blobs.map((blob : BlobChainAsset) => {
-                                const blobStatus = getBlobStatus(blob, ownedAssetsQuery.data, addressAuctionsQuery.data);
                                 if (isBlobRevealed(blob, revealedAssetsQuery.data) || isHomeAddress(addressQuery.data))  {
+                                    const blobStatus = getBlobStatus(blob, ownedAssetsQuery.data, addressAuctionsQuery.data);
+                                    const blobAuctionDatum : AuctionDatum = getBlobAuctionDatum(blob, addressAuctionsQuery.data) as AuctionDatum;
                                     return (
                                         <div className="blob col" key={blob.asset}>
-                                            <BlobImage blob={blob} blobStatus={blobStatus}/>             
+                                            <BlobImage blob={blob} blobStatus={blobStatus} auctionDatum={blobAuctionDatum} />             
                                         </div> 
                                     )
                                 }
-                                
                                 return <div key={blob.asset}></div>
                             })}                      
                         </React.Fragment>                        
