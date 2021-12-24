@@ -148,6 +148,6 @@ export const submitTx = async (signedTx: any) => {
     }
     catch (error: any) {
         console.error(error);
-        throw new Error("Transaction Submit Error. Your bid might be too low or if you are using a hardware wallet, it might not be supported. Ensure all data is correct, refresh the page, or reach out to our discord channel if the problem persists.");
+        throw new Error("Transaction Submit Error. Your bid might be too low or if you are using a hardware wallet, it might not be supported. Ensure all data is correct, refresh the page, check the guide, or reach out to our discord channel if the problem persists.");
     }
 }
