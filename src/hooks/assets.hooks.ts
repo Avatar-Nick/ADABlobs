@@ -18,11 +18,11 @@ export const useFetchAsset = (asset: string) => useQuery([BASE_ASSET_KEY, asset]
 
 export const useOwnedAssets = () => useQuery(`${BASE_ASSET_KEY}.owned`, fetchOwnedAssets, { refetchOnWindowFocus: false });
 
-export const useAddressAuctions = (address: string) => useQuery([`${BASE_ASSET_KEY}.auctions`, address], fetchAddressAuctions, { refetchOnWindowFocus: false });
-
 export const useRevealedAssets = () => useQuery(`${BASE_ASSET_KEY}.revealed`, getBlobRevealCount, { refetchOnMount: false, refetchOnWindowFocus: false });
 
 export const useAssetOwner = (asset: string) => useQuery([`${BASE_ASSET_KEY}.owner`, asset], fetchAssetOwner, { refetchOnWindowFocus: false });
+
+export const useAddressAuctions = (address: string) => useQuery([`${BASE_ASSET_KEY}.auctions`, address], fetchAddressAuctions, { refetchOnWindowFocus: false });
 
 export const useAssetAuction = (asset: string) => useQuery([`${BASE_ASSET_KEY}.auction`, asset], fetchAssetAuction, { refetchOnWindowFocus: false });
 

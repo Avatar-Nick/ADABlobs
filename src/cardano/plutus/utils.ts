@@ -16,7 +16,7 @@ export const getAssetUtxos = async (asset: string) => {
     let utxos = await fetchAssetUtxos(CONTRACT_ADDRESS().to_bech32(), asset);
     utxos = cleanUtxos(utxos);
     
-    const utxosData = utxos.map(async (utxo: any) => {
+    const utxosData = utxos?.map(async (utxo: any) => {
         const metadata = await fetchTxMetadata(utxo.tx_hash);
         let datum = null;
         let sellerAddress = null;

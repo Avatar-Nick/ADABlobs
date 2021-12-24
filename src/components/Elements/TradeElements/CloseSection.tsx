@@ -269,6 +269,9 @@ const getAsset = (blobAsset: string) => {
         // This is the SundaeSwap Mint test token
         asset = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf39165224d494e54";
     }
+
+    // Mainnet test
+    // asset = "e15ffd26ee2409db0cd76a014020125a947d5137a35b70e27bf33bb074657374";
     return asset;
 }
 

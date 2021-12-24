@@ -146,8 +146,8 @@ export const submitTx = async (signedTx: any) => {
         const txHash = await cardano.submitTx(toHex(signedTx.to_bytes()));
         return txHash;
     }
-    catch (error) {
+    catch (error: any) {
         console.error(error);
-        throw new Error("Transaction Submit Error. Ensure all data is correct, check the guide, and reach out to our discord channel for help.");
+        throw new Error("Transaction Submit Error. Your bid might be too low or if you are using a hardware wallet, it might not be supported. Ensure all data is correct, refresh the page, or reach out to our discord channel if the problem persists.");
     }
 }

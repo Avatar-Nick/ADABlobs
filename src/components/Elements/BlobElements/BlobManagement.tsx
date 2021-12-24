@@ -67,7 +67,7 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
                             {blobStatus === BlobStatus.Close && <CloseSection blob={blob} />}
                             {blobStatus === BlobStatus.Buy && <BidSection blob={blob} />}
                             {blobStatus === BlobStatus.Sell && <AuctionSection blob={blob} />}
-                        </>
+                        </>                        
                     </div>
                 </div>
             </div>

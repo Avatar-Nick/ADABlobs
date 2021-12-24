@@ -45,9 +45,10 @@ export const fetchAddressAuctions = async ({ queryKey }: any) => {
     for (let i = 0; i < keys.length; i++) {
         const asset = keys[i];
         const { utxo, metadata } = data[asset];
+
         const datumArray = metadata.find((m: any) => m.label == DATUM_LABEL).json_metadata[utxo.output_index];
         datum = arrayToBytes(datumArray);
-        datum = Loader.Cardano.PlutusData.from_bytes(fromHex(datum));             
+        datum = Loader.Cardano.PlutusData.from_bytes(fromHex(datum));
         datum = getAuctionDatum(datum);
         if (!datum) {
             continue;
@@ -102,7 +103,7 @@ export const fetchTxMetadata = async (tx_hash: string) => {
 export const fetchAssetUtxos = async (address: string, asset: string) => 
 {
     const response = await fetch(`${blockfrostAPI.clientURL}${blockfrostAPI.clientEndpoints.addresses.utxos.base(address, asset)}`);
-    return response.json();
+    return response.json();    
 }
 
 export const fetchAssetOwner = async ({ queryKey } : any) => {
@@ -118,12 +119,12 @@ export const fetchAssetAuction = async ({ queryKey } : any) => {
     if (!asset) return { };
 
     const assetUtxos = await getAssetUtxos(asset);
-    if (assetUtxos.length > 1) {
+    if (assetUtxos?.length > 1) {
         throw new Error("There can only be 1 utxo for an NFT asset");       
     }
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
-    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum) as AuctionDatum;
+    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo?.datum) as AuctionDatum;
     return auctionDatum;
 }
 
@@ -132,13 +133,13 @@ export const fetchAssetClose = async ({ queryKey } : any) => {
     if (!asset) return { };
 
     const assetUtxos = await getAssetUtxos(asset);
-    if (assetUtxos.length > 1) {
+    if (assetUtxos?.length > 1) {
         throw new Error("There can only be 1 utxo for an NFT asset");       
     }
 
     const assetUtxo: any = assetUtxos[assetUtxos.length - 1];
-    const sellerAddress = assetUtxo.sellerAddress?.to_address().to_bech32();
-    const bidderAddress = assetUtxo.bidderAddress?.to_address().to_bech32();
+    const sellerAddress = assetUtxo?.sellerAddress?.to_address().to_bech32();
+    const bidderAddress = assetUtxo?.bidderAddress?.to_address().to_bech32();
     return { sellerAddress: sellerAddress, bidderAddress: bidderAddress};
 }
 

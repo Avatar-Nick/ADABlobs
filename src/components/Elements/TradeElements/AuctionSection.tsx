@@ -248,5 +248,9 @@ const getAsset = (blob : BlobChainAsset ) => {
         adToken = "4d494e54";
     }
 
+    // Mainnet test
+    // adCurrency = "e15ffd26ee2409db0cd76a014020125a947d5137a35b70e27bf33bb0";
+    // adToken = "74657374";
+
     return { adCurrency, adToken }
 }

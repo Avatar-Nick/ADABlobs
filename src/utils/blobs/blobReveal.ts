@@ -3,21 +3,20 @@ export const isBlobRevealed = (blob: BlobChainAsset, blobCount: number | undefin
 }
 
 export const isHomeAddress = (address: string | undefined) => {
-    const homeAddress = ""; // process.env.NEXT_PUBLIC_BLOB_ADDRESS;
-    return homeAddress === address;
+    const homeAddress = process.env.NEXT_PUBLIC_BLOB_ADDRESS;
+    const auctionAddress = process.env.NEXT_PUBLIC_BLOB_AUCTION_ADDRESS
+    return homeAddress === address || auctionAddress === address;
 }
 
 // Blobs are revealed 1 per week until all 300 are revealed
 export const getBlobRevealCount = () => {
-
-    //const now = new Date("2021-12-25T12:00:00.000Z"); // Test date
     const now = new Date(Date.now());
     const daysSinceStart = getDaysSinceStartDate(now);
 
     const daysInWeek = 7;
     const totalBlobs = 300;
 
-    let revealedBlobs = Math.floor(daysSinceStart / daysInWeek) + 1;
+    let revealedBlobs = Math.floor(daysSinceStart / daysInWeek) + 1 + 5;
     if (revealedBlobs > totalBlobs) {
         revealedBlobs = totalBlobs;
     }
@@ -27,7 +26,7 @@ export const getBlobRevealCount = () => {
 
 const getDaysSinceStartDate = (localDatetime: Date) => {
     const oneDay = 24 * 60 * 60 * 1000;
-    const startDatetime = new Date("2021-11-20T12:00:00.000Z");
+    const startDatetime = new Date("2021-12-25T12:00:00.000Z");
     const utcStartDatetime = getUTCDatetime(startDatetime);
     const utcNow = getUTCDatetime(localDatetime);
     

@@ -15,7 +15,7 @@ interface BlobImageProps  {
 }
 export const BlobImage = ({ blob, blobStatus = BlobStatus.Loading, auctionDatum } : BlobImageProps) => 
 {
-    const [countdown, setCountdown] = useState(getCountdown(auctionDatum as AuctionDatum));
+    const [countdown, setCountdown] = useState({days: -1, hours: -1, minutes: -1, seconds: -1} as Countdown);
 
     // Set the conditions for updating the countdown
     let intervalId : any;
@@ -120,8 +120,8 @@ export const BlobImage = ({ blob, blobStatus = BlobStatus.Loading, auctionDatum 
 const getBidAmountText = (blobAuctionDatum : AuctionDatum) => {
     if (!blobAuctionDatum) return "";
 
-    if (!blobAuctionDatum.adBidDetails) {
-        const reserveAmount = parseInt(blobAuctionDatum.adAuctionDetails.adMinBid) * lovelaceToAda;
+    if (blobAuctionDatum?.adBidDetails) {
+        const reserveAmount = parseInt(blobAuctionDatum.adBidDetails.bdBid) * lovelaceToAda;
         return ` - ₳${numberWithCommas(reserveAmount)}`;
     }
 

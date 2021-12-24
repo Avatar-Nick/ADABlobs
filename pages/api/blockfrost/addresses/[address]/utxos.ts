@@ -9,8 +9,10 @@ const handler = async (req : NextApiRequest, res : NextApiResponse) =>
     
     const endpoint = blockfrostAPI.endpoints.addresses.utxos.base(address);
     const data = await blockfrostAPIRequest(endpoint);
-
-    res.status(200).json(data);
+    if (data.error) {
+        return res.status(200).json([]);
+    }
+    return res.status(200).json(data);
 }
 
 export default handler;

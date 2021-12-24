@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { adaToLovelace } from '../../../cardano/consts';
+import { adaToLovelace, lovelaceToAda } from '../../../cardano/consts';
 import { bid } from '../../../cardano/plutus/contract';
 import { toHex } from '../../../cardano/serialization';
 import { getBaseAddress } from '../../../cardano/wallet/wallet';
@@ -20,7 +20,7 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
     const { adMinBid } : any = auctionDatum?.adAuctionDetails || { };
     const { bdBid } : any = auctionDatum?.adBidDetails || { };
 
-    const [countdown, setCountdown] = useState(getCountdown(auctionDatum));
+    const [countdown, setCountdown] = useState({days: -1, hours: -1, minutes: -1, seconds: -1} as Countdown);
     const countdownText = getAllCountdownText(countdown);
     const auctionEnded = isAuctionEnded(countdown);
 
@@ -30,14 +30,13 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
 
     useEffect(() => {
         if (auctionDatum) {
-            setCountdown(getCountdown(auctionDatum as AuctionDatum));
+            setCountdown(getCountdown(auctionDatum));
         }
     }, [auctionDatum, setCountdown])
 
     useEffect(() => {
         return () => clearInterval(intervalId);
-    }, [intervalId]);
-    
+    }, [intervalId]);    
     
     const closeAlert = () => {
         setShowSuccess(false);
@@ -149,11 +148,13 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                         Please wait 15 minutes for the auction to confirm on the blockchain before you can close.
                     </div> }             
                     <hr className="divider" />
-                    <span className="blob-purchase-title">{getTopBidText(auctionDatum)}  </span>
-                    {!auctionDatum && <div className="spinner-border spinner-border-sm" role="status"></div>}
-                    <span className="blob-purchase-title blob-purchase-text">{getTopBid(auctionDatum)}</span>
-                    <form className="blob-form" onSubmit={submitBidTransaction}>
-                        <div className="input-group mt-3 mb-3">
+                    <div className='mb-3'>
+                        <span className="blob-purchase-title">{getTopBidText(auctionDatum)}  </span>
+                        {!auctionDatum && <div className="spinner-border spinner-border-sm" role="status"></div>}
+                        <span className="blob-purchase-title blob-purchase-text mt-4">{getTopBid(auctionDatum)}</span>
+                    </div>                    
+                    {!auctionEnded && <form className="blob-form" onSubmit={submitBidTransaction}>
+                        <div className="input-group mb-3">
                             <span className="input-group-text input-bid">₳</span>
                             <input type="number" step="0.01" min="0" name="amount" className="form-control input-bid" placeholder="Bid Amount" aria-describedby="blobBidPrice" />
                         </div>
@@ -161,7 +162,7 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                             <span>Place Bid</span>
                             <div className="visually-hidden spinner-border spinner-border-sm" role="status"></div>
                         </button>
-                    </form>                    
+                    </form>}                 
                 </div>       
                 <div className="col-2"></div>                                          
             </div>
@@ -231,6 +232,10 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                     .bid-timer {
                         font-size: 1.4vw;
                     }
+
+                    .close-text {
+                    font-size: 1.1vw;
+                }
                 }
 
                 .blob-properties h2 {
@@ -278,6 +283,9 @@ const getAsset = (blobAsset: string) => {
         // This is the SundaeSwap Mint test token
         asset = "57fca08abbaddee36da742a839f7d83a7e1d2419f1507fcbf39165224d494e54";
     }
+
+    // Mainnet test
+    // asset = "e15ffd26ee2409db0cd76a014020125a947d5137a35b70e27bf33bb074657374";
     return asset;
 }
 
@@ -347,12 +355,12 @@ const getTopBid = (auctionDatum: AuctionDatum) => {
     if (!adMinBid && !bdBid) return "";
 
     if (!bdBid) {
-        const reserveAmount = (parseInt(adMinBid) / adaToLovelace).toString();
-        return `${reserveAmount} ₳`;
+        const reserveAmount = (parseInt(adMinBid) * lovelaceToAda);
+        return `${numberWithCommas(reserveAmount)} ₳`;
     }
 
-    const bidAmount = (parseInt(bdBid) / adaToLovelace).toString();
-    return `${bidAmount} ₳`;
+    const bidAmount = (parseInt(bdBid) * lovelaceToAda);
+    return `${numberWithCommas(bidAmount)} ₳`;
 }
 
 const getTopBidText = (auctionDatum: AuctionDatum) => {
@@ -364,4 +372,8 @@ const getTopBidText = (auctionDatum: AuctionDatum) => {
     if (!adMinBid && !bdBid) return "No Auction";
     if (!bdBid) return "Reserve Amount: ";
     return "Top Bid: ";
+}
+
+const numberWithCommas = (lovelaces : Number) => {
+    return lovelaces.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }

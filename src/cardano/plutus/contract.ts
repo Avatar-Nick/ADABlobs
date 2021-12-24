@@ -100,7 +100,7 @@ export const start = async (auctionDetails: AuctionDetails) =>
 export const bid = async (asset: string, bidDetails: BidDetails) => 
 {
     const assetUtxos = await getAssetUtxos(asset);
-    if (assetUtxos.length > 1) {
+    if (assetUtxos?.length > 1) {
         throw new Error("There can only be 1 utxo for an NFT asset.");     
     }
 
@@ -133,6 +133,11 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     const now = Date.now();
     if (now > (endDateTime - fifteenMinutes)) {
         throw new Error("The auction has ended.");
+    }
+
+    const startDatetime = parseInt(auctionDatum.adAuctionDetails.adStartTime);
+    if (now < startDatetime) {
+        throw new Error("The auction has not started yet.");
     }
 
     const bidDatum = BID_DATUM(auctionDatum.adAuctionDetails, bidDetails);
@@ -194,7 +199,7 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
 export const close = async (asset: string) => 
 {
     const assetUtxos = await getAssetUtxos(asset);
-    if (assetUtxos.length > 1) {
+    if (assetUtxos?.length > 1) {
         throw new Error("There can only be 1 utxo for an NFT asset.");      
     }
 
