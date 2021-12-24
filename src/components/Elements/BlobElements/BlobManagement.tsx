@@ -23,7 +23,7 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
         const clipboard = navigator.clipboard;
         await clipboard.writeText(address);
 
-        const milliseconds = 500;
+        const milliseconds = 600;
         await timeout(milliseconds)
         setCopy(false);
     }
