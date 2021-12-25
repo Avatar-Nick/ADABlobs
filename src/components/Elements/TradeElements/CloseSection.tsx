@@ -108,7 +108,7 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
                         {!blob?.onchain_metadata?.name && <div className="spinner-border spinner-border-sm" role="status"></div> }  
                         {blob?.onchain_metadata?.name && bdBid &&
                         <div>
-                            {trader == Trader.Seller && <><strong>{blob?.onchain_metadata?.name}</strong> was sold for {(parseInt(bdBid) * lovelaceToAda).toFixed(2)}₳!</>}
+                            {trader == Trader.Seller && <>You sold<strong>{blob?.onchain_metadata?.name}</strong> for {(parseInt(bdBid) * lovelaceToAda).toFixed(2)}₳!</>}
                             {trader === Trader.Buyer && <>You bought <strong>{blob?.onchain_metadata?.name}</strong> for {(parseInt(bdBid) * lovelaceToAda).toFixed(2)}₳!</>}
                         </div>}
                     </div>}

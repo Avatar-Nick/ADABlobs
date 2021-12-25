@@ -104,7 +104,11 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         throw new Error("There can only be 1 utxo for an NFT asset.");     
     }
 
-    const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
+    const assetUtxo: any = assetUtxos[assetUtxos.length - 1];
+    if (!assetUtxo) {
+        throw new Error("No acceptable Utxo for this transaction.");  
+    }
+    
     const currentValue = assetUtxo.utxo.output().amount();
     const currentBidAmountLovelace = parseInt(currentValue.coin().to_str());    
     const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum) as AuctionDatum;
@@ -203,9 +207,13 @@ export const close = async (asset: string) =>
         throw new Error("There can only be 1 utxo for an NFT asset.");      
     }
 
-    const assetUtxo: any = assetUtxos[assetUtxos.length - 1]; 
-    const currentValue = assetUtxo.utxo.output().amount();  
-    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum) as AuctionDatum;
+    const assetUtxo: any = assetUtxos[assetUtxos.length - 1];
+    if (!assetUtxo) {
+        throw new Error("No acceptable Utxo for this transaction.");  
+    }
+    
+    const currentValue = assetUtxo?.utxo.output().amount();  
+    const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo?.datum) as AuctionDatum;
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
     const walletAddress = await getBaseAddress();

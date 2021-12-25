@@ -26,10 +26,10 @@ export const getBlobRevealCount = () => {
 
 const getDaysSinceStartDate = (localDatetime: Date) => {
     const oneDay = 24 * 60 * 60 * 1000;
-    const startDatetime = new Date("2021-12-25T12:00:00.000Z");
+    const startDatetime = new Date("2021-12-25T17:00:00.000Z");
     const utcStartDatetime = getUTCDatetime(startDatetime);
     const utcNow = getUTCDatetime(localDatetime);
-    
+
     // Calculate the difference in milliseconds and convert to days
     let daysSinceStart = Math.floor((utcNow.getTime() - utcStartDatetime.getTime()) / (oneDay));
     
