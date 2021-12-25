@@ -52,7 +52,7 @@ export const BlobImage = ({ blob, blobStatus = BlobStatus.Loading, auctionDatum 
                             { blobStatus === BlobStatus.Buy && <button type="button" className="btn btn-success btn-block btn-text">Buy</button>}
                             { blobStatus === BlobStatus.Sell && <button type="button" className="btn btn-danger btn-block btn-text">Sell</button>}                            
                         </>
-                        { blobStatus === BlobStatus.Bid && countdown?.days <= 0 && <div className="d-flex justify-content-center auction-timer-container">
+                        { blobStatus === BlobStatus.Bid && <div className="d-flex justify-content-center auction-timer-container">
                             { <div className="rounded-3 auction-timer">{`${getCountdownText(countdown)}`}</div> }    
                         </div>}
                     </div>
