@@ -234,8 +234,8 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                     }
 
                     .close-text {
-                    font-size: 1.1vw;
-                }
+                        font-size: 1.1vw;
+                    }
                 }
 
                 .blob-properties h2 {

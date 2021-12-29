@@ -31,11 +31,18 @@ export const Navbar = () =>
                         </div>
                     </div>
                     
-                    <div className="collapse navbar-collapse justify-content-end" id="navbarHelp">
+                    <div className="collapse navbar-collapse justify-content-end" id="navbarHelp">                        
+                        <div className="pe-4">
+                            <Link href="/guide" passHref>
+                                <div>
+                                    <div className="nav-link">Guide</div>
+                                </div>
+                            </Link>
+                        </div>
                         <div className="pe-4">
                             <Link href="/" passHref>
                                 <div>
-                                    <div className="nav-link">Guide</div>
+                                    <div className="nav-link">Rarity</div>
                                 </div>
                             </Link>
                         </div>
@@ -75,6 +82,10 @@ export const Navbar = () =>
                 .nav-link {
                     color: white;
                     cursor: pointer;
+                }
+
+                .nav-link:hover {
+                    text-decoration: underline;
                 }
 
                 .nav-button-text {

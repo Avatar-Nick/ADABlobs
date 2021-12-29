@@ -50,7 +50,7 @@ export const TitleContainer = () =>
                                 <Image className="first-image-width" src="/images/blobs/001 - Bob.png" height={"400%"} width={"400%"} quality={100} alt={"Bob"} priority/>                        
                             </div>
                             <div className="title-blobs align-self-end pt-2 ps-2">
-                                <Image className="second-image-width" src="/images/YolgReverse.png" height={"400%"} width={"400%"} quality={100} alt={"Yolg"} priority/>
+                                <Image className="second-image-width" src="/images/blobs/007 - Yolg - Reverse.png" height={"400%"} width={"400%"} quality={100} alt={"Yolg"} priority/>
                             </div>
                         </div>
                         <div className="d-block d-lg-none">

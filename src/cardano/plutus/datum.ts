@@ -36,7 +36,7 @@ export const START_DATUM = (startAuctionDetails: AuctionDetails) =>
                     "int": 10 // adMarketplacePercent (this is 1%)
                 },
                 {
-                    "bytes": 1639241130000 // adMarketplaceAddress
+                    "bytes": "67614c1b06ddbb100cb6cbe919594cac31771c25530b6c7f28da242b" // adMarketplaceAddress
                 },
             ]
             },
@@ -123,7 +123,7 @@ export const BID_DATUM = (bidAuctionDetails: AuctionDetails, bidBidDetails: BidD
                         "int": 1 // adMarketplacePercent
                     },
                     {
-                        "bytes": 1639241130000 // adMarketplaceAddress
+                        "bytes": "67614c1b06ddbb100cb6cbe919594cac31771c25530b6c7f28da242b" // adMarketplaceAddress
                     },
                 ]
             },
