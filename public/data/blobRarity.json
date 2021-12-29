@@ -1,0 +1,47 @@
+{
+    "white": {
+        "percent": "1.67",
+        "amount": "5",
+        "image": "/images/blobs/002 - Wumb.png"
+    },
+    "black": {
+        "percent": "1.67",
+        "amount": "5",
+        "image": "/images/blobs/002 - Wumb.png"
+    },
+    "brown": {
+        "percent": "1.67",
+        "amount": "5",
+        "image": "/images/blobs/002 - Wumb.png"
+    },
+    "red": {
+        "percent": "1.67",
+        "amount": "5",
+        "image": "/images/blobs/002 - Wumb.png"
+    },
+    "orange": {
+        "percent": "1.67",
+        "amount": "5",
+        "image": "/images/blobs/002 - Wumb.png"
+    },
+    "yellow": {
+        "percent": "1.67",
+        "amount": "5",
+        "image": "/images/blobs/002 - Wumb.png"
+    },
+    "green": {
+        "percent": "1.67",
+        "amount": "5",
+        "image": "/images/blobs/002 - Wumb.png"
+    },
+    "blue": {
+        "percent": "1.67",
+        "amount": "5",
+        "image": "/images/blobs/002 - Wumb.png"
+    },
+    "purple": {
+        "percent": "1.67",
+        "amount": "5",
+        "image": "/images/blobs/002 - Wumb.png"
+    }
+}
