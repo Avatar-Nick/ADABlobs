@@ -2,10 +2,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 interface RarityBoxProps {
-    textElement: any;
-    imageElement: any;
+    rarity: Rarity
 }
-export const RarityBox = ( { textElement, imageElement } : RarityBoxProps) => 
+export const RarityBox = ( { rarity } : RarityBoxProps) => 
 {
     return (
         <div className="rarity-container container p-4 mb-4 rounded">            
@@ -13,20 +12,20 @@ export const RarityBox = ( { textElement, imageElement } : RarityBoxProps) =>
                 <div className="col-8 d-flex align-items-start ps-4">
                     <div className='container'>
                         <div className='row'>
-                            <h1 className='rarity-title d-flex justify-content-center'>White Blobs</h1>
+                            <h1 className='rarity-title d-flex justify-content-center'>{rarity.color} Blobs</h1>
                         </div>
                         <div className='row d-flex justify-content-center pt-3 pb-3'>
                             <div className="rarity-percent d-flex justify-content-center align-items-center rounded">
-                                <span >1.67%</span>
+                                <span >{rarity.percent}%</span>
                             </div>                            
                         </div>
                         <div className='row pt-2'>
-                            <span className='rarity-text'>White Blobs make up <strong>1.67% (5/300)</strong> of all ADA Blobs!</span>
+                            <span className='rarity-text'>{rarity.color} Blobs make up <strong>{rarity.percent}% ({rarity.amount}/300)</strong> of all ADA Blobs!</span>
                         </div>
                     </div>
                 </div>
                 <div className="col-4 d-flex justify-content-center align-items-center">
-                    {imageElement}
+                    <Image src={rarity.image} quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />
                 </div>
             </div>
             <style jsx>{`

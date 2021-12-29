@@ -1,21 +1,25 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { RarityBox } from './RarityBox';
+import data from '../../../../public/data/blobRarity.json';
 
 export const RarityContainer = () => 
 {
+    const blobRarity : Rarities = data;
+    const blobRarityKeys = Object.keys(blobRarity);
     return (
         <div className="title-container pt-4">
             <div className='d-flex flex-column align-items-center'>
                 <div className='row'>
                     <h1 className='rarity-title pb-4'>Blob Rarity</h1>
                 </div>
-                <div className='row'>
-                    <RarityBox 
-                        textElement={<span>Get the <Link href="/"><a className='rarity-link'>Nami Wallet</a></Link> to connect to the Blob marketplace.</span>} 
-                        imageElement={<Image src="/images/blobs/002 - Wumb.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}                    
-                    />
-                </div>        
+                {blobRarityKeys.map((key, i) => {                        
+                    return (
+                        <div className='row' key={i}>
+                            <RarityBox rarity={blobRarity[key] as Rarity}/>
+                        </div>    
+                    )
+                })}                    
             </div>            
             <style jsx>{`
                 .title-container {

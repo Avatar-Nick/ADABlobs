@@ -1,47 +1,56 @@
 {
     "white": {
+        "color": "White",
         "percent": "1.67",
         "amount": "5",
         "image": "/images/blobs/002 - Wumb.png"
     },
     "black": {
-        "percent": "1.67",
-        "amount": "5",
-        "image": "/images/blobs/002 - Wumb.png"
+        "color": "Black",
+        "percent": "3.34",
+        "amount": "10",
+        "image": "/images/blobs/003 - Bluub.png"
     },
     "brown": {
-        "percent": "1.67",
-        "amount": "5",
-        "image": "/images/blobs/002 - Wumb.png"
+        "color": "Brown",
+        "percent": "5",
+        "amount": "15",
+        "image": "/images/blobs/004 - Broogr.png"
     },
     "red": {
-        "percent": "1.67",
-        "amount": "5",
-        "image": "/images/blobs/002 - Wumb.png"
+        "color": "Red",
+        "percent": "6.67",
+        "amount": "20",
+        "image": "/images/blobs/005 - Rooboo.png"
     },
     "orange": {
-        "percent": "1.67",
-        "amount": "5",
-        "image": "/images/blobs/002 - Wumb.png"
+        "color": "Orange",
+        "percent": "10",
+        "amount": "30",
+        "image": "/images/blobs/006 - Oobby.png"
     },
     "yellow": {
-        "percent": "1.67",
-        "amount": "5",
-        "image": "/images/blobs/002 - Wumb.png"
+        "color": "Yellow",
+        "percent": "13.34",
+        "amount": "40",
+        "image": "/images/blobs/007 - Yolg.png"
     },
     "green": {
-        "percent": "1.67",
-        "amount": "5",
-        "image": "/images/blobs/002 - Wumb.png"
+        "color": "Green",
+        "percent": "16.67",
+        "amount": "50",
+        "image": "/images/blobs/008 - Glob.png"
     },
     "blue": {
-        "percent": "1.67",
-        "amount": "5",
-        "image": "/images/blobs/002 - Wumb.png"
+        "color": "Blue",
+        "percent": "20",
+        "amount": "60",
+        "image": "/images/blobs/001 - Bob.png"
     },
     "purple": {
-        "percent": "1.67",
-        "amount": "5",
-        "image": "/images/blobs/002 - Wumb.png"
+        "color": "Purple",
+        "percent": "23.34",
+        "amount": "70",
+        "image": "/images/blobs/010 - Peep.png"
     }
 }
