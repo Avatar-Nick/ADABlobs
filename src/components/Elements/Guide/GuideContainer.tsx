@@ -5,8 +5,11 @@ import { GuideBox } from './GuideBox';
 export const GuideContainer = () => 
 {
     return (
-        <div className="title-container">
+        <div className="title-container pt-4">
             <div className='d-flex flex-column align-items-center'>
+                <div className='row'>
+                    <h1 className='guide-title pb-4'>How To Use ADA Blobs</h1>
+                </div>
                 <div className='row'>
                     <GuideBox 
                         textElement={<span>Get the <Link href="/"><a className='guide-link'>Nami Wallet</a></Link> to connect to the Blob marketplace.</span>} 
@@ -16,14 +19,14 @@ export const GuideContainer = () =>
                 </div>
                 <div className='row'>
                     <GuideBox 
-                        textElement={<span>Fund the wallet with ADA (₳) and add collateral in the Nami Wallet user interface.</span>} 
+                        textElement={<span>Fund the wallet with <strong>ADA (₳)</strong> and add collateral in the Nami Wallet user interface.</span>} 
                         imageElement={<Image src="/images/blobs/007 - Yolg - Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                         contentLeft={false}                    
                     />
                 </div>
                 <div className='row'>
                     <GuideBox 
-                        textElement={<span>Click the &quot;Connect Wallet&quot; in top right corner to connect your Nami Wallet to ADA Blobs!</span>} 
+                        textElement={<span>Click the &quot;<strong>Connect Wallet</strong>&quot; in top right corner to connect your Nami Wallet to ADA Blobs!</span>} 
                         imageElement={<Image src="/images/blobs/008 - Glob.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                         contentLeft={true}                    
                     />
@@ -33,10 +36,10 @@ export const GuideContainer = () =>
                         textElement={<span>You can now:
                             <ul>
                                 <li>
-                                    Bid for any blobs that are up for auction on the homepage (Green Button).
+                                    <strong>Bid</strong> for any blobs that are up for auction on the homepage!
                                 </li>
                                 <li>
-                                    Auction off any blobs that your wallet owns (Red Button).
+                                    <strong>Auction</strong> off any blobs that your wallet owns!
                                 </li>
                             </ul>
                              
@@ -50,14 +53,21 @@ export const GuideContainer = () =>
                 .title-container {
                     background-image: linear-gradient(180deg, #143f6d, #1e5692);                
                     min-height: 91.3vh;
+                }
 
-                    padding-top: 5rem;
+                .guide-title {
+                    color: #e9f1fa;
+
+                    font-size: 3vw;
+                    font-weight: 700;                    
                 }
 
                 .guide-link {
                     text-decoration: none;
                     font-weight: 700;
                 }
+
+
             `}</style>  
         </div>
     )

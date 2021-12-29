@@ -33,11 +33,11 @@ export const GuideBox = ( { textElement, imageElement, contentLeft } : GuideBoxP
                     background-color: #e9f1fa;
                     color: #0a2e53;
 
-                    border-width: 1px;
+                    border-width: 5px;
                     border-style: solid;
                     border-color: #bbc9ec; 
                     
-                    width: 50vw;
+                    width: 40vw;
                     font-weight: 500;
                 }
             `}</style>  
