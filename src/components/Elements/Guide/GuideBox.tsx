@@ -37,8 +37,34 @@ export const GuideBox = ( { textElement, imageElement, contentLeft } : GuideBoxP
                     border-style: solid;
                     border-color: #bbc9ec; 
                     
-                    width: 40vw;
+                    width: 80vw;
+
+                    font-size: 2.8vw;
                     font-weight: 500;
+                }
+
+                @media screen and (min-width: 576px) {
+                    .guide-container {
+                        width: 80vw;
+
+                        font-size: 2.4vw;
+                    }
+                }
+
+                @media screen and (min-width: 992px) {
+                    .guide-container {
+                        width: 50vw;
+
+                        font-size: 1.6vw;
+                    }
+                }
+
+                @media screen and (min-width: 1200px) {
+                    .guide-container {
+                        width: 40vw;
+
+                        font-size: 1.2vw;
+                    }
                 }
             `}</style>  
         </div>

@@ -58,7 +58,7 @@ export const GuideContainer = () =>
                 .guide-title {
                     color: #e9f1fa;
 
-                    font-size: 3vw;
+                    font-size: 7vw;
                     font-weight: 700;                    
                 }
 
@@ -67,6 +67,17 @@ export const GuideContainer = () =>
                     font-weight: 700;
                 }
 
+                @media screen and (min-width: 576px) {
+                    .guide-title {
+                        font-size: 5vw;                  
+                    }
+                }
+
+                @media screen and (min-width: 992px) {
+                    .guide-title {
+                        font-size: 3vw;                 
+                    }
+                }
 
             `}</style>  
         </div>

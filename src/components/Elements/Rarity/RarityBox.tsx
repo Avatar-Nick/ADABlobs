@@ -42,8 +42,10 @@ export const RarityBox = ( { rarity } : RarityBoxProps) =>
                 }
 
                 .rarity-title {
-                    font-size: 5.0vw;
+                    font-size: 4.6vw;
                     font-weight: 700; 
+                    padding-right: 0rem;
+                    padding-left: 0rem;
                 }
 
                 .rarity-percent {
