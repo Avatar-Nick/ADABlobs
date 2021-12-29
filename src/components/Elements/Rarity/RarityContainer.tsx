@@ -30,7 +30,7 @@ export const RarityContainer = () =>
                 .rarity-title {
                     color: #e9f1fa;
 
-                    font-size: 3vw;
+                    font-size: 7vw;
                     font-weight: 700;                    
                 }
 
@@ -39,6 +39,17 @@ export const RarityContainer = () =>
                     font-weight: 700;
                 }
 
+                @media screen and (min-width: 576px) {
+                    .rarity-title {
+                        font-size: 5vw;                  
+                    }
+                }
+
+                @media screen and (min-width: 992px) {
+                    .rarity-title {
+                        font-size: 3vw;                 
+                    }
+                }
             `}</style>  
         </div>
     )

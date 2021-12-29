@@ -37,19 +37,19 @@ export const RarityBox = ( { rarity } : RarityBoxProps) =>
                     border-style: solid;
                     border-color: #bbc9ec; 
                     
-                    width: 50vw;
+                    width: 80vw;
                     font-weight: 500;
                 }
 
                 .rarity-title {
-                    font-size: 2.7vw;
+                    font-size: 5.0vw;
                     font-weight: 700; 
                 }
 
                 .rarity-percent {
                     display: block;
-                    width: 10vw;
-                    height: 5vw;
+                    width: 24vw;
+                    height: 12vw;
 
                     background-color: #143f6d;
                     color: white;
@@ -58,16 +58,55 @@ export const RarityBox = ( { rarity } : RarityBoxProps) =>
                     border-style: solid;
                     border-color: #bbc9ec; 
 
-                    font-size: 2.6vw;
+                    font-size: 4.8vw;
                     font-weight: 700;
                 }
 
                 .rarity-text {
                     text-align: center;
-                    font-size: 1vw;
-                    font-weight: 00;
+                    font-size: 2.5vw;
+                    font-weight: 500;
                 }
 
+                @media screen and (min-width: 576px) {
+                    .rarity-container {                    
+                        width: 80vw;
+                    }
+
+                    .rarity-title {
+                        font-size: 4.5vw;
+                    }
+
+                    .rarity-percent {
+                        width: 20vw;
+                        height: 10vw;
+                        font-size: 4.4vw;
+                    }
+
+                    .rarity-text {
+                        font-size: 2vw;
+                    }
+                }
+
+                @media screen and (min-width: 992px) {
+                    .rarity-container {                    
+                        width: 50vw;
+                    }
+
+                    .rarity-title {
+                        font-size: 2.7vw;
+                    }
+
+                    .rarity-percent {
+                        width: 11vw;
+                        height: 5vw;
+                        font-size: 2.6vw;
+                    }
+
+                    .rarity-text {
+                        font-size: 1vw;
+                    }
+                }
             `}</style>  
         </div>
     )
