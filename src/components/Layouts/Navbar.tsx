@@ -47,7 +47,7 @@ export const Navbar = () =>
                             </Link>
                         </div>
                         <div className="pe-4">
-                            <Link href="/" passHref>
+                            <Link href="/faq" passHref>
                                 <div>
                                     <div className="nav-link">FAQ</div>
                                 </div>

@@ -18,6 +18,7 @@ const queryClient = new QueryClient()
 const App = ({ Component, pageProps }: AppProps) =>
 {
     useEffect(() => {
+        import("../public/styles/bootstrap/bootstrap.min");
         const loadCardanoLibraries = async () => await load();
         loadCardanoLibraries();
     });
