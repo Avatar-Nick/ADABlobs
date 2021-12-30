@@ -6,7 +6,7 @@ import { BlobStatus } from "../../../types/enum";
 import { useState } from "react";
 import { timeout } from "../../../utils/time";
 import { CloseSection } from "../TradeElements/CloseSection";
-import { PropertiesSection, SoldSection } from "../TradeElements/PropertiesSection";
+import { PropertiesSection } from "../TradeElements/PropertiesSection";
 
 export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) => 
 {
