@@ -16,14 +16,18 @@ export const FAQContainer = () =>
                 .title-container {
                     background-image: linear-gradient(180deg, #143f6d, #1e5692);                
                     min-height: 91.3vh;
+
+                    overflow-wrap: anywhere;
                 }
 
                 .faq-container {
-                    width: 60vw;
+                    width: 80vw;
                 }
 
                 .faq-title {
                     color: #e9f1fa;
+
+                    text-align: center;
 
                     font-size: 7vw;
                     font-weight: 700;                    
@@ -32,6 +36,12 @@ export const FAQContainer = () =>
                 @media screen and (min-width: 576px) {
                     .faq-title{
                         font-size: 5vw;                  
+                    }
+                }
+
+                @media screen and (min-width: 768px) {
+                    .faq-container {
+                        width: 60vw;
                     }
                 }
 

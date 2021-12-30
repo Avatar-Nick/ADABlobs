@@ -6,6 +6,7 @@ import { BlobStatus } from "../../../types/enum";
 import { useState } from "react";
 import { timeout } from "../../../utils/time";
 import { CloseSection } from "../TradeElements/CloseSection";
+import { PropertiesSection, SoldSection } from "../TradeElements/PropertiesSection";
 
 export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) => 
 {
@@ -67,7 +68,8 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
                             {blobStatus === BlobStatus.Close && <CloseSection blob={blob} />}
                             {blobStatus === BlobStatus.Buy && <BidSection blob={blob} />}
                             {blobStatus === BlobStatus.Sell && <AuctionSection blob={blob} />}
-                        </>                        
+                        </> 
+                        <PropertiesSection blob={blob}></PropertiesSection>            
                     </div>
                 </div>
             </div>
@@ -75,6 +77,7 @@ export const BlobManagement = ({ blob } : { blob : BlobChainAsset}) =>
             <style jsx>{`
                 .blob-container {
                     background-color: #f5f5f5;
+                    min-height: 30rem;
                 }
 
                 .btn-owner {
