@@ -15,7 +15,7 @@ export const FAQAccordionItem = ( { headerId, bodyId, question, textElement, ima
     return (
         <div className="accordion-item">
             <h2 className="accordion-header" id={headerId}>
-                <button className="header accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#${bodyId}`} aria-expanded="true" aria-controls={`${bodyId}`}>
+                <button className="header accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target={`#${bodyId}`} aria-expanded="true" aria-controls={`${bodyId}`}>
                     {question}
                 </button>
             </h2>

@@ -45,7 +45,7 @@ export const FAQAccordion = () => {
                                 <span><strong>{`{"type": "all", "scripts": [{"type": "before", "slot": 49000000}, {"type": "sig", "keyHash": "a5f81a840fe65b95685fdb9af8c95ac2f8bad54de16efe804edafbf6"}]}`}</strong></span>
                                 <br />
                                 <br />
-                                <span>Hasing the above script will give you the ADA Blobs PolicyId: <strong>4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318</strong></span>
+                                <span>Hasing the above script will give you the ADA Blobs Policy ID: <strong>4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318</strong></span>
                              </div>}
                 imageElement={<Image src="/images/blobs/009 - Blurp.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"} />}
                 contentLeft={true}
