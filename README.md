@@ -5,7 +5,7 @@
   </a>
 </h1>
   
-Welcome to [ADABlobs](https://adablobs.io/)! The cutest and most adorable NFT collection on Cardano. There are 300 Blob NFTs to collect with 1 new Blob being available each week until all 300 are released. ADA Blobs is the first auction marketplace on the Cardano Blockchain by leveraging Cardano's Plutus Smart Contract capability. This repository contains the full front implementation of the ADA Blobs website. The repository for the full Plutus Smart Contracts can be found here
+Welcome to [ADABlobs](https://adablobs.io/)! The cutest and most adorable NFT collection on Cardano. There are 300 Blob NFTs to collect with 1 new Blob being available each week until all 300 are released. ADA Blobs is the first auction marketplace on the Cardano Blockchain by leveraging Cardano's Plutus Smart Contract capability. This repository contains the full front implementation of the ADA Blobs website. The repository for the full Plutus Smart Contracts can be found [here](https://github.com/NicholasMaselli/ADABlobsPlutus)
 
 <div align="center">
   <img alt="ADABlobs" src="./public/images/blobs/001 - Bob.png" width="256" />
@@ -61,7 +61,6 @@ Unlike many NFT projects with a series of traits, an ADA Blob's rarity is based 
 
 The rarity chart for the ADA Blob colors are as follows:
 
-<span style="color:#444444">Testing</span>
 <ul>
   <li>White Blobs: 1.67% (5/300) </li>
   <li>Black Blobs: 3.34% (10/300) </li>
@@ -81,17 +80,39 @@ You can find more rarity information on this [ADA Blobs page](https://adablobs.i
   <img alt="ADABlobs" src="./public/images/blobs/004 - Broogr - Reverse.png" width="256" />
 </div>
 
-### Market place
+### Marketplace
 
-The market place can be run by members of the community. They can host the market place with their own custom interface and earn 0.4% per trade.
-
-We have a seperate module inside this repository for the market place with the full source code.
-
-Check it out [here](./src/cardano/market/).
+The ADA Blobs marketplace can be used by anyone who wants to auction off their ADA Blob. The marketplace takes a 1% on ADA Blob auctions.
 
 <div align="center">
   <img alt="ADABlobs" src="./public/images/blobs/003 - Bluub.png" width="256" />
   <img alt="ADABlobs" src="./public/images/blobs/002 - Wumb - Reverse.png" width="256" />
 </div>
 
+### Open Source
+
+If you would like to pull this code and run it to see how it works. Follow these steps:
+
+1. Clone this repository to a local directory
+
+2. Ensure you have npm installed. Preferably the latest LTS version of NPM or higher
+
+3. Copy the template env file to an env file with the following command: 
+
+```
+cat config/template.env >> .env
+```
+Note: You may need to use "Windows Terminal" if you are on windows which you can get from the Windows Store.
+
+4. Copy your [Blockfrost API](https://blockfrost.io/) credentials into .env file that you just created next to the "BLOCKFROST_API_KEY=" section:
+
+5. Install npm packages with the following command:
+```
+npm ci
+```
+
+6. Run the code and check it out with the following command:
+```
+npm run dev
+```
 
