@@ -63,8 +63,8 @@ The rarity chart for the ADA Blob colors are as follows:
 
 <span style="color:#444444">Testing</span>
 <ul>
-  <li style="color: green">White Blobs: 1.67% (5/300) </li>
-  <li style="color: black">Black Blobs: 3.34% (10/300) </li>
+  <li>White Blobs: 1.67% (5/300) </li>
+  <li>Black Blobs: 3.34% (10/300) </li>
   <li>Brown Blobs: 5.00% (15/300) </li>
   <li>Red Blobs: 6.67% (20/300) </li>
   <li>Orange Blobs: 10.00% (30/300) </li>
