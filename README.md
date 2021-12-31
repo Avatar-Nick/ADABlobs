@@ -97,20 +97,20 @@ If you would like to pull this code and run it to see how it works. Follow these
 
 1. Clone this repository to a local directory
 
-2. Ensure you have npm installed. Preferably the latest LTS version of NPM or higher
+2. Ensure you have npm installed. Preferably the latest LTS version of npm or higher
 
 3. Copy the template env file to an env file with the following command: 
 
 ```
 cat config/template.env >> .env
 ```
-Note: You may need to use "Windows Terminal" if you are on windows which you can get from the Windows Store.
+<strong>Note:</strong> You may need to use "Windows Terminal" if you are on Windows which you can get from the Windows Store.
 
 4. Copy your [Blockfrost API](https://blockfrost.io/) credentials into .env file that you just created next to the "BLOCKFROST_API_KEY=" section:
 
 5. Install npm packages with the following command:
 ```
-npm ci
+npm i
 ```
 
 6. Run the code and check it out with the following command:
