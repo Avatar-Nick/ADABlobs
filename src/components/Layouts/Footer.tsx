@@ -23,13 +23,11 @@ export const Footer = () => {
                 }
 
                 .copyright {
-                    /*text-align: center;*/
-
                     font-size: 0.8rem;
                 }
 
                 .divider {
-                    background-color: white; /*#bbc9ec;*/
+                    background-color: white;
                     height: 1px;
                     width: 1000px;
                     opacity: 1.0;
