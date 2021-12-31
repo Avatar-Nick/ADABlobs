@@ -61,16 +61,17 @@ Unlike many NFT projects with a series of traits, an ADA Blob's rarity is based 
 
 The rarity chart for the ADA Blob colors are as follows:
 
+<span style="color:#444444">Testing</span>
 <ul>
-  <li>White Blobs: 1.67% (5/300) </li>
-  <li>Black Blobs: 3.34% (5/300) </li>
-  <li>Brown Blobs: 5.00% (5/300) </li>
-  <li>Red Blobs: 6.67% (5/300) </li>
-  <li>Orange Blobs: 10.00% (5/300) </li>
-  <li>Yellow Blobs: 13.34% (5/300) </li>
-  <li>Green Blobs: 16.67% (5/300) </li>
-  <li>Blue Blobs: 20.00% (5/300) </li>
-  <li>Purple Blobs: 23.34% (5/300) </li>
+  <li style="color: green">White Blobs: 1.67% (5/300) </li>
+  <li style="color: black">Black Blobs: 3.34% (10/300) </li>
+  <li>Brown Blobs: 5.00% (15/300) </li>
+  <li>Red Blobs: 6.67% (20/300) </li>
+  <li>Orange Blobs: 10.00% (30/300) </li>
+  <li>Yellow Blobs: 13.34% (40/300) </li>
+  <li>Green Blobs: 16.67% (50/300) </li>
+  <li>Blue Blobs: 20.00% (60/300) </li>
+  <li>Purple Blobs: 23.34% (70/300) </li>
 </ul
 
 You can find more rarity information on this [ADA Blobs page](https://adablobs.io/rarity).
