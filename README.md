@@ -104,7 +104,7 @@ If you would like to pull this code and run it to see how it works. Follow these
 ```
 cat config/template.env >> .env
 ```
-<strong>Note:</strong> You may need to use "Windows Terminal" if you are on Windows which you can get from the Windows Store.
+<strong>Note:</strong> You may need to use "Windows Terminal" if you are on a Windows machine which you can get from the Windows Store.
 
 4. Copy your [Blockfrost API](https://blockfrost.io/) credentials into .env file that you just created next to the "BLOCKFROST_API_KEY=" section:
 
