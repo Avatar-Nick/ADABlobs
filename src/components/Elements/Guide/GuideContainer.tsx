@@ -12,7 +12,7 @@ export const GuideContainer = () =>
                 </div>
                 <div className='row'>
                     <GuideBox 
-                        textElement={<span>Get the <Link href="/"><a className='guide-link'>Nami Wallet</a></Link> to connect to the Blob marketplace.</span>} 
+                        textElement={<span>Get the <a href="https://namiwallet.io/" className='guide-link' target="_blank" rel="noopener noreferrer">Nami Wallet</a> to connect to the Blob marketplace.</span>} 
                         imageElement={<Image src="/images/blobs/001 - Bob.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                         contentLeft={true}                    
                     />
