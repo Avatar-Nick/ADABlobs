@@ -91,6 +91,9 @@ The ADA Blobs marketplace can be used by anyone who wants to auction off their A
   <img alt="Wumb Reverse" src="./public/images/blobs/002 - Wumb - Reverse.png" width="256" />
 </div>
 
+### Community
+The Blob Community is strong and growing! Check out our [Discord](https://discord.gg/fVcQYgsSzS) server to hear all the latest updates on the adorable blobs and connected projects! You can also follow the ADA Blobs [Twitter](https://twitter.com/ADABlobs) for Blob updates as well =)
+
 ### Open Source
 
 If you would like to pull this code and run it to see how it works. Follow these steps:
