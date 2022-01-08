@@ -84,7 +84,7 @@ You can find more rarity information on this [ADA Blobs page](https://adablobs.i
 
 ### Marketplace
 
-The ADA Blobs marketplace can be used by anyone who wants to auction off their ADA Blob. The marketplace takes a 1% fee on ADA Blob auctions. The smart contract that is used by the ADA Blobs marketplace can be found in the [ADA Blobs Plutus](https://github.com/NicholasMaselli/ADABlobsPlutus) Repository. 
+The ADA Blobs marketplace can be used by anyone who wants to auction off their ADA Blob. The marketplace takes a 1% fee on ADA Blob auctions. The smart contract that is used by the ADA Blobs marketplace can be found in the [ADA Blobs Plutus](https://github.com/NicholasMaselli/ADABlobsPlutus) repository. 
 
 <div align="center">
   <img alt="Bluub" src="./public/images/blobs/003 - Bluub.png" width="256" />
