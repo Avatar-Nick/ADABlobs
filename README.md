@@ -92,7 +92,7 @@ The ADA Blobs marketplace can be used by anyone who wants to auction off their A
 </div>
 
 ### Community
-The Blob Community is strong and growing! Check out our [Discord](https://discord.gg/fVcQYgsSzS) server to hear all the latest updates on the adorable Blobs and connected projects! You can also follow the ADA Blobs [Twitter](https://twitter.com/ADABlobs) for Blob updates as well =)
+The Blob Community is strong and growing! Check out our [Discord](https://discord.gg/hxMh4TxeW5) server to hear all the latest updates on the adorable Blobs and connected projects! You can also follow the ADA Blobs [Twitter](https://twitter.com/ADABlobs) for Blob updates as well =)
 
 ### Open Source
 
