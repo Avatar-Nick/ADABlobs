@@ -52,7 +52,17 @@ export const Navbar = () =>
                                     <div className="nav-link">FAQ</div>
                                 </div>
                             </Link>
-                        </div>  
+                        </div>
+                        <div className="pt-1 pe-4 me-2">                   
+                            <a className="d-flex nav-image" href={"https://discord.gg/hxMh4TxeW5"} target="_blank" rel="noopener noreferrer">
+                                <Image src="/images/media/discord-logo.png" width={37} height={37} quality={100} alt="Discord Logo" priority/>
+                            </a>
+                        </div>
+                        <div className="pt-1 ps-2 pe-3">                  
+                            <a className="d-flex nav-image" href={"https://twitter.com/ADABlobs"} target="_blank" rel="noopener noreferrer">
+                                <Image src="/images/media/twitter-logo.png" width={30} height={30} quality={100} alt="Twitter Logo" priority/>
+                            </a>
+                        </div>
                         <div className="d-none d-md-block ps-3">
                             {!connected ?
                                 <button type="button" className="btn btn-danger btn-lg nav-button-text" onClick={connect}>Connect Wallet</button> :
@@ -90,6 +100,15 @@ export const Navbar = () =>
 
                 .nav-button-text {
                     font-weight: 700;
+                }
+
+                .nav-image {                    
+                    cursor: pointer;
+                }
+
+                .nav-image:hover {
+                    padding-top: 3px;
+                    border-bottom: white solid 3px;
                 }
             `}</style>
         </div>
