@@ -7,6 +7,9 @@
   
 Welcome to [ADABlobs](https://adablobs.io/)! The cutest and most adorable NFT collection on Cardano. There are 300 Blob NFTs to collect with 1 new Blob being available each week until all 300 are released. ADA Blobs is the first auction marketplace on the Cardano Blockchain by leveraging Cardano's Plutus Smart Contract capability. This repository contains the full frontend implementation of the ADA Blobs website. The repository for the full Plutus Smart Contracts can be found [here](https://github.com/NicholasMaselli/ADABlobsPlutus)
 
+### Community
+The Blob Community is strong and growing! Check out our [Discord](https://discord.gg/hxMh4TxeW5) server to hear all the latest updates on the adorable Blobs and connected projects! You can also follow the ADA Blobs [Twitter](https://twitter.com/ADABlobs) for Blob updates as well =)
+
 <div align="center">
   <img alt="Bob" src="./public/images/blobs/001 - Bob.png" width="256" />
   <img alt="Yolg Reverse" src="./public/images/blobs/007 - Yolg - Reverse.png" width="256" />
@@ -90,9 +93,6 @@ The ADA Blobs marketplace can be used by anyone who wants to auction off their A
   <img alt="Bluub" src="./public/images/blobs/003 - Bluub.png" width="256" />
   <img alt="Wumb Reverse" src="./public/images/blobs/002 - Wumb - Reverse.png" width="256" />
 </div>
-
-### Community
-The Blob Community is strong and growing! Check out our [Discord](https://discord.gg/fVcQYgsSzS) server to hear all the latest updates on the adorable Blobs and connected projects! You can also follow the ADA Blobs [Twitter](https://twitter.com/ADABlobs) for Blob updates as well =)
 
 ### Open Source
 
