@@ -79,7 +79,7 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
     }
 
     return (
-        <div className="blob-bid container rounded">
+        <div className="blob-bid container rounded mb-4">
             {showError && <div className="alert alert-danger alert-dismissible fade show mt-3">
                 <strong>Error!</strong> {errorString}
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
@@ -108,7 +108,7 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
                         {!blob?.onchain_metadata?.name && <div className="spinner-border spinner-border-sm" role="status"></div> }  
                         {blob?.onchain_metadata?.name && bdBid &&
                         <div>
-                            {trader == Trader.Seller && <>You sold<strong>{blob?.onchain_metadata?.name}</strong> for {(parseInt(bdBid) * lovelaceToAda).toFixed(2)}₳!</>}
+                            {trader == Trader.Seller && <>You sold <strong>{blob?.onchain_metadata?.name}</strong> for {(parseInt(bdBid) * lovelaceToAda).toFixed(2)}₳!</>}
                             {trader === Trader.Buyer && <>You bought <strong>{blob?.onchain_metadata?.name}</strong> for {(parseInt(bdBid) * lovelaceToAda).toFixed(2)}₳!</>}
                         </div>}
                     </div>}

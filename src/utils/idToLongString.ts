@@ -1,4 +1,4 @@
-export const idToLongString = (id: Number) => 
+export const idToString = (id: Number) => 
 {
     let idString = id.toString();
     
@@ -7,5 +7,11 @@ export const idToLongString = (id: Number) =>
     {
         idString = `${0}${idString}`;
     }
+    return `${idString}`;
+}
+
+export const idToLongString = (id: Number) => 
+{
+    let idString = idToString(id);
     return `${"#"}${idString}`;
 }

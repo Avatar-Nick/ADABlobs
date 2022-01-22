@@ -11,7 +11,7 @@ export const FAQAccordion = () => {
                 bodyId="faq-body-1"
                 question="Which wallet can I use?"
                 textElement={<span>ADA Blobs supports the <a href="https://namiwallet.io/" className='link' target="_blank" rel="noopener noreferrer">Nami Wallet</a> as it is currently the only Cardano wallet that supports smart contract functionality. Additional wallets will be added as they obtain smart contract functionality.</span>}
-                imageElement={<Image src="/images/blobs/001 - Bob.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                imageElement={<Image src="/images/blobs/001-Bob.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                 contentLeft={true}
             />
             <FAQAccordionItem 
@@ -29,7 +29,7 @@ export const FAQAccordion = () => {
                                 <br />
                                 <span>Here is the full ADA Blobs smart contract <a href="https://github.com/NicholasMaselli/ADABlobsPlutus/" className='link' target="_blank" rel="noopener noreferrer">source code</a>.</span>
                              </div>}
-                imageElement={<Image src="/images/blobs/010 - Peep - Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Peep"} />}
+                imageElement={<Image src="/images/blobs/010-Peep-Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Peep"} />}
                 contentLeft={false}
             />
             <FAQAccordionItem 
@@ -47,7 +47,7 @@ export const FAQAccordion = () => {
                                 <br />
                                 <span>Hasing the above script will give you the ADA Blobs Policy ID: <strong>4a4c17cc89b90f7239ce83f41e4f47005859870178f4e6815b1cd318</strong></span>
                              </div>}
-                imageElement={<Image src="/images/blobs/009 - Blurp.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"} />}
+                imageElement={<Image src="/images/blobs/009-Blurp.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"} />}
                 contentLeft={true}
             />
             <FAQAccordionItem 
@@ -55,7 +55,7 @@ export const FAQAccordion = () => {
                 bodyId="faq-body-4"
                 question="How rare are certain Blobs?"
                 textElement={<span>Each Blob&apos;s rarity is based solely on their color. You can view all the Blob color rarities <Link href="/rarity"><a className='link'>here</a></Link>.</span>}
-                imageElement={<Image src="/images/blobs/008 - Glob - Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                imageElement={<Image src="/images/blobs/008-Glob-Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                 contentLeft={false}
             />
             <FAQAccordionItem 
@@ -69,7 +69,7 @@ export const FAQAccordion = () => {
                         <br />
                         <span>ADA Blobs is also the community NFT for the Avatar Nick Youtube Channel and Discord Server.</span>
                     </div>}
-                imageElement={<Image src="/images/blobs/007 - Yolg.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                imageElement={<Image src="/images/blobs/007-Yolg.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                 contentLeft={true}
             />
             <FAQAccordionItem 
@@ -77,7 +77,7 @@ export const FAQAccordion = () => {
                 bodyId="faq-body-6"
                 question="How can I purchase a Blob?"
                 textElement={<span>On the ADA Blobs website, Blobs are auctioned and can be bid on using the ADA <strong>(₳)</strong> cryptocurrency which is the Cardano Blockchain&apos;s native currency. You can purchase a Blob by following the <Link href="/guide"><a className='link'>guide</a></Link>!</span>}
-                imageElement={<Image src="/images/blobs/006 - Oobby - Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                imageElement={<Image src="/images/blobs/006-Oobby-Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                 contentLeft={false}
             />
             <FAQAccordionItem 
@@ -85,7 +85,7 @@ export const FAQAccordion = () => {
                 bodyId="faq-body-7"
                 question="Is my bid locked in the contract?"
                 textElement={<span>Yes. Placing a bid will lock those funds in the contract until either someone else outbids or the auction closes. To keep the auction fair, cancelling a bid after it is made is not supported.</span>}
-                imageElement={<Image src="/images/blobs/005 - Rooboo.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                imageElement={<Image src="/images/blobs/005-Rooboo.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                 contentLeft={true}
             />
             <FAQAccordionItem 
@@ -94,7 +94,7 @@ export const FAQAccordion = () => {
                 question="What fees are involved with purchasing or auctioning an ADA Blob?"
                 textElement={<span>Along with the Cardano Blockchain validator fees, the ADA Blobs marketplace charges a 1% service fee for auctioning a Blob.</span>}
                 
-                imageElement={<Image src="/images/blobs/004 - Broogr - Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                imageElement={<Image src="/images/blobs/004-Broogr-Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                 contentLeft={false}
             />
             <FAQAccordionItem 
@@ -102,7 +102,7 @@ export const FAQAccordion = () => {
                 bodyId="faq-body-9"
                 question="I purchased a Blob and want to auction it, can I do that on ADA Blobs?"
                 textElement={<span>Yes. Blob owners can auction their Blob on this website which will use the same smart contract as the original auction. Blob owners can also sell their Blob on another NFT marketplace if they choose.</span>}
-                imageElement={<Image src="/images/blobs/003 - Bluub.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                imageElement={<Image src="/images/blobs/003-Bluub.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                 contentLeft={true}
             />
             <FAQAccordionItem 
@@ -111,7 +111,7 @@ export const FAQAccordion = () => {
                 question="I want to set a minimum price for an ADA Blob that I'd like to auction off. Can I do that?"
                 textElement={<span>Yes. Simply set the &quot;Reserve Price&quot; in the auction section to whatever you want the minimum acceptable bid to be.</span>}
                 
-                imageElement={<Image src="/images/blobs/002 - Wumb - Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                imageElement={<Image src="/images/blobs/002-Wumb-Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                 contentLeft={false}
             />
             <FAQAccordionItem 
@@ -124,7 +124,7 @@ export const FAQAccordion = () => {
                                 <br />
                                 <span>If the problem persists, please reach out to our Discord Server.</span>
                              </div>}
-                imageElement={<Image src="/images/blobs/001 - Bob.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                imageElement={<Image src="/images/blobs/001-Bob.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                 contentLeft={true}
             />
             <style jsx>{`

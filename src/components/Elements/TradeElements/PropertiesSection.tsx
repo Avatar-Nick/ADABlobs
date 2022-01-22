@@ -3,6 +3,7 @@ import { idToLongString } from '../../../utils/idToLongString';
 
 export const PropertiesSection = ({ blob } : { blob : BlobChainAsset }) =>
 {
+    if (!blob) return <></>
     return (
         <div className="blob-properties container rounded mb-4">
             <div className="row pt-3">
