@@ -85,7 +85,7 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
             </div> }
             {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 wrap">
-            <strong>Success!</strong> Transaction successfully submitted! The transaction will be show up on chain momentarily
+            <strong>Success!</strong> Transaction successfully submitted! The transaction will be show up on chain momentarily.
                 <br />
                 <span><strong>Transaction hash:</strong> <a href={`https://cardanoscan.io/transaction/${txHash}`} className='link' target="_blank" rel="noopener noreferrer">{txHash}</a></span>
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
