@@ -6,12 +6,11 @@ import { ReactQueryDevtools  } from 'react-query/devtools';
 
 import { Layout } from '../src/components/Layouts/Layout';
 import Loader from '../src/cardano/loader';
-import TransactionParamers from '../src/cardano/cardanoBlockchain';
 import CardanoBlockchain from '../src/cardano/cardanoBlockchain';
+import WalletAPI from '../src/cardano/wallet/wallet';
 
 import '../public/styles/base.css';
 import '../public/styles/bootstrap/bootstrap.min.css'
-
 
 const queryClient = new QueryClient()
 
@@ -39,6 +38,10 @@ const load = async () => {
     const loadList = []
     if (!Loader.Cardano) {
         loadList.push(Loader.load());
+    }
+
+    if (WalletAPI) {
+        loadList.push(WalletAPI.isConnected());
     }
     
     if (!CardanoBlockchain.protocolParameters) {

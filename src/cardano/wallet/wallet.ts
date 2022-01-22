@@ -1,153 +1,118 @@
+import { debug } from 'console';
 import Loader from '../loader';
 import { fromHex, toHex } from '../serialization';
 
-export const connect = async () => 
-{
-    try {
-        const cardano = window.cardano;
-        if (!cardano) 
-        {
-            console.error("Error: window.cardano is null or undefined. You must have a Cardano Wallet Extension (such as Nami) to connect.")
-            return;
+class WalletAPI {
+    api: any;
+
+    async connect() {
+        try {      
+            const cardano = window.cardano;
+            if (!cardano) 
+            {
+                console.error("Error: window.cardano is null or undefined. You must have a Cardano Wallet Extension (such as Nami) to connect.")
+                return;
+            }
+            
+            // Currently only supporting nami
+            this.api = await cardano.nami.enable();
         }
-        
-        const walletConnected = await isConnected();
-        if (walletConnected) return false;
-        
-        const isEnabled = await cardano.enable();
-        return isEnabled;
+        catch (error) {
+            console.error(error);
+            return false;
+        }
     }
-    catch (error) {
-        console.error(error);
-        return false;
-    }    
-}
 
-export const isConnected = async () => 
-{
-    try {
-        const cardano = window.cardano;
-        if (!cardano) return false;
-        
-        const isEnabled = await cardano.isEnabled();
-        return isEnabled
+    async isConnected() {
+        try {
+            const cardano = window.cardano;
+            if (!cardano) return false;
+
+            const isEnabled = await cardano.nami.isEnabled();
+            if (isEnabled) {
+                await this.connect(); // Ensure this.api is set
+            }
+            return isEnabled
+        }
+        catch (error) {
+            console.error(error);
+            return false;
+        }    
     }
-    catch (error) {
-        console.error(error);
-        return false;
-    }    
-}
 
-export const getBalance = async () => 
-{
-    const cardano = window.cardano;
-    if (!cardano) return null;
-
-    const walletConnected = await isConnected();
-    if (!walletConnected) return null;
-
-    const hexBalance = await cardano.getBalance();
-    const balance = Loader.Cardano.Value.from_bytes(fromHex(hexBalance));
-    const lovelaces = balance.coin().to_str();
-    return lovelaces;
-}
-
-// Human readable address output
-export const getAddress = async () => 
-{
-    const cardano = window.cardano;
-    if (!cardano) return null;
-
-    const walletConnected = await isConnected();
-    if (!walletConnected) return null;
-
-    // cardano.changeAddress can also be used here
-    const hexAddresses = await cardano.getUsedAddresses();
-    const addressObject = Loader.Cardano.Address.from_bytes(fromHex(hexAddresses[0]));
-    const address = addressObject.to_bech32();
-    return address;
-}
-
-// Transaction readable address
-export const getBaseAddress = async () => 
-{
-    try {
-        const cardano = window.cardano;
-        if (!cardano) return null;
+    async getBalance() {
+        if (!this.api) return null;
     
+        const hexBalance = await this.api.getBalance();
+        const balance = Loader.Cardano.Value.from_bytes(fromHex(hexBalance));
+        const lovelaces = balance.coin().to_str();
+        return lovelaces;
+    }
+
+    // Human readable address
+    async getAddress() {
+        if (!this.api) return null;
+
         // cardano.changeAddress can also be used here
-        const hexAddresses = await cardano.getUsedAddresses();
+        const hexAddresses = await this.api.getUsedAddresses();
+        const addressObject = Loader.Cardano.Address.from_bytes(fromHex(hexAddresses[0]));
+        const address = addressObject.to_bech32();
+        return address;
+    }
+
+    // Transaction readable address
+    async getBaseAddress() {
+        if (!this.api) return null;
+        
+        // cardano.changeAddress can also be used here
+        const hexAddresses = await this.api.getUsedAddresses();
         const addressObject = Loader.Cardano.Address.from_bytes(fromHex(hexAddresses[0]));
         const baseAddress = Loader.Cardano.BaseAddress.from_address(addressObject);
         return baseAddress;
     }
-    catch (error) {
-        console.error(error);
-        throw new Error("Unable to get wallet address. Ensure your Cardano wallet is connected.");
-    } 
-}
 
-export const getBaseAddressFromAddressString = async (addressBech32: string) => {
-    const cardano = window.cardano;
-    if (!cardano) return null;
-
-    const addressObject = Loader.Cardano.Address.from_bech32(addressBech32);
-    const baseAddress = Loader.Cardano.BaseAddress.from_address(addressObject);
-    return baseAddress;
-}
-
-export const getUtxos = async () => 
-{
-    try {
-        const cardano = window.cardano;
-        if (!cardano) return;
-    
-        const hexUtxos = await cardano.getUtxos();
+    async getUtxos() {
+        if (!this.api) return null;
+        
+        const hexUtxos = await this.api.getUtxos();
         const utxos = hexUtxos.map((utxo: any) => Loader.Cardano.TransactionUnspentOutput.from_bytes(fromHex(utxo)));
         return utxos;
     }
-    catch (error) {
-        console.error(error);
-        throw new Error("Unable to get Utxos. Ensure your Cardano wallet is connected.");
-    }
-}
 
-export const getCollateral = async () => {
-    const cardano = window.cardano;
-    if (!cardano) return;
-
-    const hexCollateral = await cardano.getCollateral();
-    const collateral = hexCollateral.map((utxo: any) => Loader.Cardano.TransactionUnspentOutput.from_bytes(fromHex(utxo)));
-    return collateral;
-}
-
-export const getNetworkId = async () => 
-{
-    const cardano = window.cardano;
-    if (!cardano) return null;
-
-    const networkId = await cardano.getNetworkId();
-    return networkId;
-}
-
-export const signTx = async (tx: any) => {
-    const cardano = window.cardano;
-    if (!cardano) return null;
-
-    const txVKeyWitnesses = await cardano.signTx(toHex(tx.to_bytes()), true);
-    return txVKeyWitnesses;
-}
-
-export const submitTx = async (signedTx: any) => {
-    try {
-        const cardano = window.cardano;
-        if (!cardano) return null;
+    async getCollateral() {
+        if (!this.api) return null;
     
-        const txHash = await cardano.submitTx(toHex(signedTx.to_bytes()));
-        return txHash;
+        const hexCollateral = await this.api.experimental.getCollateral();
+        const collateral = hexCollateral.map((utxo: any) => Loader.Cardano.TransactionUnspentOutput.from_bytes(fromHex(utxo)));
+        return collateral;
     }
-    catch (error: any) {
-        console.error(error);
-        throw new Error("Transaction Submit Error. Your bid might be too low or if you are using a hardware wallet, it might not be supported. Ensure all data is correct, refresh the page, check the guide, or reach out to our discord channel if the problem persists.");
+
+    async getNetworkId() {
+        if (!this.api) return null;
+
+        const networkId = await this.api.getNetworkId();
+        return networkId;
+    }
+
+    async signTx(tx: any) {
+        if (!this.api) return null;
+    
+        const txVKeyWitnesses = await this.api.signTx(toHex(tx.to_bytes()), true);
+        return txVKeyWitnesses;
+    }
+
+    async submitTx(signedTx: any) {
+        try {
+            if (!this.api) return null;
+        
+            const txHash = await this.api.submitTx(toHex(signedTx.to_bytes()));
+            return txHash;
+        }
+        catch (error: any) {
+            console.error(error);
+            throw new Error("Transaction Submit Error. The Blob UTXO might be used until the next block (20 seconds), the bid might be too low, or if you are using a hardware wallet it might not be supported. Ensure all data is correct, refresh the page, check the guide, or reach out to our discord channel if the problem persists.");
+        }
     }
 }
+
+export default new WalletAPI();

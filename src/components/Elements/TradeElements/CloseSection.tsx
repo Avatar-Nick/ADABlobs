@@ -1,7 +1,7 @@
 import {  useState } from 'react';
 import Image from 'next/image';
 import { lovelaceToAda } from '../../../cardano/consts';
-import {  close } from '../../../cardano/plutus/contract';
+import { close } from '../../../cardano/plutus/contract';
 import { useAssetAuction, useAssetClose } from '../../../hooks/assets.hooks';
 import { useGetAddress } from '../../../hooks/wallet.hooks';
 import { months } from '../../../consts/consts';
@@ -85,9 +85,9 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
             </div> }
             {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 wrap">
-                <strong>Success!</strong> Transaction successfully submitted! 
+            <strong>Success!</strong> Transaction successfully submitted! The transaction will be show up on chain momentarily
                 <br />
-                <strong>Transaction hash:</strong> {txHash}
+                <span><strong>Transaction hash:</strong> <a href={`https://cardanoscan.io/transaction/${txHash}`} className='link' target="_blank" rel="noopener noreferrer">{txHash}</a></span>
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
             </div>}
             <div className="row pt-3">
@@ -256,6 +256,14 @@ export const CloseSection = ({ blob } : { blob : BlobChainAsset}) =>
 
                 .wrap {
                     overflow-wrap: anywhere;
+                }
+
+                .link {
+                    color: #0f5132;
+                }
+
+                .link:hover {
+                    color: #578570;
                 }
             `}</style>
         </div>

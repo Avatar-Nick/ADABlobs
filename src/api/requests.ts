@@ -1,8 +1,8 @@
 import Loader from "../cardano/loader";
+import WalletAPI from '../cardano/wallet/wallet';
 import { adablobsAPI, blockfrostAPI } from '../api/api';
 import { arrayToBytes, getAssetUtxos, getAuctionDatum } from '../cardano/plutus/utils';
 import { BIDDER_ADDRESS_LABEL, DATUM_LABEL, SELLER_ADDRESS_LABEL } from '../cardano/wallet/transact';
-import { getAddress } from '../cardano/wallet/wallet';
 import { blockfrostAPIKey } from '../consts/consts';
 import { fromHex } from "../cardano/serialization";
 import { getTestBidData, getTestCloseData } from "../../public/data/testData";
@@ -22,7 +22,7 @@ export const fetchAsset = async ({ queryKey } : any) => {
 }
 
 export const fetchOwnedAssets = async () => {
-    const address = await getAddress();
+    const address = await WalletAPI.getAddress();
     if (!address) return { }
 
     const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.addresses.base(address)}`);

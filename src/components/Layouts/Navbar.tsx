@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image';
-import { connect} from '../../cardano/wallet/wallet';
+import WalletAPI from '../../cardano/wallet/wallet';
 import { useIsConnected } from '../../hooks/wallet.hooks';
 
 export const Navbar = () => 
@@ -53,7 +53,7 @@ export const Navbar = () =>
                                 </div>
                             </Link>
                         </div>
-                        <div className="pt-1 pe-4 me-2">                   
+                        <div className="pt-1 ps-2 pe-4 me-2">                   
                             <a className="d-flex nav-image" href={"https://discord.gg/hxMh4TxeW5"} target="_blank" rel="noopener noreferrer">
                                 <Image src="/images/media/discord-logo.png" width={37} height={37} quality={100} alt="Discord Logo" priority/>
                             </a>
@@ -65,7 +65,7 @@ export const Navbar = () =>
                         </div>
                         <div className="d-none d-md-block ps-3">
                             {!connected ?
-                                <button type="button" className="btn btn-danger btn-lg nav-button-text" onClick={connect}>Connect Wallet</button> :
+                                <button type="button" className="btn btn-danger btn-lg nav-button-text" onClick={() => WalletAPI.connect()}>Connect Wallet</button> :
                                 <div className="bg-success btn-lg nav-button-text">Connected</div> 
                             }  
                         </div>  

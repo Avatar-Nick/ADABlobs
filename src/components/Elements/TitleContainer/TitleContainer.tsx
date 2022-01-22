@@ -1,13 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import Image from 'next/image';
-import { connect } from "../../../cardano/wallet/wallet";
+import WalletAPI from "../../../cardano/wallet/wallet";
 import { useIsConnected } from "../../../hooks/wallet.hooks";
 
 export const TitleContainer = () => 
 {
     const { isLoading, error, data } = useIsConnected();
     let connected = data;
-
+    
     const description = "Launched in December 2021, ADA Blobs is a collection of 300 Blob NFTs and is the first auction NFT project on the Cardano Blockchain. There will only ever be 300 ADA Blobs available, with 1 new adorable and memeable Blob being available each week until all 300 are revealed.";
     return (
         <div className="title-container d-flex align-items-center">            
@@ -30,7 +30,7 @@ export const TitleContainer = () =>
                 <div className="row d-flex d-md-none">
                     <div className="col-12 pt-1 pb-4 d-flex justify-content-center">
                         {!connected ?
-                            <button type="button" className="btn btn-danger btn-lg nav-button-text" onClick={connect}>Connect Wallet</button> :
+                            <button type="button" className="btn btn-danger btn-lg nav-button-text" onClick={() => WalletAPI.connect()}>Connect Wallet</button> :
                             <div className="bg-success btn-lg nav-button-text">Connected</div> 
                         }  
                     </div> 

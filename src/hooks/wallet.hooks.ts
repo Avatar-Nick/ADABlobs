@@ -1,8 +1,8 @@
 import { useQuery } from "react-query";
-import { getAddress, isConnected } from "../cardano/wallet/wallet";
+import WalletAPI from "../cardano/wallet/wallet";
 
 const BASE_WALLET_KEY = "wallet"
 
-export const useIsConnected = () => useQuery(`${BASE_WALLET_KEY}.isConnected`, isConnected);
+export const useIsConnected = () => useQuery(`${BASE_WALLET_KEY}.isConnected`, () => WalletAPI.isConnected());
 
-export const useGetAddress = () => useQuery(`${BASE_WALLET_KEY}.address`, getAddress);
+export const useGetAddress = () => useQuery(`${BASE_WALLET_KEY}.address`, () => WalletAPI.getAddress());

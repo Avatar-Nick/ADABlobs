@@ -13,6 +13,6 @@ class Loader {
     get Cardano() {
       return this._wasm;
     }
-  }
+}
   
 export default new Loader();

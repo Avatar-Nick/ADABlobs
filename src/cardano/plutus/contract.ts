@@ -1,9 +1,10 @@
-import { adaToLovelace, lovelaceToAda } from '../consts';
 import Loader from '../loader';
+import WalletAPI from '../wallet/wallet';
+import { lovelaceToAda } from '../consts';
 
 import { assetsToValue, fromHex, toHex } from '../serialization';
 import { createOutput, finalizeTransaction, initializeTransaction, splitAmount } from '../wallet/transact';
-import { getBaseAddress, getUtxos } from '../wallet/wallet';
+
 import { BID_DATUM, START_DATUM } from './datum';
 import { BID_REDEEMER, CLOSE_REDEEMER } from './redeemer';
 import { getAssetUtxos, getAuctionDatum } from './utils';
@@ -45,8 +46,8 @@ export const start = async (auctionDetails: AuctionDetails) =>
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
 
     // Get the connected wallet address and utxos to ensure they have enough ADA and the proper NFT to auction
-    const walletAddress = await getBaseAddress();
-    const utxos = await getUtxos();
+    const walletAddress = await WalletAPI.getBaseAddress();
+    const utxos = await WalletAPI.getUtxos();
     
     // The contract receives a blob NFT as an output
     outputs.add(
@@ -114,8 +115,8 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo.datum) as AuctionDatum;
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
-    const walletAddress = await getBaseAddress();
-    const utxos = await getUtxos();
+    const walletAddress = await WalletAPI.getBaseAddress();
+    const utxos = await WalletAPI.getUtxos();
 
     datums.add(assetUtxo.datum);
 
@@ -216,8 +217,8 @@ export const close = async (asset: string) =>
     const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo?.datum) as AuctionDatum;
 
     const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
-    const walletAddress = await getBaseAddress();
-    const utxos = await getUtxos();
+    const walletAddress = await WalletAPI.getBaseAddress();
+    const utxos = await WalletAPI.getUtxos();
 
     datums.add(assetUtxo.datum);
 

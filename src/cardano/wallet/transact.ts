@@ -1,10 +1,10 @@
 import Loader from '../loader';
+import WalletAPI from './wallet';
 import CardanoBlockchain from '../cardanoBlockchain';
 import CoinSelection from '../CoinSelection';
 import { fromHex, toHex } from '../serialization';
 import { fee } from '../consts';
 import { CONTRACT, MARKETPLACE_ADDRESS } from '../plutus/contract';
-import { getCollateral, signTx, submitTx } from './wallet';
 import { bytesToArray, getAuctionDatum, getAuctionRedeemer } from '../plutus/utils';
 import { fetchCurrentSlot } from '../../api/requests';
 
@@ -85,7 +85,7 @@ export const finalizeTransaction = async ({
             CONTRACT()
         );
 
-        const collateral = await getCollateral();
+        const collateral = await WalletAPI.getCollateral();
         if (collateral.length <= 0) throw new Error("Your wallet has no collateral. Ensure your connected wallet has collateral. You can follow the guide page for instructions");
         setCollateral(txBuilder, collateral);
 
@@ -189,7 +189,7 @@ export const finalizeTransaction = async ({
     if (size > CardanoBlockchain.protocolParameters.maxTxSize)
         throw new Error(`The maximum transaction size has been reached: ${CardanoBlockchain.protocolParameters.maxTxSize} bytes. Please contact us in our discord channel for help`);
 
-    let txVKeyWitnesses = await signTx(tx);
+    let txVKeyWitnesses = await WalletAPI.signTx(tx);
     txVKeyWitnesses = Loader.Cardano.TransactionWitnessSet.from_bytes(
         fromHex(txVKeyWitnesses)
     );
@@ -207,7 +207,7 @@ export const finalizeTransaction = async ({
     //console.log(toHex(signedTx.to_bytes()));    
     console.log("Full Tx Size: ", signedTx.to_bytes().length);
 
-    const txHash = await submitTx(signedTx);
+    const txHash = await WalletAPI.submitTx(signedTx);
     return txHash;
 }
 

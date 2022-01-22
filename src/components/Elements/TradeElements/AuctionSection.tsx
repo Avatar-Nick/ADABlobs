@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
+import WalletAPI from '../../../cardano/wallet/wallet';
 import { toHex } from '../../../cardano/serialization';
-import { getBaseAddress, getBaseAddressFromAddressString } from '../../../cardano/wallet/wallet';
 import { start } from '../../../cardano/plutus/contract';
 import { adaToLovelace, fee } from '../../../cardano/consts';
+import { getBaseAddressFromAddressString } from '../../../cardano/wallet/utils';
 
 export const AuctionSection = ({ blob } : { blob : BlobChainAsset }) =>
 {
@@ -75,7 +76,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset }) =>
             const endDateTime = new Date(event.target.endDatetime.value);
             const newEndDateTime = new Date(endDateTime.getTime() + fifteenMinutes);
 
-            const walletAddress = await getBaseAddress();
+            const walletAddress = await WalletAPI.getBaseAddress();
             const marketplaceAddress = await getBaseAddressFromAddressString(process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as string)
 
             let { adCurrency, adToken } = getAsset(blob);
@@ -117,9 +118,9 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset }) =>
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
             </div> }
             {showSuccess && <div className="alert alert-success alert-dismissible fade show mt-3 wrap">
-                <strong>Success!</strong> Transaction successfully submitted! 
+            <strong>Success!</strong> Transaction successfully submitted! The transaction will be show up on chain momentarily
                 <br />
-                <strong>Transaction hash:</strong> {txHash}
+                <span><strong>Transaction hash:</strong> <a href={`https://cardanoscan.io/transaction/${txHash}`} className='link' target="_blank" rel="noopener noreferrer">{txHash}</a></span>
                 <button type="button" className="btn-close" onClick={closeAlert} data-bs-dismiss="alert"></button>
             </div>}
             <div className="row pt-3">
@@ -230,6 +231,14 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset }) =>
 
                 .wrap {
                     overflow-wrap: anywhere;
+                }
+
+                .link {
+                    color: #0f5132;
+                }
+
+                .link:hover {
+                    color: #578570;
                 }
             `}</style>
         </div>
