@@ -11,8 +11,8 @@ Welcome to [ADABlobs](https://adablobs.io/)! The cutest and most adorable NFT co
 The Blob Community is strong and growing! Check out our [Discord](https://discord.gg/hxMh4TxeW5) server to hear all the latest updates on the adorable Blobs and connected projects! You can also follow the ADA Blobs [Twitter](https://twitter.com/ADABlobs) for Blob updates as well =)
 
 <div align="center">
-  <img alt="Bob" src="./public/images/blobs/001 - Bob.png" width="256" />
-  <img alt="Yolg Reverse" src="./public/images/blobs/007 - Yolg - Reverse.png" width="256" />
+  <img alt="Bob" src="./public/images/blobs/001-Bob.png" width="256" />
+  <img alt="Yolg Reverse" src="./public/images/blobs/007-Yolg-Reverse.png" width="256" />
 </div>
 
 ### Validity
@@ -27,7 +27,7 @@ The contract address for the official ADA Blobs auction market place is:
 
 <div align="center">
   <img alt="Glob" src="./public/images/blobs/008 - Glob.png" width="256" />
-  <img alt="Rooboo Reverse" src="./public/images/blobs/005 - Rooboo - Reverse.png" width="256" />
+  <img alt="Rooboo Reverse" src="./public/images/blobs/005-Rooboo-Reverse.png" width="256" />
 </div>
 
 ### Metadata
@@ -54,8 +54,8 @@ ADA Blobs follows [CIP-25](https://github.com/cardano-foundation/CIPs/blob/maste
 Images are stored on IPFS and you find the image link to an ADA Blob inside the metadata.
 
 <div align="center">
-  <img alt="Peep" src="./public/images/blobs/010 - Peep.png" width="256" />
-  <img alt="Blurp Reverse" src="./public/images/blobs/009 - Blurp - Reverse.png" width="256" />
+  <img alt="Peep" src="./public/images/blobs/010-Peep.png" width="256" />
+  <img alt="Blurp Reverse" src="./public/images/blobs/009-Blurp-Reverse.png" width="256" />
 </div>
 
 ### Rarity
@@ -64,7 +64,7 @@ Unlike many NFT projects with a series of traits, an ADA Blob's rarity is based 
 
 The rarity chart for the ADA Blob colors are as follows:
 
-<img alt="Wumb" src="./public/images/blobs/002 - Wumb.png" width="32" /><img alt="Bluub" src="./public/images/blobs/003 - Bluub.png" width="32" /><img alt="Broogr" src="./public/images/blobs/004 - Broogr.png" width="32" /><img alt="Rooboo" src="./public/images/blobs/005 - Rooboo.png" width="32" /><img alt="Oobby" src="./public/images/blobs/006 - Oobby.png" width="32" /><img alt="Yolg" src="./public/images/blobs/007 - Yolg.png" width="32" /><img alt="Glob" src="./public/images/blobs/008 - Glob.png" width="32" /><img alt="Blurp" src="./public/images/blobs/009 - Blurp.png" width="32" /><img alt="Peep" src="./public/images/blobs/010 - Peep.png" width="32" />
+<img alt="Wumb" src="./public/images/blobs/002-Wumb.png" width="32" /><img alt="Bluub" src="./public/images/blobs/003-Bluub.png" width="32" /><img alt="Broogr" src="./public/images/blobs/004-Broogr.png" width="32" /><img alt="Rooboo" src="./public/images/blobs/005-Rooboo.png" width="32" /><img alt="Oobby" src="./public/images/blobs/006-Oobby.png" width="32" /><img alt="Yolg" src="./public/images/blobs/007-Yolg.png" width="32" /><img alt="Glob" src="./public/images/blobs/008-Glob.png" width="32" /><img alt="Blurp" src="./public/images/blobs/009-Blurp.png" width="32" /><img alt="Peep" src="./public/images/blobs/010-Peep.png" width="32" />
 
 ```
 - White Blobs: 1.67% (5/300)
@@ -81,8 +81,8 @@ The rarity chart for the ADA Blob colors are as follows:
 You can find more rarity information on this [ADA Blobs page](https://adablobs.io/rarity).
 
 <div align="center">
-  <img alt="Oobby" src="./public/images/blobs/006 - Oobby.png" width="256" />
-  <img alt="Broogr Reverse" src="./public/images/blobs/004 - Broogr - Reverse.png" width="256" />
+  <img alt="Oobby" src="./public/images/blobs/006-Oobby.png" width="256" />
+  <img alt="Broogr Reverse" src="./public/images/blobs/004-Broogr-Reverse.png" width="256" />
 </div>
 
 ### Marketplace
@@ -90,8 +90,8 @@ You can find more rarity information on this [ADA Blobs page](https://adablobs.i
 The ADA Blobs marketplace can be used by anyone who wants to auction off their ADA Blob. The marketplace takes a 1% fee on ADA Blob auctions. The smart contract that is used by the ADA Blobs marketplace can be found in the [ADA Blobs Plutus](https://github.com/NicholasMaselli/ADABlobsPlutus) repository. 
 
 <div align="center">
-  <img alt="Bluub" src="./public/images/blobs/003 - Bluub.png" width="256" />
-  <img alt="Wumb Reverse" src="./public/images/blobs/002 - Wumb - Reverse.png" width="256" />
+  <img alt="Bluub" src="./public/images/blobs/003-Bluub.png" width="256" />
+  <img alt="Wumb Reverse" src="./public/images/blobs/002-Wumb-Reverse.png" width="256" />
 </div>
 
 ### Open Source
