@@ -13,21 +13,21 @@ export const GuideContainer = () =>
                 <div className='row'>
                     <GuideBox 
                         textElement={<span>Get the <a href="https://namiwallet.io/" className='guide-link' target="_blank" rel="noopener noreferrer">Nami Wallet</a> to connect to the Blob marketplace.</span>} 
-                        imageElement={<Image src="/images/blobs/001 - Bob.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                        imageElement={<Image src="/images/blobs/001-Bob.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
                         contentLeft={true}                    
                     />
                 </div>
                 <div className='row'>
                     <GuideBox 
                         textElement={<span>Fund the wallet with <strong>ADA (₳)</strong> and add collateral in the Nami Wallet user interface.</span>} 
-                        imageElement={<Image src="/images/blobs/007 - Yolg - Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                        imageElement={<Image src="/images/blobs/007-Yolg-Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Yolg"}  />}
                         contentLeft={false}                    
                     />
                 </div>
                 <div className='row'>
                     <GuideBox 
                         textElement={<span>Click the &quot;<strong>Connect Wallet</strong>&quot; in top right corner to connect your Nami Wallet to ADA Blobs!</span>} 
-                        imageElement={<Image src="/images/blobs/008 - Glob.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                        imageElement={<Image src="/images/blobs/008-Glob.png" quality={100} width={"200%"} height={"200%"} alt={"Glob"}  />}
                         contentLeft={true}                    
                     />
                 </div>
@@ -44,7 +44,7 @@ export const GuideContainer = () =>
                             </ul>
                              
                             </span>} 
-                        imageElement={<Image src="/images/blobs/005 - Rooboo - Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Bob"}  />}
+                        imageElement={<Image src="/images/blobs/005-Rooboo-Reverse.png" quality={100} width={"200%"} height={"200%"} alt={"Rooboo"}  />}
                         contentLeft={false}                    
                     />
                 </div>         

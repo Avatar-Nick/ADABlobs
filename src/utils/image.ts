@@ -7,6 +7,6 @@ export const convertIPFSToHTTP = (url: string) => {
 }
 
 export const getBlobLocalImage = (id: number, name: string) => {
-    const imageLocation = `/images/blobs/${idToLongString(id)} - ${name}.png`
+    const imageLocation = `/images/blobs/${idToLongString(id)}-${name}.png`
     return imageLocation;
 }

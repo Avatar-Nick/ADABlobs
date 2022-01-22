@@ -3,54 +3,54 @@
         "color": "White",
         "percent": "1.67",
         "amount": "5",
-        "image": "/images/blobs/002 - Wumb.png"
+        "image": "/images/blobs/002-Wumb.png"
     },
     "black": {
         "color": "Black",
         "percent": "3.34",
         "amount": "10",
-        "image": "/images/blobs/003 - Bluub.png"
+        "image": "/images/blobs/003-Bluub.png"
     },
     "brown": {
         "color": "Brown",
         "percent": "5",
         "amount": "15",
-        "image": "/images/blobs/004 - Broogr.png"
+        "image": "/images/blobs/004-Broogr.png"
     },
     "red": {
         "color": "Red",
         "percent": "6.67",
         "amount": "20",
-        "image": "/images/blobs/005 - Rooboo.png"
+        "image": "/images/blobs/005-Rooboo.png"
     },
     "orange": {
         "color": "Orange",
         "percent": "10",
         "amount": "30",
-        "image": "/images/blobs/006 - Oobby.png"
+        "image": "/images/blobs/006-Oobby.png"
     },
     "yellow": {
         "color": "Yellow",
         "percent": "13.34",
         "amount": "40",
-        "image": "/images/blobs/007 - Yolg.png"
+        "image": "/images/blobs/007-Yolg.png"
     },
     "green": {
         "color": "Green",
         "percent": "16.67",
         "amount": "50",
-        "image": "/images/blobs/008 - Glob.png"
+        "image": "/images/blobs/008-Glob.png"
     },
     "blue": {
         "color": "Blue",
         "percent": "20",
         "amount": "60",
-        "image": "/images/blobs/001 - Bob.png"
+        "image": "/images/blobs/001-Bob.png"
     },
     "purple": {
         "color": "Purple",
         "percent": "23.34",
         "amount": "70",
-        "image": "/images/blobs/010 - Peep.png"
+        "image": "/images/blobs/010-Peep.png"
     }
 }

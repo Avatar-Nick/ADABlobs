@@ -16,6 +16,7 @@ interface BlobImageProps  {
 }
 export const BlobImage = ({ blob, blobStatus = BlobStatus.Loading, auctionDatum } : BlobImageProps) => 
 {
+    const [src, setSrc] = useState(convertIPFSToHTTP(blob.onchain_metadata.image))
     const [countdown, setCountdown] = useState({days: -1, hours: -1, minutes: -1, seconds: -1} as Countdown);
 
     // Set the conditions for updating the countdown
@@ -42,7 +43,7 @@ export const BlobImage = ({ blob, blobStatus = BlobStatus.Loading, auctionDatum 
             <div className="blob-content d-flex justify-content-center rounded pb-4 mb-4" >
                 <div className="blob-content-inner">
                     <div className="d-flex flex-column justify-content-center align-items-center">
-                        <Image src={convertIPFSToHTTP(blob.onchain_metadata.image)} quality={100} width={"400%"} height={"400%"} alt={blob.onchain_metadata.name} placeholder="blur" blurDataURL={getBlobLocalImage(blob.onchain_metadata.id, blob.onchain_metadata.name)} onError={() => setSrc(getBlobLocalImage(blob.onchain_metadata.id, blob.onchain_metadata.name))}/>
+                        <Image src={src} quality={100} width={"400%"} height={"400%"} alt={blob.onchain_metadata.name} placeholder="blur" blurDataURL={getBlobLocalImage(blob.onchain_metadata.id, blob.onchain_metadata.name)} onError={() => setSrc(getBlobLocalImage(blob.onchain_metadata.id, blob.onchain_metadata.name))}/>
                         <div className="blob-name mb-2">{blob.onchain_metadata.name} {idToLongString(blob.onchain_metadata.id)}</div>
                         <>
                             { blobStatus === BlobStatus.Loading && <button type="button" className="btn btn-shade btn-block btn-text"><div className="spinner-border spinner-border-sm" role="status"></div></button>}
