@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { idToLongString } from '../../../utils/idToLongString';
-import { convertIPFSToHTTP } from '../../../utils/ipfsToHttp';
+import { convertIPFSToHTTP, getBlobLocalImage } from '../../../utils/image';
 
 export const BlobBigImage = ({ blob } : { blob: BlobChainAsset }) => 
 {
@@ -12,7 +12,7 @@ export const BlobBigImage = ({ blob } : { blob: BlobChainAsset }) =>
             <div className="blob-content-inner">
                 <div className="d-flex flex-column justify-content-center align-items-center">
                     <div></div>
-                    <Image src={convertIPFSToHTTP(blob.onchain_metadata.image)} quality={100} width={"500%"} height={"500%"} alt={blob.onchain_metadata.name} priority />
+                    <Image src={convertIPFSToHTTP(blob.onchain_metadata.image)} quality={100} width={"500%"} height={"500%"} alt={blob.onchain_metadata.name} placeholder="blur" blurDataURL={getBlobLocalImage(blob.onchain_metadata.id, blob.onchain_metadata.name)} onError={() => setSrc(getBlobLocalImage(blob.onchain_metadata.id, blob.onchain_metadata.name))} priority />
                     <div className="blob-name mb-2">{blob.onchain_metadata.name} {idToLongString(blob.onchain_metadata.id)}</div>
                 </div>  
             </div>
