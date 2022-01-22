@@ -26,7 +26,7 @@ The contract address for the official ADA Blobs auction market place is:
 **`addr1w8qupuhmh3qwckr7dglaqkjr7qhruglem6anp49x9ey70wcrn3fa8`**
 
 <div align="center">
-  <img alt="Glob" src="./public/images/blobs/008 - Glob.png" width="256" />
+  <img alt="Glob" src="./public/images/blobs/008-Glob.png" width="256" />
   <img alt="Rooboo Reverse" src="./public/images/blobs/005-Rooboo-Reverse.png" width="256" />
 </div>
 
