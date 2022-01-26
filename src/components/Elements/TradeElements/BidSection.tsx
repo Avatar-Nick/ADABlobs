@@ -24,19 +24,15 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
     const countdownText = getAllCountdownText(countdown);
     const auctionEnded = isAuctionEnded(countdown);
 
-    let intervalId = setInterval(() => {
-        setCountdown(getCountdown(auctionDatum));
-    }, 1000);
-
     useEffect(() => {
-        if (auctionDatum) {
-            setCountdown(getCountdown(auctionDatum));
-        }
-    }, [auctionDatum, setCountdown])
+        let intervalId = setInterval(() => {
+            if (auctionDatum) {
+                setCountdown(getCountdown(auctionDatum));
+            }
+        }, 1000);
 
-    useEffect(() => {
         return () => clearInterval(intervalId);
-    }, [intervalId]);    
+    }, [auctionDatum]);    
     
     const closeAlert = () => {
         setShowSuccess(false);

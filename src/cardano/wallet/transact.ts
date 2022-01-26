@@ -5,7 +5,7 @@ import CoinSelection from '../CoinSelection';
 import { fromHex, toHex } from '../serialization';
 import { fee } from '../consts';
 import { CONTRACT, MARKETPLACE_ADDRESS } from '../plutus/contract';
-import { bytesToArray, getAuctionDatum, getAuctionRedeemer } from '../plutus/utils';
+import { bytesToArray } from '../plutus/utils';
 import { fetchCurrentSlot } from '../../api/requests';
 
 export const DATUM_LABEL = 405;
@@ -51,6 +51,7 @@ export const finalizeTransaction = async ({
     metadata,
     scriptUtxo,
     action,
+    timeToLive = 2 * 60 * 60,
   }: any) => {
     
     // Build the transaction witness set
@@ -99,9 +100,9 @@ export const finalizeTransaction = async ({
         // set_validity_start_interval is the current slot on the cardano blockchain
         txBuilder.set_validity_start_interval(currentTime.slot);
 
-        // ttl is an absolute slot number greater than the current slot. This code sets the ttl to 15 minutes after the current slot
+        // ttl is an absolute slot number greater than the current slot. This code sets the ttl to "timeToLive" seconds after the current slot
         // Transactions will silently fail and not place a bid if this time window is not before the end of the auction
-        txBuilder.set_ttl(currentTime.slot + (15 * 60)); 
+        txBuilder.set_ttl(currentTime.slot + timeToLive); 
     }
 
     // Attach metadata to the transaction

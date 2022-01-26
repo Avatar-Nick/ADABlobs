@@ -132,7 +132,7 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     }
     newBid += (currentBidAmountLovelace - oldBid);
 
-    // Decrement endDateTime by 15 minutes to account for ttl (time to live)
+    // Decrement endDateTime by 15 minutes to account for transactions in the mempool that still are within ttl (time to live)
     const fifteenMinutes = 1000 * 60 * 15;
     const endDateTime = parseInt(auctionDatum.adAuctionDetails.adDeadline);
     const now = Date.now();
@@ -143,6 +143,13 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     const startDatetime = parseInt(auctionDatum.adAuctionDetails.adStartTime);
     if (now < startDatetime) {
         throw new Error("The auction has not started yet.");
+    }
+
+    // Need time left to calculate TTL
+    const twoHours = 2 * 60 * 60;
+    let timeToLive = (endDateTime - now) - 1; // Subtract 1 second to ensure this time is before the deadline
+    if (timeToLive > twoHours) {
+        timeToLive = twoHours;
     }
 
     const bidDatum = BID_DATUM(auctionDatum.adAuctionDetails, bidDetails);
@@ -186,7 +193,8 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         datums,
         metadata,
         scriptUtxo: assetUtxo.utxo,
-        action: (redeemerIndex: any) => BID_REDEEMER(redeemerIndex, bidDetails)
+        action: (redeemerIndex: any) => BID_REDEEMER(redeemerIndex, bidDetails),
+        timeToLive
     });
     
     return txHash;

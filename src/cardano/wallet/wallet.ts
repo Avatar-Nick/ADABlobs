@@ -1,4 +1,3 @@
-import { debug } from 'console';
 import Loader from '../loader';
 import { fromHex, toHex } from '../serialization';
 

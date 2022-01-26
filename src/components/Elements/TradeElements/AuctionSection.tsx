@@ -36,7 +36,7 @@ export const AuctionSection = ({ blob } : { blob : BlobChainAsset }) =>
             throw new Error("End Date Time is required.");
         }
 
-        // Increment the given end time by 15 minutes to allow for 15 minute time to live when transactions are submitted (ttl)
+        // Increment the given end time by 15 minutes to allow transactions living in the mempool to be accepted within their time to live (ttl)
         const fifteenMinutes = 1000 * 60 * 15;
         const now = new Date(Date.now())
         const startDatetime = new Date(target.startDatetime.value);
