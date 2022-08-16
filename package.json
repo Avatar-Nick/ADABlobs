@@ -10,11 +10,11 @@
     "@pinata/sdk": "^1.1.23",
     "@popperjs/core": "^2.11.0",
     "dotenv": "^10.0.0",
-    "next": "^12.0.7",
+    "next": "^12.2.5",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-query": "^3.33.7",
-    "sharp": "^0.29.3"
+    "sharp": "^0.30.7"
   },
   "devDependencies": {
     "@types/node": "^16.11.9",

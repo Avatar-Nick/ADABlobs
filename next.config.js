@@ -2,9 +2,9 @@
  * @type {import('next').NextConfig}
  */
  const nextConfig = {
-    output: process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? null : 'standalone',
+    output: 'standalone',
+    //output: process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? null : 'standalone',
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-      // Important: return the modified config
       config.experiments.asyncWebAssembly = true;
       config.module.exprContextCritical = false;
       return config;
