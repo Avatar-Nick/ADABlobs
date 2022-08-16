@@ -27,9 +27,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-
-# 8 / 16 / 2022 - Removed the .env copy because digital ocean app platform will manage the env variables
-# COPY --from=builder /app/.env ./
+COPY --from=builder /app/config/ci.env ./.env
 
 USER nextjs
 
