@@ -54,7 +54,7 @@ export const Navbar = () =>
                             </Link>
                         </div>
                         <div className="pt-1 ps-2 pe-4 me-2">                   
-                            <a className="d-flex nav-image" href={"https://discord.gg/hxMh4TxeW5"} target="_blank" rel="noopener noreferrer">
+                            <a className="d-flex nav-image" href={"https://discord.gg/uWaMtheeTw"} target="_blank" rel="noopener noreferrer">
                                 <Image src="/images/media/discord-logo.png" width={37} height={37} quality={100} alt="Discord Logo" priority/>
                             </a>
                         </div>
