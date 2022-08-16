@@ -9,9 +9,6 @@ import { getTestBidData, getTestCloseData } from "../../public/data/testData";
 
 // ADABlobs Functions
 export const fetchAssets = async ({ pageParam = 1 } : any) => {
-    console.log('process.env.BLOCKFROST_API_URL', process.env.BLOCKFROST_API_URL);
-    console.log('process.env.NEXT_PUBLIC_ADABLOBS_API_URL', process.env.NEXT_PUBLIC_ADABLOBS_API_URL);
-    console.log('adablobsAPI.baseURL', adablobsAPI.baseURL);
     const response = await fetch(`${adablobsAPI.baseURL}${adablobsAPI.endpoints.blobs.base(pageParam)}`);
     return response.json();
 }
