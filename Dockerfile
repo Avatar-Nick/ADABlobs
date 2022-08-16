@@ -11,7 +11,7 @@ FROM node:alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-COPY /app/config/production.no-keys.env ./.env
+COPY ./config/production.no-keys.env ./.env
 RUN npm run build && npm i --production --ignore-scripts --prefer-offline
 
 # Production image, copy all the files and run next
