@@ -2,7 +2,7 @@
  * @type {import('next').NextConfig}
  */
  const nextConfig = {
-    //output: 'standalone',
+    output: 'standalone',
     //output: process.env.NEXT_PUBLIC_ENVIRONMENT === 'local' ? null : 'standalone',
     webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
       config.experiments.asyncWebAssembly = true;
