@@ -145,9 +145,6 @@ export const BidSection = ({ blob } : { blob : BlobChainAsset}) =>
                     </div> }             
                     <hr className="divider" />
                     <div className='mb-3'>
-                        <span className="mt-4"><strong>Note: </strong>Due to temporary congestion on the Cardano Blockchain, transactions that occur too close to the deadline might fail.</span>
-                    </div> 
-                    <div className='mb-3'>
                         <span className="blob-purchase-title">{getTopBidText(auctionDatum)}  </span>
                         {!auctionDatum && <div className="spinner-border spinner-border-sm" role="status"></div>}
                         <span className="blob-purchase-title blob-purchase-text mt-4">{getTopBid(auctionDatum)}</span>
