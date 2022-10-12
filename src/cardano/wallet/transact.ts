@@ -175,6 +175,11 @@ export const finalizeTransaction = async ({
 
     txBuilder.add_change_if_needed(changeAddress.to_address());
 
+    // Calculate Script Data Hash
+    txBuilder.calc_script_data_hash(
+        Loader.Cardano.Instance.TxBuilderConstants.plutus_vasil_cost_models()
+      );
+
     // Build the full transaction
     const txBody = txBuilder.build();
     const tx = Loader.Cardano.Transaction.new(
