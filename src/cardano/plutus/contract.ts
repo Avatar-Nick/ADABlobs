@@ -117,7 +117,6 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
     const walletAddress = await WalletAPI.getBaseAddress();
     const utxos = await WalletAPI.getUtxos();
 
-    console.log(4);
     datums.add(assetUtxo.datum);
 
     let newBid = parseInt(bidDetails.bdBid);
@@ -131,7 +130,7 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         oldBid = parseInt(auctionDatum.adBidDetails?.bdBid)
     }
     newBid += (currentBidAmountLovelace - oldBid);
-    console.log(5);
+
     // Decrement endDateTime by 15 minutes to account for transactions in the mempool that still are within ttl (time to live)
     const fifteenMinutes = 1000 * 60 * 15;
     const endDateTime = parseInt(auctionDatum.adAuctionDetails.adDeadline);
@@ -152,7 +151,6 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         timeToLive = twoHours;
     }
 
-    console.log(6);
     const bidDatum = BID_DATUM(auctionDatum.adAuctionDetails, bidDetails);
     datums.add(bidDatum);
     outputs.add(
@@ -171,7 +169,6 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
             }
         )
     );
-    console.log(6.5);
     
     // Pay back prevoius bidder if they exist
     if (assetUtxo.bidderAddress) {
@@ -183,7 +180,6 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         );
     }
 
-    console.log(6.75);
     const requiredSigner = walletAddress.payment_cred().to_keyhash();
     txBuilder.add_required_signer(requiredSigner);
 
