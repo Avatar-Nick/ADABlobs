@@ -14,8 +14,6 @@ export const BIDDER_ADDRESS_LABEL = 407;
 
 export const initializeTransaction = async () => 
 {
-  console.log(CardanoBlockchain.protocolParameters);
-  console.log(1);
     const costmdls = Loader.Cardano.Costmdls.new();
     const costmdl = Loader.Cardano.CostModel.new();
     Object.values(CardanoBlockchain.protocolParameters.costModels.PlutusV1).forEach(
@@ -25,9 +23,6 @@ export const initializeTransaction = async () =>
       );
     costmdls.insert(Loader.Cardano.Language.new_plutus_v1(), costmdl);
 
-    console.log(2);
-    console.log(process.env.NEXT_PUBLIC_BLOCKFROST_API_URL);
-    console.log(process.env.NEXT_PUBLIC_BLOCKFROST);
     const blockfrost: any = {url: process.env.NEXT_PUBLIC_BLOCKFROST_API_URL + "/utils/txs/evaluate", blockfrost: process.env.NEXT_PUBLIC_BLOCKFROST} 
     const txBuilder = Loader.Cardano.TransactionBuilder.new(
     Loader.Cardano.TransactionBuilderConfigBuilder.new()
@@ -60,7 +55,6 @@ export const initializeTransaction = async () =>
         )
       )
       .build());
-      console.log(3);
 
     const datums = Loader.Cardano.PlutusList.new();
     const metadata = { [DATUM_LABEL]: {}, [SELLER_ADDRESS_LABEL]: {}, [BIDDER_ADDRESS_LABEL]: {} };
@@ -80,14 +74,11 @@ export const finalizeTransaction = async ({
     timeToLive = 2 * 60 * 60,
   }: any) => {
 
-    console.log(7);
     // Build the transaction outputs
     for (let i = 0; i < outputs.len(); i++) 
     {
       txBuilder.add_output(outputs.get(i));
-    } 
-
-    console.log(8);
+    }
 
     // Ensure proper redeemers for transaction
     if (scriptUtxo) {
@@ -97,8 +88,6 @@ export const finalizeTransaction = async ({
               Loader.Cardano.PlutusWitness.new(action("0").data())
             )
           );
-
-          console.log(9);
 
         txBuilder.add_plutus_script(CONTRACT().get(0));
         for (let i = 0; i < datums.len(); i++) {
@@ -124,8 +113,6 @@ export const finalizeTransaction = async ({
         txBuilder.set_ttl(Loader.Cardano.BigNum.from_str(ttl.toString())); 
     }
 
-    console.log(10);
-
     // Attach metadata to the transaction
     let aux_data;
     if (metadata) {
@@ -145,8 +132,6 @@ export const finalizeTransaction = async ({
         txBuilder.set_auxiliary_data(aux_data);
     }
 
-    console.log(11);
-
     const u = Loader.Cardano.TransactionUnspentOutputs.new();
     utxos.forEach((utxo: any) => {
       u.add(utxo);
@@ -155,8 +140,6 @@ export const finalizeTransaction = async ({
     txBuilder.add_inputs_from(u, changeAddress.to_address());
     txBuilder.balance(changeAddress.to_address());
     const tx = await txBuilder.construct(u, changeAddress.to_address());
-
-    console.log(12);
 
     const witnessSetBuilder = Loader.Cardano.TransactionWitnessSetBuilder.new();
     witnessSetBuilder.add_existing(tx.witness_set());
