@@ -26,6 +26,8 @@ export const initializeTransaction = async () =>
     costmdls.insert(Loader.Cardano.Language.new_plutus_v1(), costmdl);
 
     console.log(2);
+    console.log(process.env.NEXT_PUBLIC_BLOCKFROST_API_URL);
+    console.log(process.env.NEXT_PUBLIC_BLOCKFROST);
     const blockfrost: any = {url: process.env.NEXT_PUBLIC_BLOCKFROST_API_URL + "/utils/txs/evaluate", blockfrost: process.env.NEXT_PUBLIC_BLOCKFROST} 
     const txBuilder = Loader.Cardano.TransactionBuilder.new(
     Loader.Cardano.TransactionBuilderConfigBuilder.new()
