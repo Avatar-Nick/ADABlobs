@@ -12,7 +12,6 @@ class CardanoBlockchain {
 
     loadProtocolParameters = async () => {
         const blockfrostProtocolParameters = await fetchProtocolParameters();
-        
         // Spacebudz code referencing blockfrost protocolParameter Issues
         /*
          this.protocolParameters = {
@@ -38,9 +37,15 @@ class CardanoBlockchain {
             minUtxo: "1000000",
             poolDeposit: "500000000",
             keyDeposit: "2000000",
+            coinsPerUtxoWord: "34482", // deprecated
+            coinsPerUtxoByte: "4310",
             maxValSize: "5000",
             maxTxSize: 16384,
+            priceMemNumerator: "577",
+            priceMemDenominator: "10000",
             priceMem: 5.77e-2,
+            priceStepNumerator: "721",
+            priceStepDenominator: "10000000",
             priceStep: 7.21e-5,
           };
 

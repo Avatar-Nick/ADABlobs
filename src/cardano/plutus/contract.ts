@@ -277,9 +277,8 @@ export const close = async (asset: string) =>
         );
     }
 
-    const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
-    requiredSigners.add(walletAddress.payment_cred().to_keyhash());
-    txBuilder.set_required_signers(requiredSigners);
+    const requiredSigner = walletAddress.payment_cred().to_keyhash();
+    txBuilder.add_required_signer(requiredSigner);
 
     const txHash = await finalizeTransaction({
       txBuilder,

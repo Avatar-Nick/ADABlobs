@@ -7,17 +7,18 @@ import { fee } from '../consts';
 import { CONTRACT, MARKETPLACE_ADDRESS } from '../plutus/contract';
 import { bytesToArray } from '../plutus/utils';
 import { fetchCurrentSlot } from '../../api/requests';
+import { Console } from 'console';
+import wallet from './wallet';
 
 export const DATUM_LABEL = 405;
 export const SELLER_ADDRESS_LABEL = 406;
 export const BIDDER_ADDRESS_LABEL = 407;
 
-const languageViews =
-  "a141005901d59f1a000302590001011a00060bc719026d00011a000249f01903e800011a000249f018201a0025cea81971f70419744d186419744d186419744d186419744d186419744d186419744d18641864186419744d18641a000249f018201a000249f018201a000249f018201a000249f01903e800011a000249f018201a000249f01903e800081a000242201a00067e2318760001011a000249f01903e800081a000249f01a0001b79818f7011a000249f0192710011a0002155e19052e011903e81a000249f01903e8011a000249f018201a000249f018201a000249f0182001011a000249f0011a000249f0041a000194af18f8011a000194af18f8011a0002377c190556011a0002bdea1901f1011a000249f018201a000249f018201a000249f018201a000249f018201a000249f018201a000249f018201a000242201a00067e23187600010119f04c192bd200011a000249f018201a000242201a00067e2318760001011a000242201a00067e2318760001011a0025cea81971f704001a000141bb041a000249f019138800011a000249f018201a000302590001011a000249f018201a000249f018201a000249f018201a000249f018201a000249f018201a000249f018201a000249f018201a00330da70101ff";
-
 export const initializeTransaction = async () => 
 {
     const txBuilder = Loader.Cardano.TransactionBuilder.new(
+    Loader.Cardano.TransactionBuilderConfigBuilder.new()
+      .fee_algo(
         Loader.Cardano.LinearFee.new(
             Loader.Cardano.BigNum.from_str(
                 CardanoBlockchain.protocolParameters.linearFee.minFeeA
@@ -25,16 +26,23 @@ export const initializeTransaction = async () =>
             Loader.Cardano.BigNum.from_str(
                 CardanoBlockchain.protocolParameters.linearFee.minFeeB
             )
-        ),
-        Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.minUtxo),
-        Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.poolDeposit),
-        Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.keyDeposit),
-        CardanoBlockchain.protocolParameters.maxValSize,
-        CardanoBlockchain.protocolParameters.maxTxSize,
-        CardanoBlockchain.protocolParameters.priceMem,
-        CardanoBlockchain.protocolParameters.priceStep,
-        Loader.Cardano.LanguageViews.new(Buffer.from(languageViews, "hex"))
-    )
+        )
+      )
+      .coins_per_utxo_byte(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.coinsPerUtxoByte))
+      .pool_deposit(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.poolDeposit))
+      .key_deposit(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.keyDeposit))
+      .max_value_size(CardanoBlockchain.protocolParameters.maxValSize)
+      .max_tx_size(CardanoBlockchain.protocolParameters.maxTxSize)
+      .ex_unit_prices(Loader.Cardano.ExUnitPrices.new(
+        Loader.Cardano.UnitInterval.new(
+            Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceMemNumerator),
+            Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceMemDenominator)),
+        Loader.Cardano.UnitInterval.new(
+            Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceStepNumerator),
+            Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceStepDenominator))
+      ))
+      .prefer_pure_change(true)
+      .build());
 
     const datums = Loader.Cardano.PlutusList.new();
     const metadata = { [DATUM_LABEL]: {}, [SELLER_ADDRESS_LABEL]: {}, [BIDDER_ADDRESS_LABEL]: {} };
@@ -54,16 +62,10 @@ export const finalizeTransaction = async ({
     timeToLive = 2 * 60 * 60,
   }: any) => {
     
+
+
     // Build the transaction witness set
     const transactionWitnessSet = Loader.Cardano.TransactionWitnessSet.new();
-
-    // Build the transaction inputs using the random improve algorithm
-    // Algorithm details: https://input-output-hk.github.io/cardano-coin-selection/haddock/cardano-coin-selection-1.0.1/Cardano-CoinSelection-Algorithm-RandomImprove.html
-    //@ts-ignore
-    let { input, change } : any = CoinSelection.randomImprove(utxos, outputs, 8, scriptUtxo ? [scriptUtxo] : []);
-    input.forEach((utxo: any) => { 
-        txBuilder.add_input(utxo.output().address(), utxo.input(), utxo.output().amount()); 
-    });
 
     // Build the transaction outputs
     for (let i = 0; i < outputs.len(); i++) 
@@ -71,10 +73,54 @@ export const finalizeTransaction = async ({
         txBuilder.add_output(outputs.get(i));
     }
 
+
+    const transactionUnspentOutputs = Loader.Cardano.TransactionUnspentOutputs.new();
+    for (let i = 0; i < utxos.length; i++) {
+        transactionUnspentOutputs.add(utxos[i])
+    }
+    transactionUnspentOutputs.add(scriptUtxo);
+
+    txBuilder.add_inputs_from(transactionUnspentOutputs, Loader.Cardano.CoinSelectionStrategyCIP2.RandomImproveMultiAsset);
+    txBuilder.add_change_if_needed(changeAddress.to_address());
+
+
+    /*
+   console.log('scriptUTXO', scriptUtxo)
+    for (let i = 0; i < utxos.length; i++) {
+        const utxo = utxos[i];
+        txBuilder.add_input(utxo.output().address(), utxo.input(), utxo.output().amount());
+    }
+    */
+    // Need to add change
+
+    // Build the transaction inputs using the random improve algorithm
+    // Algorithm details: https://input-output-hk.github.io/cardano-coin-selection/haddock/cardano-coin-selection-1.0.1/Cardano-CoinSelection-Algorithm-RandomImprove.html
+    /*
+    //@ts-ignore
+    let { input, change } : any = CoinSelection.randomImprove(utxos, outputs, 8, scriptUtxo ? [scriptUtxo] : []);
+    console.log(input, change);
+    input.forEach((utxo: any) => { 
+        txBuilder.add_input(utxo.output().address(), utxo.input(), utxo.output().amount()); 
+    });
+    */
+
+    
+
     // Ensure proper redeemers for transaction
     if (scriptUtxo) {
+        /*
         const redeemers = Loader.Cardano.Redeemers.new();
+
+        console.log(Loader.Cardano);
+        console.log(txBuilder);
+        console.log(txBuilder.get_total_input());
+        console.log(txBuilder.get_total_input().coin().to_str());
+        console.log(txBuilder.get_plutus_input_scripts());
+        console.log(transactionWitnessSet);
         const redeemerIndex = txBuilder.index_of_input(scriptUtxo.input()).toString();
+        
+        console.log(scriptUtxo.input().index());
+
         redeemers.add(action(redeemerIndex));
         txBuilder.set_redeemers(
             Loader.Cardano.Redeemers.from_bytes(redeemers.to_bytes())
@@ -85,14 +131,16 @@ export const finalizeTransaction = async ({
         txBuilder.set_plutus_scripts(
             CONTRACT()
         );
+        */
 
         const collateral = await WalletAPI.getCollateral();
+        const walletAddres = await WalletAPI.getAddress();
         if (collateral.length <= 0) throw new Error("Your wallet has no collateral. Ensure your connected wallet has collateral. You can follow the guide page for instructions");
-        setCollateral(txBuilder, collateral);
+        setCollateral(txBuilder, walletAddres, collateral);
 
         transactionWitnessSet.set_plutus_scripts(CONTRACT());
         transactionWitnessSet.set_plutus_data(datums);
-        transactionWitnessSet.set_redeemers(redeemers);
+        //transactionWitnessSet.set_redeemers(redeemers);
 
         // Get the current blockchain slot time
         const currentTime = await fetchCurrentSlot()
@@ -124,6 +172,7 @@ export const finalizeTransaction = async ({
         txBuilder.set_auxiliary_data(aux_data);
     }
 
+    /*
     const changeMultiAssets = change.multiasset();
 
     // Check if change value is too big for single output
@@ -159,6 +208,7 @@ export const finalizeTransaction = async ({
         };
         makeSplit();
         partialChange.set_multiasset(partialMultiAssets);
+
         const minAda = Loader.Cardano.min_ada_required(
             partialChange,
             Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.minUtxo)
@@ -174,11 +224,15 @@ export const finalizeTransaction = async ({
     }
 
     txBuilder.add_change_if_needed(changeAddress.to_address());
-
+    */
     // Calculate Script Data Hash
+    console.log(txBuilder);
+
+    /*
     txBuilder.calc_script_data_hash(
         Loader.Cardano.Instance.TxBuilderConstants.plutus_vasil_cost_models()
       );
+      */
 
     // Build the full transaction
     const txBody = txBuilder.build();
@@ -220,19 +274,23 @@ export const finalizeTransaction = async ({
 // This is the Spacebudz createOutput function (with some updates for ADABlobs to handle multiple addresses) which will build the output of the transaction
 export const createOutput = (address : any, value: any, { index, datum, metadata, sellerAddress, bidderAddress }: any = {}) => 
 {
-    const minAda = Loader.Cardano.min_ada_required(
-        value,
-        Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.minUtxo),
-        datum && Loader.Cardano.hash_plutus_data(datum)
-      );
-      
-    if (minAda.compare(value.coin()) == 1) value.set_coin(minAda);
-    
     const output = Loader.Cardano.TransactionOutput.new(address, value);
     if (datum) {
         output.set_data_hash(Loader.Cardano.hash_plutus_data(datum));
         metadata[DATUM_LABEL][index] = bytesToArray("0x" + toHex(datum.to_bytes()));
     }
+    const minAda = Loader.Cardano.min_ada_for_output(
+        output,
+        Loader.Cardano.DataCost.new_coins_per_byte(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.coinsPerUtxoByte))
+      );
+
+    if (minAda.compare(value.coin()) == 1) value.set_coin(minAda);
+
+    const newOutput = Loader.Cardano.TransactionOutput.new(address, value);
+    if (datum) {
+        newOutput.set_data_hash(Loader.Cardano.hash_plutus_data(datum));
+    }    
+    
     if (sellerAddress) {
         metadata[SELLER_ADDRESS_LABEL].address = "0x" + toHex(sellerAddress.to_address().to_bytes());
     }
@@ -240,7 +298,7 @@ export const createOutput = (address : any, value: any, { index, datum, metadata
         metadata[BIDDER_ADDRESS_LABEL].address = "0x" + toHex(bidderAddress.to_address().to_bytes());
     }
     
-    return output;
+    return newOutput;
 }
 
 // Split amount according to marketplace fees
@@ -254,13 +312,13 @@ export const lovelacePercentage = (amount: any, p: any) =>
 {
     // Check mul multiplies the value by 10, we then want to divide by 1000 to get 1%
     const scaledFee = (parseInt(p) * 100).toString();
-    return amount.checked_mul(Loader.Cardano.BigNum.from_str("10")).checked_div(Loader.Cardano.BigNum.from_str(scaledFee));
+    return amount.checked_mul(Loader.Cardano.BigNum.from_str("10").div_floor(Loader.Cardano.BigNum.from_str(scaledFee)));
 };
 
-export const setCollateral = (txBuilder: any, utxos: any) => {
-    const inputs = Loader.Cardano.TransactionInputs.new();
+export const setCollateral = (txBuilder: any, walletAddres: any, utxos: any) => {
+    const inputBuilder = Loader.Cardano.TxInputsBuilder.new();
     utxos.forEach((utxo: any) => {
-        inputs.add(utxo.input());
+        inputBuilder.add_input(Loader.Cardano.Address.from_bech32(walletAddres), utxo.input(), utxo.output().amount());
     });
-    txBuilder.set_collateral(inputs);
+    txBuilder.set_collateral(inputBuilder);
 }

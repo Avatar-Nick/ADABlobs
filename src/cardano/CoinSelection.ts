@@ -2,11 +2,6 @@
 // This code is copy and pasted from the Spacebudz Marketplace
 // https://github.com/Berry-Pool/spacebudz/blob/299c936d8c77f4a55e203a448b0262494c94d627/src/cardano/market/coinSelection.js#L228
 
-import {
-    TransactionUnspentOutput,
-    TransactionOutputs,
-    Value,
-  } from "./custom_modules/@emurgo/cardano-serialization-lib-browser/cardano_serialization_lib";
   import Loader from "./loader";
   const BigInt = typeof window !== "undefined" && window.BigInt;
   
@@ -299,10 +294,10 @@ import {
       if (utxoSelection.remaining.length > 0) {
         const change = utxoSelection.amount.checked_sub(mergedOutputsAmounts);
   
-        let minAmount = Loader.Cardano.Value.new(
-          Loader.Cardano.min_ada_required(
+        let minAmount = Loader.CardanoOld.Value.new(
+          Loader.CardanoOld.min_ada_required(
             change,
-            Loader.Cardano.BigNum.from_str(protocolParameters.minUTxO)
+            Loader.CardanoOld.BigNum.from_str(protocolParameters.minUTxO)
           )
         );
   
@@ -311,8 +306,8 @@ import {
             BigInt(protocolParameters.maxTxSize) +
           BigInt(protocolParameters.minFeeB);
   
-        maxFee = Loader.Cardano.Value.new(
-          Loader.Cardano.BigNum.from_str(maxFee.toString())
+        maxFee = Loader.CardanoOld.Value.new(
+          Loader.CardanoOld.BigNum.from_str(maxFee.toString())
         );
   
         minAmount = minAmount.checked_add(maxFee);
@@ -515,8 +510,8 @@ import {
       .splice(Math.floor(Math.random() * nbFreeUTxO), 1)
       .pop();
   
-    const newAmount = Loader.Cardano.Value.new(
-      Loader.Cardano.BigNum.from_str("0")
+    const newAmount = Loader.CardanoOld.Value.new(
+      Loader.CardanoOld.BigNum.from_str("0")
     )
       .checked_add(utxo.output().amount())
       .checked_add(outputAmount);
@@ -604,7 +599,6 @@ import {
             Loader.Cardano.BigNum.from_str("0")
           );
           _value.set_multiasset(_multiasset);
-  
           splitAmounts.push(_value);
         }
       }
@@ -728,10 +722,10 @@ import {
     let amount = outputAmount;
   
     if (minUTxOValue && BigInt(outputAmount.coin().to_str()) > 0) {
-      let minAmount = Loader.Cardano.Value.new(
-        Loader.Cardano.min_ada_required(
+      let minAmount = Loader.CardanoOld.Value.new(
+        Loader.CardanoOld.min_ada_required(
           cumulatedAmount,
-          Loader.Cardano.BigNum.from_str(minUTxOValue.toString())
+          Loader.CardanoOld.BigNum.from_str(minUTxOValue.toString())
         )
       );
   
@@ -741,8 +735,8 @@ import {
       // If requested Lovelace lower than minAmount, plan for change
       if (compare(outputAmount, minAmount) < 0) {
         amount = minAmount.checked_add(
-          Loader.Cardano.Value.new(
-            Loader.Cardano.BigNum.from_str(protocolParameters.minUTxO)
+          Loader.CardanoOld.Value.new(
+            Loader.CardanoOld.BigNum.from_str(protocolParameters.minUTxO)
           )
         );
       }
@@ -754,8 +748,8 @@ import {
             BigInt(protocolParameters.maxTxSize) +
           BigInt(protocolParameters.minFeeB);
   
-        maxFee = Loader.Cardano.Value.new(
-          Loader.Cardano.BigNum.from_str(maxFee.toString())
+        maxFee = Loader.CardanoOld.Value.new(
+          Loader.CardanoOld.BigNum.from_str(maxFee.toString())
         );
   
         amount = amount.checked_add(maxFee);
@@ -786,7 +780,7 @@ import {
    */
   const cloneUTxOList = (utxoList) =>
     utxoList.map((utxo) =>
-      Loader.Cardano.TransactionUnspentOutput.from_bytes(utxo.to_bytes())
+      Loader.CardanoOld.TransactionUnspentOutput.from_bytes(utxo.to_bytes())
     );
   
   /**
@@ -794,7 +788,7 @@ import {
    * @param {Value} value
    * @return {Value} Cone - Deep copy
    */
-  const cloneValue = (value) => Loader.Cardano.Value.from_bytes(value.to_bytes());
+  const cloneValue = (value) => Loader.CardanoOld.Value.from_bytes(value.to_bytes());
   
   // Helper
   function abs(big) {
