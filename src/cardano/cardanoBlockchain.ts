@@ -9,7 +9,7 @@ class CardanoBlockchain {
     }
 
     loadProtocolParameters = async () => {
-        const blockfrostProtocolParameters = await fetchProtocolParameters();\
+        const blockfrostProtocolParameters = await fetchProtocolParameters();
         
         const protocolParameters = {
           linearFee: {
