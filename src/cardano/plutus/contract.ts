@@ -224,7 +224,7 @@ export const close = async (asset: string) =>
     const currentValue = assetUtxo?.utxo.output().amount();  
     const auctionDatum: AuctionDatum = getAuctionDatum(assetUtxo?.datum) as AuctionDatum;
 
-    const { txBuilder, txBuilderCopy, datums, metadata, outputs } = await initializeTransaction();
+    const { txBuilder, datums, metadata, outputs } = await initializeTransaction();
     const walletAddress = await WalletAPI.getBaseAddress();
     const utxos = await WalletAPI.getUtxos();
 
@@ -279,11 +279,9 @@ export const close = async (asset: string) =>
 
     const requiredSigner = walletAddress.payment_cred().to_keyhash();
     txBuilder.add_required_signer(requiredSigner);
-    txBuilderCopy.add_required_signer(requiredSigner);
 
     const txHash = await finalizeTransaction({
       txBuilder,
-      txBuilderCopy,
       changeAddress: walletAddress,
       utxos,
       outputs,

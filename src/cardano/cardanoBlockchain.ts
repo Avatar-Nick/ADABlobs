@@ -1,34 +1,15 @@
 
 import { fetchProtocolParameters } from '../api/requests';
-import CoinSelection from './CoinSelection';
 
 class CardanoBlockchain {
     protocolParameters: any;
 
     load = async () => {
         this.protocolParameters = await this.loadProtocolParameters();
-        this.loadCoinSelection();
     }
 
     loadProtocolParameters = async () => {
         const blockfrostProtocolParameters = await fetchProtocolParameters();
-        // Spacebudz code referencing blockfrost protocolParameter Issues
-        /*
-         this.protocolParameters = {
-           linearFee: {
-             minFeeA: p.min_fee_a.toString(),
-             minFeeB: p.min_fee_b.toString(),
-           },
-           minUtxo: "1000000",
-           poolDeposit: p.pool_deposit,
-           keyDeposit: p.key_deposit,
-           maxValSize: parseInt(p.max_val_size),
-           maxTxSize: parseInt(p.max_tx_size),
-           priceMem: parseFloat(p.price_mem),
-           priceStep: parseFloat(p.price_step),
-         };
-        TODO: wait for blockfrost fix
-        */
         const protocolParameters = {
             linearFee: {
               minFeeA: blockfrostProtocolParameters.min_fee_a.toString(),
@@ -50,15 +31,6 @@ class CardanoBlockchain {
           };
 
         return protocolParameters;
-    }
-
-    loadCoinSelection() {
-        CoinSelection.setProtocolParameters(
-            this.protocolParameters.minUtxo,
-            this.protocolParameters.linearFee.minFeeA,
-            this.protocolParameters.linearFee.minFeeB,
-            this.protocolParameters.maxTxSize.toString()
-          );
     }
 }
 

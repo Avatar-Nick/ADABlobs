@@ -1,14 +1,11 @@
 import Loader from '../loader';
 import WalletAPI from './wallet';
 import CardanoBlockchain from '../cardanoBlockchain';
-import CoinSelection from '../CoinSelection';
 import { fromHex, toHex } from '../serialization';
 import { fee } from '../consts';
 import { CONTRACT, MARKETPLACE_ADDRESS } from '../plutus/contract';
 import { bytesToArray } from '../plutus/utils';
 import { fetchCurrentSlot } from '../../api/requests';
-import { Console } from 'console';
-import wallet from './wallet';
 
 export const DATUM_LABEL = 405;
 export const SELLER_ADDRESS_LABEL = 406;
@@ -85,7 +82,6 @@ export const initializeTransaction = async () =>
 
 export const finalizeTransaction = async ({
     txBuilder,
-    txBuilderCopy,
     changeAddress,
     utxos,
     outputs,
@@ -105,7 +101,6 @@ export const finalizeTransaction = async ({
     for (let i = 0; i < outputs.len(); i++) 
     {
         txBuilder.add_output(outputs.get(i));
-        txBuilderCopy.add_output(outputs.get(i));
     }
 
     const transactionUnspentOutputs = Loader.Cardano.TransactionUnspentOutputs.new();
@@ -114,12 +109,11 @@ export const finalizeTransaction = async ({
     }
     transactionUnspentOutputs.add(scriptUtxo);
     txBuilder.add_inputs_from(transactionUnspentOutputs, Loader.Cardano.CoinSelectionStrategyCIP2.RandomImproveMultiAsset);
-    txBuilderCopy.add_inputs_from(transactionUnspentOutputs, Loader.Cardano.CoinSelectionStrategyCIP2.RandomImproveMultiAsset);
 
     // Ensure proper redeemers for transaction
     if (scriptUtxo) {
-        txBuilderCopy.set_fee(Loader.Cardano.BigNum.from_str("300000"));
-        const built = txBuilderCopy.build();
+        txBuilder.set_fee(Loader.Cardano.BigNum.from_str("300000"));
+        const built = txBuilder.build();
         const builtInputs = built.inputs();
 
         const scriptTxId = toHex(scriptUtxo.input().transaction_id().to_bytes());
