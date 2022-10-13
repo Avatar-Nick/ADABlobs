@@ -92,8 +92,6 @@ export const finalizeTransaction = async ({
     timeToLive = 2 * 60 * 60,
   }: any) => {
     
-
-
     // Build the transaction witness set
     const transactionWitnessSet = Loader.Cardano.TransactionWitnessSet.new();
 
@@ -109,9 +107,12 @@ export const finalizeTransaction = async ({
     }
     transactionUnspentOutputs.add(scriptUtxo);
     txBuilder.add_inputs_from(transactionUnspentOutputs, Loader.Cardano.CoinSelectionStrategyCIP2.RandomImproveMultiAsset);
+    
 
     // Ensure proper redeemers for transaction
     if (scriptUtxo) {
+
+        /*
         txBuilder.set_fee(Loader.Cardano.BigNum.from_str("300000"));
         const built = txBuilder.build();
         const builtInputs = built.inputs();
@@ -125,32 +126,11 @@ export const finalizeTransaction = async ({
                 redeemerIndex = i;
             }
         }
-
+        */
+       console.log(txBuilder);
+        const redeemerIndex = txBuilder.index_of_input(scriptUtxo.input()).toString();
         const redeemers = Loader.Cardano.Redeemers.new();
         redeemers.add(action(redeemerIndex));
-
-        /*
-        console.log(Loader.Cardano);
-        console.log(txBuilder);
-        console.log(txBuilder.get_total_input());
-        console.log(txBuilder.get_total_input().coin().to_str());
-        console.log(txBuilder.get_plutus_input_scripts());
-        console.log(transactionWitnessSet);
-        const redeemerIndex = txBuilder.index_of_input(scriptUtxo.input()).toString();
-        
-        console.log(scriptUtxo.input().index());
-
-        redeemers.add(action(redeemerIndex));
-        txBuilder.set_redeemers(
-            Loader.Cardano.Redeemers.from_bytes(redeemers.to_bytes())
-        );
-        txBuilder.set_plutus_data(
-            Loader.Cardano.PlutusList.from_bytes(datums.to_bytes())
-        );
-        txBuilder.set_plutus_scripts(
-            CONTRACT()
-        );
-        */
 
         const collateral = await WalletAPI.getCollateral();
         const walletAddres = await WalletAPI.getAddress();
@@ -254,9 +234,10 @@ export const finalizeTransaction = async ({
       */
 
     // Build the full transaction
-    txBuilder.add_change_if_needed(changeAddress.to_address());
     //const fee = Loader.Cardano.BigNum.from_str("300000")
     //txBuilder.set_fee(fee)
+    
+    txBuilder.add_change_if_needed(changeAddress.to_address());
     const txBody = txBuilder.build();
     const tx = Loader.Cardano.Transaction.new(
         txBody,
