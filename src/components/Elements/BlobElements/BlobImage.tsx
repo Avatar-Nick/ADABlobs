@@ -6,7 +6,6 @@ import { convertIPFSToHTTP, getBlobLocalImage } from '../../../utils/image';
 import { lovelaceToAda } from '../../../cardano/consts';
 import { useEffect, useState } from 'react';
 import { getCountdown } from '../../../utils/time';
-import { stakecredential_to_scripthash } from '../../../cardano/custom_modules/@emurgo/cardano-serialization-lib-browser/cardano_serialization_lib_bg.wasm';
 
 interface BlobImageProps  {
     blob: BlobChainAsset,
