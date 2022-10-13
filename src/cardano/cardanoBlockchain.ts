@@ -10,6 +10,8 @@ class CardanoBlockchain {
 
     loadProtocolParameters = async () => {
         const blockfrostProtocolParameters = await fetchProtocolParameters();
+
+        /*
         const protocolParameters = {
             linearFee: {
               minFeeA: blockfrostProtocolParameters.min_fee_a.toString(),
@@ -30,7 +32,27 @@ class CardanoBlockchain {
             priceStep: 7.21e-5,
             collateralPercent: "150",
             maxCollateralInputs: "3",
+            costModels
           };
+          */
+        
+          const protocolParameters = {
+            linearFee: {
+              minFeeA: blockfrostProtocolParameters.min_fee_a.toString(),
+              minFeeB: blockfrostProtocolParameters.min_fee_b.toString(),
+            },
+            coinsPerUtxoByte: blockfrostProtocolParameters.coins_per_utxo_size.toString(),
+            poolDeposit: blockfrostProtocolParameters.pool_deposit,
+            keyDeposit: blockfrostProtocolParameters.key_deposit,
+            maxValSize: parseInt(blockfrostProtocolParameters.max_val_size),
+            maxTxSize: parseInt(blockfrostProtocolParameters.max_tx_size),
+            priceMem: parseFloat(blockfrostProtocolParameters.price_mem),
+            priceStep: parseFloat(blockfrostProtocolParameters.price_step),
+            maxCollateralInputs: parseInt(blockfrostProtocolParameters.max_collateral_inputs),
+            collateralPercentage: 0, // parseInt(p.collateral_percent),
+            costModels: blockfrostProtocolParameters.cost_models,
+          };
+
 
         return protocolParameters;
     }

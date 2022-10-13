@@ -3,7 +3,7 @@ import WalletAPI from '../cardano/wallet/wallet';
 import { adablobsAPI, blockfrostAPI } from '../api/api';
 import { arrayToBytes, getAssetUtxos, getAuctionDatum } from '../cardano/plutus/utils';
 import { BIDDER_ADDRESS_LABEL, DATUM_LABEL, SELLER_ADDRESS_LABEL } from '../cardano/wallet/transact';
-import { blockfrostAPIKey } from '../consts/consts';
+import { blockfrostAPIState } from '../consts/consts';
 import { fromHex } from "../cardano/serialization";
 import { getTestBidData, getTestCloseData } from "../../public/data/testData";
 
@@ -148,7 +148,7 @@ export const blockfrostAPIRequest = async (endpoint: string, headers? : any, bod
     const url = `${blockfrostAPI.baseURL}${endpoint}`;
     const response = await fetch(url, {
         headers: {
-        project_id: blockfrostAPIKey,
+        project_id: blockfrostAPIState,
         ...headers,
         "User-Agent": "adablobs",
         },

@@ -5,9 +5,7 @@ class Loader {
       if (this._wasm) return;
       
       this._wasm = await import(
-        //"@emurgo/cardano-serialization-lib-browser/cardano_serialization_lib",
-        //"@emurgo/cardano-serialization-lib-browser/cardano_serialization_lib",
-        "@dcspark/cardano-multiplatform-lib-browser"
+        "./custom_modules/@dcspark/cardano-multiplatform-lib-browser/cardano_multiplatform_lib"
       );
     }
   

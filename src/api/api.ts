@@ -33,7 +33,7 @@ export const adablobsAPI = new API (
 
 export const blockfrostAPI = new API(
     {
-        baseURL: process.env.BLOCKFROST_API_URL,
+        baseURL: process.env.NEXT_PUBLIC_BLOCKFROST_API_URL,
         endpoints: {
             addresses: {
                 base: (address: string) => `/addresses/${address}`,
@@ -57,7 +57,7 @@ export const blockfrostAPI = new API(
             },
             txs: {
                 metadata: (tx_hash: string) => `/txs/${tx_hash}/metadata`
-            }
+            },
         },
         clientURL: process.env.NEXT_PUBLIC_BLOCKFROST_CLIENT_API_URL,
         clientEndpoints: {
@@ -83,6 +83,11 @@ export const blockfrostAPI = new API(
             },
             txs: {
                 metadata: (tx_hash: string) => `/txs/${tx_hash}/metadata`
+            },
+            utils: {
+                txs: {
+                    evaluate: () => `/utils/txs/evaluate`
+                }
             }
         }    
     }
