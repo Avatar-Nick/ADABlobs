@@ -29,7 +29,7 @@ export const BID_REDEEMER = (redeemerIndex: number, bidDetails: BidDetails) =>
     bidDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(bdBid)))
     const redeemerData = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
+            Loader.Cardano.BigNum.from_str("0"),
             bidDetailsFields,
         )
     )
@@ -39,7 +39,7 @@ export const BID_REDEEMER = (redeemerIndex: number, bidDetails: BidDetails) =>
     auctionRedeemerFields.add(redeemerData);
     const auctionRedeemerData = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
+            Loader.Cardano.BigNum.from_str("0"),
             auctionRedeemerFields,
         )
     )
