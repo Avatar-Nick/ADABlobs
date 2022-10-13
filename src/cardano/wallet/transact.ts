@@ -44,14 +44,48 @@ export const initializeTransaction = async () =>
       .prefer_pure_change(true)
       .build());
 
+      // We unfortunately need to create a fake copy transacation as the Cardano
+      // Serialization Library does not support coin selection and redeemers. 
+      // https://github.com/Emurgo/cardano-serialization-lib/issues/375
+      // For some absolutely insane reason you cannot view the tx inputs without building
+      // the transaction and you cannot adjust fees after build and rebuild. This library is garbage
+      const txBuilderCopy = Loader.Cardano.TransactionBuilder.new(
+        Loader.Cardano.TransactionBuilderConfigBuilder.new()
+          .fee_algo(
+            Loader.Cardano.LinearFee.new(
+                Loader.Cardano.BigNum.from_str(
+                    CardanoBlockchain.protocolParameters.linearFee.minFeeA
+                ),
+                Loader.Cardano.BigNum.from_str(
+                    CardanoBlockchain.protocolParameters.linearFee.minFeeB
+                )
+            )
+          )
+          .coins_per_utxo_byte(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.coinsPerUtxoByte))
+          .pool_deposit(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.poolDeposit))
+          .key_deposit(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.keyDeposit))
+          .max_value_size(CardanoBlockchain.protocolParameters.maxValSize)
+          .max_tx_size(CardanoBlockchain.protocolParameters.maxTxSize)
+          .ex_unit_prices(Loader.Cardano.ExUnitPrices.new(
+            Loader.Cardano.UnitInterval.new(
+                Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceMemNumerator),
+                Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceMemDenominator)),
+            Loader.Cardano.UnitInterval.new(
+                Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceStepNumerator),
+                Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceStepDenominator))
+          ))
+          .prefer_pure_change(true)
+          .build());
+
     const datums = Loader.Cardano.PlutusList.new();
     const metadata = { [DATUM_LABEL]: {}, [SELLER_ADDRESS_LABEL]: {}, [BIDDER_ADDRESS_LABEL]: {} };
     const outputs = Loader.Cardano.TransactionOutputs.new();
-    return { txBuilder, datums, metadata, outputs };
+    return { txBuilder, txBuilderCopy, datums, metadata, outputs };
 }
 
 export const finalizeTransaction = async ({
     txBuilder,
+    txBuilderCopy,
     changeAddress,
     utxos,
     outputs,
@@ -71,46 +105,37 @@ export const finalizeTransaction = async ({
     for (let i = 0; i < outputs.len(); i++) 
     {
         txBuilder.add_output(outputs.get(i));
+        txBuilderCopy.add_output(outputs.get(i));
     }
-
 
     const transactionUnspentOutputs = Loader.Cardano.TransactionUnspentOutputs.new();
     for (let i = 0; i < utxos.length; i++) {
         transactionUnspentOutputs.add(utxos[i])
     }
     transactionUnspentOutputs.add(scriptUtxo);
-
     txBuilder.add_inputs_from(transactionUnspentOutputs, Loader.Cardano.CoinSelectionStrategyCIP2.RandomImproveMultiAsset);
-    txBuilder.add_change_if_needed(changeAddress.to_address());
-
-
-    /*
-   console.log('scriptUTXO', scriptUtxo)
-    for (let i = 0; i < utxos.length; i++) {
-        const utxo = utxos[i];
-        txBuilder.add_input(utxo.output().address(), utxo.input(), utxo.output().amount());
-    }
-    */
-    // Need to add change
-
-    // Build the transaction inputs using the random improve algorithm
-    // Algorithm details: https://input-output-hk.github.io/cardano-coin-selection/haddock/cardano-coin-selection-1.0.1/Cardano-CoinSelection-Algorithm-RandomImprove.html
-    /*
-    //@ts-ignore
-    let { input, change } : any = CoinSelection.randomImprove(utxos, outputs, 8, scriptUtxo ? [scriptUtxo] : []);
-    console.log(input, change);
-    input.forEach((utxo: any) => { 
-        txBuilder.add_input(utxo.output().address(), utxo.input(), utxo.output().amount()); 
-    });
-    */
-
-    
+    txBuilderCopy.add_inputs_from(transactionUnspentOutputs, Loader.Cardano.CoinSelectionStrategyCIP2.RandomImproveMultiAsset);
 
     // Ensure proper redeemers for transaction
     if (scriptUtxo) {
-        /*
-        const redeemers = Loader.Cardano.Redeemers.new();
+        txBuilderCopy.set_fee(Loader.Cardano.BigNum.from_str("300000"));
+        const built = txBuilderCopy.build();
+        const builtInputs = built.inputs();
 
+        const scriptTxId = toHex(scriptUtxo.input().transaction_id().to_bytes());
+        let redeemerIndex = 0;
+        for (let i = 0; i < builtInputs.len(); i++) {
+            const curInput = builtInputs.get(i);
+            const txId = toHex(curInput.transaction_id().to_bytes());
+            if (txId === scriptTxId) {
+                redeemerIndex = i;
+            }
+        }
+
+        const redeemers = Loader.Cardano.Redeemers.new();
+        redeemers.add(action(redeemerIndex));
+
+        /*
         console.log(Loader.Cardano);
         console.log(txBuilder);
         console.log(txBuilder.get_total_input());
@@ -140,7 +165,7 @@ export const finalizeTransaction = async ({
 
         transactionWitnessSet.set_plutus_scripts(CONTRACT());
         transactionWitnessSet.set_plutus_data(datums);
-        //transactionWitnessSet.set_redeemers(redeemers);
+        transactionWitnessSet.set_redeemers(redeemers);
 
         // Get the current blockchain slot time
         const currentTime = await fetchCurrentSlot()
@@ -235,6 +260,9 @@ export const finalizeTransaction = async ({
       */
 
     // Build the full transaction
+    txBuilder.add_change_if_needed(changeAddress.to_address());
+    //const fee = Loader.Cardano.BigNum.from_str("300000")
+    //txBuilder.set_fee(fee)
     const txBody = txBuilder.build();
     const tx = Loader.Cardano.Transaction.new(
         txBody,
@@ -242,7 +270,7 @@ export const finalizeTransaction = async ({
             transactionWitnessSet.to_bytes()
         ),
         aux_data
-    );
+    ); 
 
     // Ensure the transaction size is below the max transaction size for the Cardano Blockchain
     const size = tx.to_bytes().length;
