@@ -49,7 +49,7 @@ export const getAssetUtxos = async (asset: string) => {
         utxo = Loader.Cardano.TransactionUnspentOutput.new(
             Loader.Cardano.TransactionInput.new(
                 Loader.Cardano.TransactionHash.from_bytes(fromHex(utxo.tx_hash)),
-                utxo.output_index,
+                Loader.Cardano.BigNum.from_str(utxo.output_index.toString()),
             ),
             Loader.Cardano.TransactionOutput.new(
                 CONTRACT_ADDRESS(), assetsToValue(utxo.amount),

@@ -28,6 +28,8 @@ class CardanoBlockchain {
             priceStepNumerator: "721",
             priceStepDenominator: "10000000",
             priceStep: 7.21e-5,
+            collateralPercent: "150",
+            maxCollateralInputs: "3",
           };
 
         return protocolParameters;

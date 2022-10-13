@@ -38,46 +38,15 @@ export const initializeTransaction = async () =>
             Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceStepNumerator),
             Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceStepDenominator))
       ))
+      .collateral_percentage(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.collateralPercent))
+      .max_collateral_inputs(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.maxCollateralInputs))
       .prefer_pure_change(true)
       .build());
-
-      // We unfortunately need to create a fake copy transacation as the Cardano
-      // Serialization Library does not support coin selection and redeemers. 
-      // https://github.com/Emurgo/cardano-serialization-lib/issues/375
-      // For some absolutely insane reason you cannot view the tx inputs without building
-      // the transaction and you cannot adjust fees after build and rebuild. This library is garbage
-      const txBuilderCopy = Loader.Cardano.TransactionBuilder.new(
-        Loader.Cardano.TransactionBuilderConfigBuilder.new()
-          .fee_algo(
-            Loader.Cardano.LinearFee.new(
-                Loader.Cardano.BigNum.from_str(
-                    CardanoBlockchain.protocolParameters.linearFee.minFeeA
-                ),
-                Loader.Cardano.BigNum.from_str(
-                    CardanoBlockchain.protocolParameters.linearFee.minFeeB
-                )
-            )
-          )
-          .coins_per_utxo_byte(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.coinsPerUtxoByte))
-          .pool_deposit(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.poolDeposit))
-          .key_deposit(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.keyDeposit))
-          .max_value_size(CardanoBlockchain.protocolParameters.maxValSize)
-          .max_tx_size(CardanoBlockchain.protocolParameters.maxTxSize)
-          .ex_unit_prices(Loader.Cardano.ExUnitPrices.new(
-            Loader.Cardano.UnitInterval.new(
-                Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceMemNumerator),
-                Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceMemDenominator)),
-            Loader.Cardano.UnitInterval.new(
-                Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceStepNumerator),
-                Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.priceStepDenominator))
-          ))
-          .prefer_pure_change(true)
-          .build());
 
     const datums = Loader.Cardano.PlutusList.new();
     const metadata = { [DATUM_LABEL]: {}, [SELLER_ADDRESS_LABEL]: {}, [BIDDER_ADDRESS_LABEL]: {} };
     const outputs = Loader.Cardano.TransactionOutputs.new();
-    return { txBuilder, txBuilderCopy, datums, metadata, outputs };
+    return { txBuilder, datums, metadata, outputs };
 }
 
 export const finalizeTransaction = async ({
@@ -279,19 +248,20 @@ export const createOutput = (address : any, value: any, { index, datum, metadata
 {
     const output = Loader.Cardano.TransactionOutput.new(address, value);
     if (datum) {
-        output.set_data_hash(Loader.Cardano.hash_plutus_data(datum));
+        output.set_datum(Loader.Cardano.Datum.new_data_hash(Loader.Cardano.hash_plutus_data(datum)));
         metadata[DATUM_LABEL][index] = bytesToArray("0x" + toHex(datum.to_bytes()));
     }
-    const minAda = Loader.Cardano.min_ada_for_output(
+
+    const minAda = Loader.Cardano.min_ada_required(
         output,
-        Loader.Cardano.DataCost.new_coins_per_byte(Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.coinsPerUtxoByte))
+        Loader.Cardano.BigNum.from_str(CardanoBlockchain.protocolParameters.coinsPerUtxoByte)
       );
 
     if (minAda.compare(value.coin()) == 1) value.set_coin(minAda);
 
     const newOutput = Loader.Cardano.TransactionOutput.new(address, value);
     if (datum) {
-        newOutput.set_data_hash(Loader.Cardano.hash_plutus_data(datum));
+        newOutput.set_datum(Loader.Cardano.Datum.new_data_hash(Loader.Cardano.hash_plutus_data(datum)));
     }    
     
     if (sellerAddress) {
@@ -315,7 +285,7 @@ export const lovelacePercentage = (amount: any, p: any) =>
 {
     // Check mul multiplies the value by 10, we then want to divide by 1000 to get 1%
     const scaledFee = (parseInt(p) * 100).toString();
-    return amount.checked_mul(Loader.Cardano.BigNum.from_str("10").div_floor(Loader.Cardano.BigNum.from_str(scaledFee)));
+    return amount.checked_mul(Loader.Cardano.BigNum.from_str("10").checked_div(Loader.Cardano.BigNum.from_str(scaledFee)));
 };
 
 export const setCollateral = (txBuilder: any, walletAddres: any, utxos: any) => {
