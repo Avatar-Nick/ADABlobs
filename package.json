@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@emurgo/cardano-serialization-lib-browser": "^9.1.2",
+    "@mercury-chat/react-chat": "^0.0.7",
     "@pinata/sdk": "^1.1.23",
     "@popperjs/core": "^2.11.0",
     "dotenv": "^16.0.1",
