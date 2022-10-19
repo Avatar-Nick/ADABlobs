@@ -71,9 +71,8 @@ export const start = async (auctionDetails: AuctionDetails) =>
     datums.add(datum);
 
     // Set the required transaction signers
-    const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
-    requiredSigners.add(walletAddress.payment_cred().to_keyhash());
-    txBuilder.set_required_signers(requiredSigners);
+    const requiredSigner = walletAddress.payment_cred().to_keyhash();
+    txBuilder.add_required_signer(requiredSigner);
 
     // Finish building and submitting the transaction!
     const txHash = await finalizeTransaction({
@@ -181,9 +180,8 @@ export const bid = async (asset: string, bidDetails: BidDetails) =>
         );
     }
 
-    const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
-    requiredSigners.add(walletAddress.payment_cred().to_keyhash());
-    txBuilder.set_required_signers(requiredSigners);
+    const requiredSigner = walletAddress.payment_cred().to_keyhash();
+    txBuilder.add_required_signer(requiredSigner);
 
     const txHash = await finalizeTransaction({
         txBuilder,
@@ -277,9 +275,8 @@ export const close = async (asset: string) =>
         );
     }
 
-    const requiredSigners = Loader.Cardano.Ed25519KeyHashes.new();
-    requiredSigners.add(walletAddress.payment_cred().to_keyhash());
-    txBuilder.set_required_signers(requiredSigners);
+    const requiredSigner = walletAddress.payment_cred().to_keyhash();
+    txBuilder.add_required_signer(requiredSigner);
 
     const txHash = await finalizeTransaction({
       txBuilder,

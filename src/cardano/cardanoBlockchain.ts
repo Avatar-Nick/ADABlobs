@@ -1,59 +1,34 @@
 
 import { fetchProtocolParameters } from '../api/requests';
-import CoinSelection from './CoinSelection';
 
 class CardanoBlockchain {
     protocolParameters: any;
 
     load = async () => {
         this.protocolParameters = await this.loadProtocolParameters();
-        this.loadCoinSelection();
     }
 
     loadProtocolParameters = async () => {
         const blockfrostProtocolParameters = await fetchProtocolParameters();
         
-        // Spacebudz code referencing blockfrost protocolParameter Issues
-        /*
-         this.protocolParameters = {
-           linearFee: {
-             minFeeA: p.min_fee_a.toString(),
-             minFeeB: p.min_fee_b.toString(),
-           },
-           minUtxo: "1000000",
-           poolDeposit: p.pool_deposit,
-           keyDeposit: p.key_deposit,
-           maxValSize: parseInt(p.max_val_size),
-           maxTxSize: parseInt(p.max_tx_size),
-           priceMem: parseFloat(p.price_mem),
-           priceStep: parseFloat(p.price_step),
-         };
-        TODO: wait for blockfrost fix
-        */
         const protocolParameters = {
-            linearFee: {
-              minFeeA: blockfrostProtocolParameters.min_fee_a.toString(),
-              minFeeB: blockfrostProtocolParameters.min_fee_b.toString(),
-            },
-            minUtxo: "1000000",
-            poolDeposit: "500000000",
-            keyDeposit: "2000000",
-            maxValSize: "5000",
-            maxTxSize: 16384,
-            priceMem: 5.77e-2,
-            priceStep: 7.21e-5,
-          };
+          linearFee: {
+            minFeeA: blockfrostProtocolParameters.min_fee_a.toString(),
+            minFeeB: blockfrostProtocolParameters.min_fee_b.toString(),
+          },
+          coinsPerUtxoByte: blockfrostProtocolParameters.coins_per_utxo_size.toString(),
+          poolDeposit: blockfrostProtocolParameters.pool_deposit,
+          keyDeposit: blockfrostProtocolParameters.key_deposit,
+          maxValSize: parseInt(blockfrostProtocolParameters.max_val_size),
+          maxTxSize: parseInt(blockfrostProtocolParameters.max_tx_size),
+          priceMem: parseFloat(blockfrostProtocolParameters.price_mem),
+          priceStep: parseFloat(blockfrostProtocolParameters.price_step),
+          maxCollateralInputs: parseInt(blockfrostProtocolParameters.max_collateral_inputs),
+          collateralPercentage: 0, // parseInt(p.collateral_percent),
+          costModels: blockfrostProtocolParameters.cost_models,
+        };
 
         return protocolParameters;
-    }
-
-    loadCoinSelection() {
-        CoinSelection.setProtocolParameters(
-            this.protocolParameters.minUtxo,
-            this.protocolParameters.linearFee.minFeeA,
-            this.protocolParameters.linearFee.minFeeB,
-            this.protocolParameters.maxTxSize.toString()
-          );
     }
 }
 

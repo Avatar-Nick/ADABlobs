@@ -29,7 +29,7 @@ export const BID_REDEEMER = (redeemerIndex: number, bidDetails: BidDetails) =>
     bidDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(bdBid)))
     const redeemerData = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
+            Loader.Cardano.BigNum.from_str("0"),
             bidDetailsFields,
         )
     )
@@ -39,7 +39,7 @@ export const BID_REDEEMER = (redeemerIndex: number, bidDetails: BidDetails) =>
     auctionRedeemerFields.add(redeemerData);
     const auctionRedeemerData = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
+            Loader.Cardano.BigNum.from_str("0"),
             auctionRedeemerFields,
         )
     )
@@ -69,24 +69,24 @@ export const CLOSE_REDEEMER = (redeemerIndex: number) =>
     */
 
     // Construct Cardano Json
+    const bigNum = Loader.Cardano.BigNum.from_str("1");
     const closeFields = Loader.Cardano.PlutusList.new();
     const redeemerData = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(1),
+            bigNum,
             closeFields,
         )
     )
     
     const redeemer = Loader.Cardano.Redeemer.new(
         Loader.Cardano.RedeemerTag.new_spend(),
-        Loader.Cardano.BigNum.from_str(redeemerIndex),
+        Loader.Cardano.BigNum.from_str(redeemerIndex.toString()),
         redeemerData,
         Loader.Cardano.ExUnits.new(
             Loader.Cardano.BigNum.from_str("5000000"),
             Loader.Cardano.BigNum.from_str("2000000000")
-        )// ExUnits represents payment for computation (not sure about units, this was copied from SpaceBudz)
+        )
     )
-
     return redeemer;
 }
 //--------------------------------------------------------------------------------//

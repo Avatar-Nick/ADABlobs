@@ -64,7 +64,7 @@ export const START_DATUM = (startAuctionDetails: AuctionDetails) =>
     
     const auctionDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
+            Loader.Cardano.BigNum.from_str("0"),
             auctionDetailsFields,
         )
     )
@@ -72,7 +72,7 @@ export const START_DATUM = (startAuctionDetails: AuctionDetails) =>
     const bidDetailsFields = Loader.Cardano.PlutusList.new();
     const bidDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(1),
+            Loader.Cardano.BigNum.from_str("1"),
             bidDetailsFields,
         )
     )
@@ -83,7 +83,7 @@ export const START_DATUM = (startAuctionDetails: AuctionDetails) =>
 
     const datum = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
+            Loader.Cardano.BigNum.from_str("0"),
             datumFields,
         )
     )
@@ -156,7 +156,7 @@ export const BID_DATUM = (bidAuctionDetails: AuctionDetails, bidBidDetails: BidD
     auctionDetailsFields.add(Loader.Cardano.PlutusData.new_bytes(fromHex(adMarketplaceAddress)))
     const auctionDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
+            Loader.Cardano.BigNum.from_str("0"),
             auctionDetailsFields,
         )
     )
@@ -168,7 +168,7 @@ export const BID_DATUM = (bidAuctionDetails: AuctionDetails, bidBidDetails: BidD
     bidDetailsFields.add(Loader.Cardano.PlutusData.new_integer(Loader.Cardano.BigInt.from_str(bdBid)))
     const bidDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
+            Loader.Cardano.BigNum.from_str("0"),
             bidDetailsFields,
         )
     )
@@ -178,7 +178,7 @@ export const BID_DATUM = (bidAuctionDetails: AuctionDetails, bidBidDetails: BidD
     maybeBidDetailsFields.add(bidDetails);
     const maybeBidDetails = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
+            Loader.Cardano.BigNum.from_str("0"),
             maybeBidDetailsFields,
         )
     )
@@ -189,7 +189,7 @@ export const BID_DATUM = (bidAuctionDetails: AuctionDetails, bidBidDetails: BidD
 
     const datum = Loader.Cardano.PlutusData.new_constr_plutus_data(
         Loader.Cardano.ConstrPlutusData.new(
-            Loader.Cardano.Int.new_i32(0),
+            Loader.Cardano.BigNum.from_str("0"),
             datumFields,
         )
     )
