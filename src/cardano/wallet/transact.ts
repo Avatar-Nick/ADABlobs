@@ -215,5 +215,6 @@ export const lovelacePercentage = (amount: any, p: any) =>
 {
     // Check mul multiplies the value by 10, we then want to divide by 1000 to get 1%
     const scaledFee = (parseInt(p) * 100).toString();
-    return amount.checked_mul(Loader.Cardano.BigNum.from_str("10").checked_div(Loader.Cardano.BigNum.from_str(scaledFee)));
+    const marketplaceFee = amount.checked_mul(Loader.Cardano.BigNum.from_str("10")).checked_div(Loader.Cardano.BigNum.from_str(scaledFee));
+    return marketplaceFee;
 };
