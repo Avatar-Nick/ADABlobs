@@ -7,7 +7,7 @@ export const Layout = ({ children } : { children: React.ReactNode }) =>
   return (
     <>
       <Navbar />
-      <MercuryChat position={'bottom-right'} hasFullscreen={false} showBackground={false} />
+      <MercuryChat position={'bottom-right'} showBackground={false} />
       <main>{children}</main>
       <Footer />
     </>
