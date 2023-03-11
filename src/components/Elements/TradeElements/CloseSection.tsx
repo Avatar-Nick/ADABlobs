@@ -294,8 +294,12 @@ const getTimeText = (auctionDatum: AuctionDatum) => {
     const month = months[datetime.getMonth()];
     const date = datetime.getDate()
     const year = datetime.getFullYear()
-    const hours = datetime.getHours();
+    let hours = datetime.getHours();
     const minutes = datetime.getMinutes();
+
+    // Daylight savings
+    hours = hours - 2
+    if (hours < 0) hours = hours + 24
     
     // Get string data
     const suffix = (hours >= 12) ? 'PM' : 'AM';
